@@ -30,6 +30,16 @@ public class Main extends Application {
         Rectangle palkki = new Rectangle(220, 100, Color.BLACK);
         Rectangle palkki2 = new Rectangle(220, 500, Color.BLACK);
 
+        // TODO nämä nappulat voisi tehdä loopilla jostain listasta jossa vain lukee nuo nappien tekstit, esim seuraavanlaisesta
+        String[] nakymaTekstit = new String[] {
+                "Alueet",
+                "Mökit",
+                "Palvelut",
+                "Varaukset",
+                "Asiakkaat",
+                "Laskut"
+        };
+
         Rectangle aluenappula = new Rectangle(219, 40, Color.BLACK);
         aluenappula.setStroke(Color.BLACK);
         Label alueteksti = new Label("Alueet", aluenappula);
@@ -119,7 +129,7 @@ public class Main extends Application {
         paneeli.setLeft(painikkeet);
 
         try {
-            Image ylapalkinkuva = new Image(IMGPOLKU+"ylapalkki.png");
+            Image ylapalkinkuva = new Image(IMGPOLKU + "ylapalkki.png");
             ImageView ylapalkki = new ImageView(ylapalkinkuva);
             ylapalkki.setFitWidth(1600);
             ylapalkki.setFitHeight(100);
