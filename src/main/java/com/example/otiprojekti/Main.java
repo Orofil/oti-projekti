@@ -2,8 +2,6 @@ package com.example.otiprojekti;
 
 import javafx.application.Application;
 import javafx.scene.Scene;
-import javafx.scene.layout.StackPane;
-import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import javafx.scene.control.ContentDisplay;
 import javafx.scene.control.Label;
@@ -12,7 +10,6 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
-import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
@@ -119,7 +116,7 @@ public class Main extends Application {
 
         paneeli.setLeft(painikkeet);
 
-        Image ylapalkinkuva = new Image(IMGPOLKU + "ylapalkki.png");
+        Image ylapalkinkuva = new Image("ylapalkki.png");
         ImageView ylapalkki = new ImageView(ylapalkinkuva);
         ylapalkki.setFitWidth(1200);
         ylapalkki.setFitHeight(130);
