@@ -121,14 +121,14 @@ public class Main extends Application {
         try {
             Image ylapalkinkuva = new Image(IMGPOLKU+"ylapalkki.png");
             ImageView ylapalkki = new ImageView(ylapalkinkuva);
-            ylapalkki.setFitWidth(1200);
-            ylapalkki.setFitHeight(130);
+            ylapalkki.setFitWidth(1600);
+            ylapalkki.setFitHeight(100);
             paneeli.setTop(ylapalkki);
         } catch (Exception e) {
             Image ylapalkinkuva = new Image("ylapalkki.png");
             ImageView ylapalkki = new ImageView(ylapalkinkuva);
-            ylapalkki.setFitWidth(1200);
-            ylapalkki.setFitHeight(130);
+            ylapalkki.setFitWidth(1600);
+            ylapalkki.setFitHeight(100);
             paneeli.setTop(ylapalkki);
         }
 
