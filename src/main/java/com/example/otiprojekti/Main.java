@@ -116,11 +116,21 @@ public class Main extends Application {
 
         paneeli.setLeft(painikkeet);
 
-        Image ylapalkinkuva = new Image("ylapalkki.png");
-        ImageView ylapalkki = new ImageView(ylapalkinkuva);
-        ylapalkki.setFitWidth(1200);
-        ylapalkki.setFitHeight(130);
-        paneeli.setTop(ylapalkki);
+        try {
+            Image ylapalkinkuva = new Image(IMGPOLKU+"ylapalkki.png");
+            ImageView ylapalkki = new ImageView(ylapalkinkuva);
+            ylapalkki.setFitWidth(1200);
+            ylapalkki.setFitHeight(130);
+            paneeli.setTop(ylapalkki);
+        } catch (Exception e) {
+            Image ylapalkinkuva = new Image("ylapalkki.png");
+            ImageView ylapalkki = new ImageView(ylapalkinkuva);
+            ylapalkki.setFitWidth(1200);
+            ylapalkki.setFitHeight(130);
+            paneeli.setTop(ylapalkki);
+        }
+
+
 
         BorderPane aluepaneeli = new BorderPane();
         paneeli.setCenter(aluepaneeli);
