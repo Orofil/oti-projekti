@@ -1,7 +1,9 @@
 package com.example.otiprojekti;
 
 import javafx.application.Application;
+import javafx.geometry.Rectangle2D;
 import javafx.scene.Scene;
+import javafx.stage.Screen;
 import javafx.stage.Stage;
 import javafx.scene.control.ContentDisplay;
 import javafx.scene.control.Label;
@@ -130,8 +132,6 @@ public class Main extends Application {
             paneeli.setTop(ylapalkki);
         }
 
-
-
         BorderPane aluepaneeli = new BorderPane();
         paneeli.setCenter(aluepaneeli);
 
@@ -146,7 +146,9 @@ public class Main extends Application {
         alueTaulukko.add(new Rectangle(350, 350), 1, 3);
 
 
-        Scene aluekehys = new Scene(paneeli, 1200, 800);
+        Rectangle2D bounds = Screen.getPrimary().getVisualBounds();
+        System.out.println("Näytön koko on " + bounds.getWidth() + " x " + bounds.getHeight());
+        Scene aluekehys = new Scene(paneeli, bounds.getWidth(), bounds.getHeight());
         ikkuna.setScene(aluekehys);
         ikkuna.show();
     }
