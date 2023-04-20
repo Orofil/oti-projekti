@@ -89,6 +89,19 @@ public class Asiakas {
     }
 
     @Override
+    public String toString() {
+        return "Asiakas[" +
+                "asiakasID=" + asiakasID +
+                "sukunimi=" + sukunimi +
+                "etunimi=" + etunimi +
+                "email=" + email +
+                "lahiosoite=" + lahiosoite +
+                "postinro=" + postinro +
+                "puhnro=" + puhnro +
+                "]";
+    }
+
+    @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;

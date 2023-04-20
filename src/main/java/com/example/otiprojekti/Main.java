@@ -20,6 +20,8 @@ import javafx.scene.text.Font;
 
 
 public class Main extends Application {
+    private static final String IMGPOLKU = "src/main/resources/com/example/otiprojekti/";
+
     @Override
     public void start(Stage ikkuna) {
         BorderPane paneeli = new BorderPane();
@@ -117,7 +119,7 @@ public class Main extends Application {
 
         paneeli.setLeft(painikkeet);
 
-        Image ylapalkinkuva = new Image("ylapalkki.png");
+        Image ylapalkinkuva = new Image(IMGPOLKU + "ylapalkki.png");
         ImageView ylapalkki = new ImageView(ylapalkinkuva);
         ylapalkki.setFitWidth(1200);
         ylapalkki.setFitHeight(130);
