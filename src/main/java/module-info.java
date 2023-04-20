@@ -7,4 +7,8 @@ module com.example.otiprojekti {
 
     opens com.example.otiprojekti to javafx.fxml;
     exports com.example.otiprojekti;
+
+    // TODO poistetaan kun testit poistetaan
+    opens testit to javafx.fxml;
+    exports testit;
 }
