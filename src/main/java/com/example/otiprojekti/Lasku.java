@@ -1,5 +1,7 @@
 package com.example.otiprojekti;
 
+import java.util.Objects;
+
 public class Lasku {
     private int laskuID;
     private int varausID;
@@ -8,7 +10,7 @@ public class Lasku {
     private String laskunStatus;
 
     //alustaja
-    public Lasku() {}
+    public Lasku(int laskuID, int varausID, double laskunSumma, double laskuAlv, String laskunStatus) {}
 
     public int getLaskuID() {
         return laskuID;
@@ -56,9 +58,17 @@ public class Lasku {
     }
 
     @Override
-    public boolean equals(Object obj) {
-        return super.equals(obj);
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Lasku lasku = (Lasku) o;
+        return getLaskuID() == lasku.getLaskuID() &&
+                getVarausID() == lasku.getVarausID() &&
+                Double.compare(lasku.getLaskunSumma(), getLaskunSumma()) == 0 &&
+                Double.compare(lasku.getLaskuAlv(), getLaskuAlv()) == 0 &&
+                Objects.equals(getLaskunStatus(), lasku.getLaskunStatus());
     }
+
 
     public void vieDokumentiksi() {}
 }

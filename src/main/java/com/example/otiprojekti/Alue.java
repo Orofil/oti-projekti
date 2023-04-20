@@ -1,11 +1,13 @@
 package com.example.otiprojekti;
 
+import java.util.Objects;
+
 public class Alue {
     private int alueID;
     private String alueenNimi;
 
     //alustaja
-    public Alue() {}
+    public Alue(int alueID, String alueenNimi) {}
 
     public int getAlueID() {
         return alueID;
@@ -24,9 +26,14 @@ public class Alue {
     }
 
     @Override
-    public boolean equals(Object obj) {
-        return super.equals(obj);
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Alue alue = (Alue) o;
+        return getAlueID() == alue.getAlueID() &&
+                Objects.equals(getAlueenNimi(), alue.getAlueenNimi());
     }
+
 
     @Override
     public String toString() {
