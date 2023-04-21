@@ -34,34 +34,15 @@ public class Main extends Application {
         Rectangle palkki = new Rectangle(220, 100, Color.BLACK);
         Rectangle palkki2 = new Rectangle(220, 500, Color.BLACK);
 
-        painikkeet.getChildren().add(palkki);
 
-        // Määritellään tekstit sivuvalikolle
-        String[] nakymaTekstit = new String[] {
-                "Alueet",
-                "Mökit",
-                "Palvelut",
-                "Varaukset",
-                "Asiakkaat",
-                "Laskut"
-        };
-
-        // Luodaan sivuvalikon painikkeet
-        for (String teksti : nakymaTekstit) {
-            Rectangle nappula = new Rectangle(219, 40, Color.BLACK);
-            nappula.setStroke(Color.BLACK);
-
-            Label label = new Label(teksti, nappula);
-            label.setContentDisplay(ContentDisplay.CENTER);
-            label.setTextFill(Color.WHITE);
-            label.setFont(Font.font(18));
-            label.setOnMouseEntered( e -> nappula.setStroke(Color.WHITE));
-            label.setOnMouseExited( e -> nappula.setStroke(Color.BLACK));
-
-            painikkeet.getChildren().add(label);
-        }
-
-        painikkeet.getChildren().add(palkki2);
+        Nappula aluenappula = new Nappula("Alueet");
+        Nappula mokkinappula = new Nappula("Mökit");
+        Nappula palvelunappula = new Nappula("Palvelut");
+        Nappula varausnappula = new Nappula("Varaukset");
+        Nappula asiakasnappula = new Nappula("Asiakkaat");
+        Nappula laskunappula = new Nappula("Laskut");
+        painikkeet.getChildren().addAll(palkki, aluenappula, mokkinappula, palvelunappula,
+                varausnappula, asiakasnappula, laskunappula, palkki2);
 
         paneeli.setLeft(painikkeet);
 
@@ -80,20 +61,74 @@ public class Main extends Application {
             paneeli.setTop(ylapalkki);
         }
 
+
+
+        //aluepaneeli.setTop(new Nappula("Paina tästä!")); // TEMP
+
+        // Aluepaneelin luonti ja asetus
         BorderPane aluepaneeli = new BorderPane();
         paneeli.setCenter(aluepaneeli);
-
-        //aluepaneeli.setTop(new Nappula("Paina tästä!"));
-
+        aluenappula.setOnMouseClicked(e -> {
+            paneeli.setCenter(aluepaneeli);
+        });
         ScrollPane alueScrollaus = new ScrollPane();
         aluepaneeli.setCenter(alueScrollaus);
-
         GridPane alueTaulukko = new GridPane();
         alueScrollaus.setContent(alueTaulukko);
-        alueTaulukko.add(new Rectangle(350, 350), 0, 0); // TEMP
-        alueTaulukko.add(new Rectangle(350, 350), 1, 1);
-        alueTaulukko.add(new Rectangle(350, 350), 0, 2);
-        alueTaulukko.add(new Rectangle(350, 350), 1, 3);
+
+
+        // Mokkipaneelin luonti ja asetus
+        BorderPane mokkipaneeli = new BorderPane();
+        mokkinappula.setOnMouseClicked(e -> {
+            paneeli.setCenter(mokkipaneeli);
+        });
+        ScrollPane mokkiScrollaus = new ScrollPane();
+        mokkipaneeli.setCenter(mokkiScrollaus);
+        GridPane mokkiTaulukko = new GridPane();
+        mokkiScrollaus.setContent(mokkiTaulukko);
+
+
+        // Palvelupaneelin luonti ja asetus
+        BorderPane palvelupaneeli = new BorderPane();
+        palvelunappula.setOnMouseClicked(e -> {
+            paneeli.setCenter(palvelupaneeli);
+        });
+        ScrollPane palveluScrollaus = new ScrollPane();
+        palvelupaneeli.setCenter(palveluScrollaus);
+        GridPane palveluTaulukko = new GridPane();
+        palveluScrollaus.setContent(palveluTaulukko);
+
+
+        // Varauspaneelin luonti ja asetus
+        BorderPane varauspaneeli = new BorderPane();
+        varausnappula.setOnMouseClicked(e -> {
+            paneeli.setCenter(varauspaneeli);
+        });
+        ScrollPane varausScrollaus = new ScrollPane();
+        varauspaneeli.setCenter(varausScrollaus);
+        GridPane varausTaulukko = new GridPane();
+        varausScrollaus.setContent(varausTaulukko);
+
+        // Asiakaspaneelin luonti ja asetus
+        BorderPane asiakaspaneeli = new BorderPane();
+        asiakasnappula.setOnMouseClicked(e -> {
+            paneeli.setCenter(asiakaspaneeli);
+        });
+        ScrollPane asiakasScrollaus = new ScrollPane();
+        asiakaspaneeli.setCenter(asiakasScrollaus);
+        GridPane asiakasTaulukko = new GridPane();
+        asiakasScrollaus.setContent(asiakasTaulukko);
+
+        // Laskupaneelin luonti ja asetus
+        BorderPane laskupaneeli = new BorderPane();
+        laskunappula.setOnMouseClicked(e -> {
+            paneeli.setCenter(laskupaneeli);
+        });
+        ScrollPane laskuScrollaus = new ScrollPane();
+        varauspaneeli.setCenter(laskuScrollaus);
+        GridPane laskuTaulukko = new GridPane();
+        varausScrollaus.setContent(laskuTaulukko);
+
 
 
         Rectangle2D bounds = Screen.getPrimary().getVisualBounds();
