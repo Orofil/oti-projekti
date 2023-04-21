@@ -83,6 +83,8 @@ public class Main extends Application {
         BorderPane aluepaneeli = new BorderPane();
         paneeli.setCenter(aluepaneeli);
 
+        //aluepaneeli.setTop(new Nappula("Paina tästä!"));
+
         ScrollPane alueScrollaus = new ScrollPane();
         aluepaneeli.setCenter(alueScrollaus);
 
