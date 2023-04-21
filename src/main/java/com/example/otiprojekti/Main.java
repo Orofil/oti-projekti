@@ -132,8 +132,8 @@ public class Main extends Application {
 
 
         Rectangle2D bounds = Screen.getPrimary().getVisualBounds();
-        System.out.println("Näytön koko on " + bounds.getWidth() + " x " + bounds.getHeight());
-        Scene aluekehys = new Scene(paneeli, bounds.getWidth(), bounds.getHeight());
+        System.out.println("Näytön koko on " + bounds.getWidth() + " x " + bounds.getHeight()); // TEMP
+        Scene aluekehys = new Scene(paneeli, bounds.getWidth(), bounds.getHeight()); // TODO parempi ratkaisu ikkunan koolle
         ikkuna.setScene(aluekehys);
         ikkuna.show();
     }
