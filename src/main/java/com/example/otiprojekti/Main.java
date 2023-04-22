@@ -1,13 +1,14 @@
 package com.example.otiprojekti;
 
 import javafx.application.Application;
+import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.Scene;
+import javafx.scene.control.*;
+import javafx.scene.text.Text;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
-import javafx.scene.control.ContentDisplay;
-import javafx.scene.control.Label;
-import javafx.scene.control.ScrollPane;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
@@ -24,9 +25,19 @@ public class Main extends Application {
      */
     private static final String IMGPOLKU = "src/main/resources/com/example/otiprojekti/";
 
+    public Nappula aluenappula = new Nappula("Alueet");
+    public Nappula mokkinappula = new Nappula("Mökit");
+    public Nappula palvelunappula = new Nappula("Palvelut");
+    public Nappula varausnappula = new Nappula("Varaukset");
+    public Nappula asiakasnappula = new Nappula("Asiakkaat");
+    public Nappula laskunappula = new Nappula("Laskut");
+
+    public BorderPane paneeli = new BorderPane();
+
     @Override
     public void start(Stage ikkuna) {
-        BorderPane paneeli = new BorderPane();
+
+
 
         VBox painikkeet = new VBox();
 
@@ -34,13 +45,6 @@ public class Main extends Application {
         Rectangle palkki = new Rectangle(220, 100, Color.BLACK);
         Rectangle palkki2 = new Rectangle(220, 500, Color.BLACK);
 
-
-        Nappula aluenappula = new Nappula("Alueet");
-        Nappula mokkinappula = new Nappula("Mökit");
-        Nappula palvelunappula = new Nappula("Palvelut");
-        Nappula varausnappula = new Nappula("Varaukset");
-        Nappula asiakasnappula = new Nappula("Asiakkaat");
-        Nappula laskunappula = new Nappula("Laskut");
         painikkeet.getChildren().addAll(palkki, aluenappula, mokkinappula, palvelunappula,
                 varausnappula, asiakasnappula, laskunappula, palkki2);
 
@@ -71,10 +75,55 @@ public class Main extends Application {
         aluenappula.setOnMouseClicked(e -> {
             paneeli.setCenter(aluepaneeli);
         });
+
+        GridPane alueHaku = new GridPane();
+        alueHaku.setPadding(new Insets(50,50,50,0));
+        alueHaku.setHgap(200);
+        alueHaku.setVgap(15);
+        aluepaneeli.setTop(alueHaku);
+
+        TextField alueHakuKentta = new TextField();
+        Label alueHakuKenttaLabel = new Label("Hae aluetta: ", alueHakuKentta);
+        alueHakuKenttaLabel.setFont(Font.font(16));
+        alueHakuKenttaLabel.setContentDisplay(ContentDisplay.BOTTOM);
+        alueHaku.add(alueHakuKenttaLabel, 1, 1);
+        Nappula alueHakuNappula = new Nappula("Suorita haku", 190, 30);
+        alueHaku.add(alueHakuNappula, 1, 2);
+        alueHaku.add(new Text("Näytä tulokset järjestyksessä"), 2, 0);
+
+        ToggleGroup toggleAlue = new ToggleGroup();
+
+        RadioButton uusinAlue = new RadioButton("uusin - vanhin");
+        alueHaku.add(uusinAlue, 2, 1);
+        uusinAlue.setToggleGroup(toggleAlue);
+
+        RadioButton vanhinAlue = new RadioButton("vanhin - uusin");
+        alueHaku.add(vanhinAlue, 2, 2);
+        vanhinAlue.setToggleGroup(toggleAlue);
+
+        RadioButton aakkosAlue = new RadioButton("A - Ö");
+        alueHaku.add(aakkosAlue, 2, 3);
+        aakkosAlue.setToggleGroup(toggleAlue);
+
         ScrollPane alueScrollaus = new ScrollPane();
         aluepaneeli.setCenter(alueScrollaus);
         GridPane alueTaulukko = new GridPane();
+        alueTaulukko.setPadding(new Insets(50,50,50,150));
+        alueTaulukko.setAlignment(Pos.CENTER);
+        alueTaulukko.setGridLinesVisible(true);
         alueScrollaus.setContent(alueTaulukko);
+
+
+        Nappula alueenLisays = new Nappula("Lisää uusi alue", 190, 30);
+        alueTaulukko.add(alueenLisays, 1,0);
+
+        Text aluetunnusOtsikko = new Text("    Aluetunnus    ");
+        aluetunnusOtsikko.setFont(Font.font(16));
+        Text alueennimiOtsikko = new Text("    Alueen nimi    ");
+        alueennimiOtsikko.setFont(Font.font(16));
+        alueTaulukko.add(aluetunnusOtsikko, 0, 1);
+        alueTaulukko.add(alueennimiOtsikko, 1, 1);
+
 
 
         // Mokkipaneelin luonti ja asetus
@@ -85,6 +134,7 @@ public class Main extends Application {
         ScrollPane mokkiScrollaus = new ScrollPane();
         mokkipaneeli.setCenter(mokkiScrollaus);
         GridPane mokkiTaulukko = new GridPane();
+        mokkiTaulukko.setGridLinesVisible(true);
         mokkiScrollaus.setContent(mokkiTaulukko);
 
 
@@ -96,6 +146,7 @@ public class Main extends Application {
         ScrollPane palveluScrollaus = new ScrollPane();
         palvelupaneeli.setCenter(palveluScrollaus);
         GridPane palveluTaulukko = new GridPane();
+        palveluTaulukko.setGridLinesVisible(true);
         palveluScrollaus.setContent(palveluTaulukko);
 
 
@@ -107,6 +158,7 @@ public class Main extends Application {
         ScrollPane varausScrollaus = new ScrollPane();
         varauspaneeli.setCenter(varausScrollaus);
         GridPane varausTaulukko = new GridPane();
+        varausTaulukko.setGridLinesVisible(true);
         varausScrollaus.setContent(varausTaulukko);
 
         // Asiakaspaneelin luonti ja asetus
@@ -117,6 +169,7 @@ public class Main extends Application {
         ScrollPane asiakasScrollaus = new ScrollPane();
         asiakaspaneeli.setCenter(asiakasScrollaus);
         GridPane asiakasTaulukko = new GridPane();
+        asiakasTaulukko.setGridLinesVisible(true);
         asiakasScrollaus.setContent(asiakasTaulukko);
 
         // Laskupaneelin luonti ja asetus
@@ -127,6 +180,7 @@ public class Main extends Application {
         ScrollPane laskuScrollaus = new ScrollPane();
         varauspaneeli.setCenter(laskuScrollaus);
         GridPane laskuTaulukko = new GridPane();
+        laskuTaulukko.setGridLinesVisible(true);
         varausScrollaus.setContent(laskuTaulukko);
 
 
