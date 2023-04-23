@@ -185,10 +185,19 @@ public class Main extends Application {
         varausScrollaus.setContent(laskuTaulukko);
 
 
-
+        // Lasketaan koko ikkunalle
         Rectangle2D bounds = Screen.getPrimary().getVisualBounds();
-        System.out.println("Näytön koko on " + bounds.getWidth() + " x " + bounds.getHeight()); // TEMP
-        Scene aluekehys = new Scene(paneeli, bounds.getWidth(), bounds.getHeight()); // TODO parempi ratkaisu ikkunan koolle
+        double boundsW = bounds.getWidth();
+        double boundsH = bounds.getHeight();
+        // Ikkunan mittasuhde jaettuna kahteen muuttujaan
+        double suhdeW = 5;
+        double suhdeH = 3;
+        double boundsSuhdeMin = Math.min(boundsW / suhdeW, boundsH / suhdeH);
+        // Kuinka suuren osan näytön leveydestä tai korkeudesta ikkuna vie enintään
+        double maxOsuus = 0.9;
+        double W = boundsSuhdeMin * maxOsuus * suhdeW;
+        double H = boundsSuhdeMin * maxOsuus * suhdeH;
+        Scene aluekehys = new Scene(paneeli, W, H);
         ikkuna.setScene(aluekehys);
         ikkuna.show();
     }
