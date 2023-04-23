@@ -1,5 +1,6 @@
 package com.example.otiprojekti;
 
+import com.example.otiprojekti.nakymat.*;
 import javafx.application.Application;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -70,7 +71,7 @@ public class Main extends Application {
         //aluepaneeli.setTop(new Nappula("Paina tästä!")); // TEMP
 
         // Aluepaneelin luonti ja asetus
-        BorderPane aluepaneeli = new BorderPane();
+        Aluenakyma aluepaneeli = new Aluenakyma();
         paneeli.setCenter(aluepaneeli);
         aluenappula.setOnMouseClicked(e -> {
             paneeli.setCenter(aluepaneeli);
@@ -127,7 +128,7 @@ public class Main extends Application {
 
 
         // Mokkipaneelin luonti ja asetus
-        BorderPane mokkipaneeli = new BorderPane();
+        Mokkinakyma mokkipaneeli = new Mokkinakyma();
         mokkinappula.setOnMouseClicked(e -> {
             paneeli.setCenter(mokkipaneeli);
         });
@@ -139,7 +140,7 @@ public class Main extends Application {
 
 
         // Palvelupaneelin luonti ja asetus
-        BorderPane palvelupaneeli = new BorderPane();
+        Palvelunakyma palvelupaneeli = new Palvelunakyma();
         palvelunappula.setOnMouseClicked(e -> {
             paneeli.setCenter(palvelupaneeli);
         });
@@ -151,7 +152,7 @@ public class Main extends Application {
 
 
         // Varauspaneelin luonti ja asetus
-        BorderPane varauspaneeli = new BorderPane();
+        Varausnakyma varauspaneeli = new Varausnakyma();
         varausnappula.setOnMouseClicked(e -> {
             paneeli.setCenter(varauspaneeli);
         });
@@ -162,7 +163,7 @@ public class Main extends Application {
         varausScrollaus.setContent(varausTaulukko);
 
         // Asiakaspaneelin luonti ja asetus
-        BorderPane asiakaspaneeli = new BorderPane();
+        Asiakasnakyma asiakaspaneeli = new Asiakasnakyma();
         asiakasnappula.setOnMouseClicked(e -> {
             paneeli.setCenter(asiakaspaneeli);
         });
@@ -173,7 +174,7 @@ public class Main extends Application {
         asiakasScrollaus.setContent(asiakasTaulukko);
 
         // Laskupaneelin luonti ja asetus
-        BorderPane laskupaneeli = new BorderPane();
+        Laskunakyma laskupaneeli = new Laskunakyma();
         laskunappula.setOnMouseClicked(e -> {
             paneeli.setCenter(laskupaneeli);
         });

@@ -11,4 +11,6 @@ module com.example.otiprojekti {
     // TODO poistetaan kun testit poistetaan
     opens testit to javafx.fxml;
     exports testit;
+    exports com.example.otiprojekti.nakymat;
+    opens com.example.otiprojekti.nakymat to javafx.fxml;
 }
