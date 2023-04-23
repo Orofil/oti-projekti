@@ -1,8 +1,10 @@
 package com.example.otiprojekti;
 
-import javafx.scene.Node;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.scene.control.ContentDisplay;
 import javafx.scene.control.Label;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
@@ -32,6 +34,4 @@ public class Nappula extends Label {
         setOnMouseEntered( e -> nappula.setStroke(Color.WHITE));
         setOnMouseExited( e -> nappula.setStroke(Color.BLACK));
     }
-
-
 }

@@ -7,6 +7,11 @@ public class Alue {
     //alustaja
     public Alue() {}
 
+    public Alue(int id, String nimi) {
+        this.alueID = id;
+        this.alueenNimi = nimi;
+    }
+
     public int getAlueID() {
         return alueID;
     }

@@ -1,12 +1,17 @@
 package com.example.otiprojekti;
 
 import javafx.application.Application;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
+import javafx.geometry.HPos;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.text.Text;
+import javafx.scene.text.TextAlignment;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
 import javafx.scene.image.Image;
@@ -17,6 +22,8 @@ import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
+
+import java.util.ArrayList;
 
 
 public class Main extends Application {
@@ -36,6 +43,7 @@ public class Main extends Application {
 
     @Override
     public void start(Stage ikkuna) {
+
 
 
 
@@ -66,64 +74,8 @@ public class Main extends Application {
         }
 
 
-
-        //aluepaneeli.setTop(new Nappula("Paina tästä!")); // TEMP
-
         // Aluepaneelin luonti ja asetus
-        BorderPane aluepaneeli = new BorderPane();
-        paneeli.setCenter(aluepaneeli);
-        aluenappula.setOnMouseClicked(e -> {
-            paneeli.setCenter(aluepaneeli);
-        });
-
-        GridPane alueHaku = new GridPane();
-        alueHaku.setPadding(new Insets(50,50,50,0));
-        alueHaku.setHgap(200);
-        alueHaku.setVgap(15);
-        aluepaneeli.setTop(alueHaku);
-
-        TextField alueHakuKentta = new TextField();
-        Label alueHakuKenttaLabel = new Label("Hae aluetta: ", alueHakuKentta);
-        alueHakuKenttaLabel.setFont(Font.font(16));
-        alueHakuKenttaLabel.setContentDisplay(ContentDisplay.BOTTOM);
-        alueHaku.add(alueHakuKenttaLabel, 1, 1);
-        Nappula alueHakuNappula = new Nappula("Suorita haku", 190, 30);
-        alueHaku.add(alueHakuNappula, 1, 2);
-        alueHaku.add(new Text("Näytä tulokset järjestyksessä"), 2, 0);
-
-        ToggleGroup toggleAlue = new ToggleGroup();
-
-        RadioButton uusinAlue = new RadioButton("uusin - vanhin");
-        alueHaku.add(uusinAlue, 2, 1);
-        uusinAlue.setToggleGroup(toggleAlue);
-
-        RadioButton vanhinAlue = new RadioButton("vanhin - uusin");
-        alueHaku.add(vanhinAlue, 2, 2);
-        vanhinAlue.setToggleGroup(toggleAlue);
-
-        RadioButton aakkosAlue = new RadioButton("A - Ö");
-        alueHaku.add(aakkosAlue, 2, 3);
-        aakkosAlue.setToggleGroup(toggleAlue);
-
-        ScrollPane alueScrollaus = new ScrollPane();
-        aluepaneeli.setCenter(alueScrollaus);
-        GridPane alueTaulukko = new GridPane();
-        alueTaulukko.setPadding(new Insets(50,50,50,150));
-        alueTaulukko.setAlignment(Pos.CENTER);
-        alueTaulukko.setGridLinesVisible(true);
-        alueScrollaus.setContent(alueTaulukko);
-
-
-        Nappula alueenLisays = new Nappula("Lisää uusi alue", 190, 30);
-        alueTaulukko.add(alueenLisays, 1,0);
-
-        Text aluetunnusOtsikko = new Text("    Aluetunnus    ");
-        aluetunnusOtsikko.setFont(Font.font(16));
-        Text alueennimiOtsikko = new Text("    Alueen nimi    ");
-        alueennimiOtsikko.setFont(Font.font(16));
-        alueTaulukko.add(aluetunnusOtsikko, 0, 1);
-        alueTaulukko.add(alueennimiOtsikko, 1, 1);
-
+        luoAluenakyma();
 
 
         // Mokkipaneelin luonti ja asetus
@@ -190,6 +142,95 @@ public class Main extends Application {
         Scene aluekehys = new Scene(paneeli, bounds.getWidth(), bounds.getHeight()); // TODO parempi ratkaisu ikkunan koolle
         ikkuna.setScene(aluekehys);
         ikkuna.show();
+    }
+
+
+    public void luoAluenakyma() {
+
+        ColumnConstraints kolumniLeveys = new ColumnConstraints();
+        kolumniLeveys.setHalignment(HPos.CENTER);
+        kolumniLeveys.setPrefWidth(200);
+
+        BorderPane aluepaneeli = new BorderPane();
+        paneeli.setCenter(aluepaneeli);
+        aluenappula.setOnMouseClicked(e -> {
+            paneeli.setCenter(aluepaneeli);
+        });
+
+        GridPane alueHaku = new GridPane();
+        alueHaku.setPadding(new Insets(50,50,50,0));
+        alueHaku.setHgap(200);
+        alueHaku.setVgap(15);
+        aluepaneeli.setTop(alueHaku);
+
+        TextField alueHakuKentta = new TextField();
+        Label alueHakuKenttaLabel = new Label("Hae aluetta: ", alueHakuKentta);
+        alueHakuKenttaLabel.setFont(Font.font(16));
+        alueHakuKenttaLabel.setContentDisplay(ContentDisplay.BOTTOM);
+        alueHaku.add(alueHakuKenttaLabel, 1, 1);
+        Nappula alueHakuNappula = new Nappula("Suorita haku", 190, 30);
+        alueHaku.add(alueHakuNappula, 1, 2);
+        alueHaku.add(new Text("Näytä tulokset järjestyksessä"), 2, 0);
+
+        ToggleGroup toggleAlue = new ToggleGroup();
+
+        RadioButton uusinAlue = new RadioButton("uusin - vanhin");
+        alueHaku.add(uusinAlue, 2, 1);
+        uusinAlue.setToggleGroup(toggleAlue);
+
+        RadioButton vanhinAlue = new RadioButton("vanhin - uusin");
+        alueHaku.add(vanhinAlue, 2, 2);
+        vanhinAlue.setToggleGroup(toggleAlue);
+
+        RadioButton aakkosAlue = new RadioButton("A - Ö");
+        alueHaku.add(aakkosAlue, 2, 3);
+        aakkosAlue.setToggleGroup(toggleAlue);
+
+        ScrollPane alueScrollaus = new ScrollPane();
+        aluepaneeli.setCenter(alueScrollaus);
+        GridPane alueTaulukko = new GridPane();
+        alueTaulukko.setPadding(new Insets(50,50,50,150));
+        alueTaulukko.getColumnConstraints().addAll(kolumniLeveys, kolumniLeveys);
+        alueTaulukko.setGridLinesVisible(true);
+        alueScrollaus.setContent(alueTaulukko);
+
+
+        Nappula alueenLisays = new Nappula("Lisää uusi alue", 200, 30);
+        alueTaulukko.add(alueenLisays, 1,0);
+
+        Text aluetunnusOtsikko = new Text("Aluetunnus");
+        aluetunnusOtsikko.setFont(Font.font(16));
+        Text alueennimiOtsikko = new Text("Alueen nimi");
+        alueennimiOtsikko.setFont(Font.font(16));
+        alueTaulukko.add(aluetunnusOtsikko, 0, 1);
+        alueTaulukko.add(alueennimiOtsikko, 1, 1);
+
+        ArrayList<Alue> aluelista = new ArrayList<Alue>();
+        aluelista.add(new Alue(1, "Ylläs"));       //TEMP
+        aluelista.add(new Alue(2, "Levi"));        //TEMP
+
+
+        int alueLaskuri = 2;
+        for (Alue obj : aluelista) {
+            Text alueID = new Text(String.valueOf(obj.getAlueID()));
+            alueID.setFont(Font.font(16));
+            Text alueNimi = new Text(String.valueOf(obj.getAlueenNimi()));
+            alueNimi.setFont(Font.font(16));
+            alueTaulukko.add(alueID, 0, alueLaskuri);
+
+            alueID.setTextAlignment(TextAlignment.CENTER);
+            alueTaulukko.add(alueNimi, 1, alueLaskuri);
+            //alueNimi.setAlignment(Pos.CENTER);
+            alueNimi.setTextAlignment(TextAlignment.CENTER);
+
+            Nappula poistoNappula = new Nappula("Poista alue", 150, 30);
+            alueTaulukko.add(poistoNappula, 2, alueLaskuri);
+            poistoNappula.setOnMouseClicked(e -> {
+                // poistaAlue();                          //TODO  poistaAlue() - metodin luominen
+            });
+
+            alueLaskuri++;
+        }
     }
 
     public static void main(String[] args) {
