@@ -75,61 +75,7 @@ public class Main extends Application {
 
         //aluepaneeli.setTop(new Nappula("Paina tästä!")); // TEMP
 
-        // Aluepaneelin luonti ja asetus
-        Aluenakyma aluepaneeli = new Aluenakyma();
-        paneeli.setCenter(aluepaneeli);
-        aluenappula.setOnMouseClicked(e -> {
-            paneeli.setCenter(aluepaneeli);
-        });
-
-        GridPane alueHaku = new GridPane();
-        alueHaku.setPadding(new Insets(50,50,50,0));
-        alueHaku.setHgap(200);
-        alueHaku.setVgap(15);
-        aluepaneeli.setTop(alueHaku);
-
-        TextField alueHakuKentta = new TextField();
-        Label alueHakuKenttaLabel = new Label("Hae aluetta: ", alueHakuKentta);
-        alueHakuKenttaLabel.setFont(Font.font(16));
-        alueHakuKenttaLabel.setContentDisplay(ContentDisplay.BOTTOM);
-        alueHaku.add(alueHakuKenttaLabel, 1, 1);
-        Nappula alueHakuNappula = new Nappula("Suorita haku", 190, 30);
-        alueHaku.add(alueHakuNappula, 1, 2);
-        alueHaku.add(new Text("Näytä tulokset järjestyksessä"), 2, 0);
-
-        ToggleGroup toggleAlue = new ToggleGroup();
-
-        RadioButton uusinAlue = new RadioButton("uusin - vanhin");
-        alueHaku.add(uusinAlue, 2, 1);
-        uusinAlue.setToggleGroup(toggleAlue);
-
-        RadioButton vanhinAlue = new RadioButton("vanhin - uusin");
-        alueHaku.add(vanhinAlue, 2, 2);
-        vanhinAlue.setToggleGroup(toggleAlue);
-
-        RadioButton aakkosAlue = new RadioButton("A - Ö");
-        alueHaku.add(aakkosAlue, 2, 3);
-        aakkosAlue.setToggleGroup(toggleAlue);
-
-        ScrollPane alueScrollaus = new ScrollPane();
-        aluepaneeli.setCenter(alueScrollaus);
-        GridPane alueTaulukko = new GridPane();
-        alueTaulukko.setPadding(new Insets(50,50,50,150));
-        alueTaulukko.setAlignment(Pos.CENTER);
-        alueTaulukko.setGridLinesVisible(true);
-        alueScrollaus.setContent(alueTaulukko);
-
-
-        Nappula alueenLisays = new Nappula("Lisää uusi alue", 190, 30);
-        alueTaulukko.add(alueenLisays, 1,0);
-
-        Text aluetunnusOtsikko = new Text("    Aluetunnus    ");
-        aluetunnusOtsikko.setFont(Font.font(16));
-        Text alueennimiOtsikko = new Text("    Alueen nimi    ");
-        alueennimiOtsikko.setFont(Font.font(16));
-        alueTaulukko.add(aluetunnusOtsikko, 0, 1);
-        alueTaulukko.add(alueennimiOtsikko, 1, 1);
-
+        luoAluenakyma();
 
 
         // Mokkipaneelin luonti ja asetus
