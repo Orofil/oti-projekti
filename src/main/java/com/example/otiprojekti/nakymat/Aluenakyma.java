@@ -1,4 +1,4 @@
-package com.example.otiprojekti;
+package com.example.otiprojekti.nakymat;
 
 import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.BorderPane;

@@ -1,17 +1,13 @@
 package com.example.otiprojekti;
 
+import com.example.otiprojekti.nakymat.*;
 import javafx.application.Application;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
-import javafx.geometry.HPos;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
-import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.text.Text;
-import javafx.scene.text.TextAlignment;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
 import javafx.scene.image.Image;
@@ -22,8 +18,6 @@ import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
-
-import java.util.ArrayList;
 
 
 public class Main extends Application {
@@ -43,7 +37,6 @@ public class Main extends Application {
 
     @Override
     public void start(Stage ikkuna) {
-
 
 
 
@@ -74,84 +67,11 @@ public class Main extends Application {
         }
 
 
+
+        //aluepaneeli.setTop(new Nappula("Paina tästä!")); // TEMP
+
         // Aluepaneelin luonti ja asetus
-        luoAluenakyma();
-
-
-        // Mokkipaneelin luonti ja asetus
-        BorderPane mokkipaneeli = new BorderPane();
-        mokkinappula.setOnMouseClicked(e -> {
-            paneeli.setCenter(mokkipaneeli);
-        });
-        ScrollPane mokkiScrollaus = new ScrollPane();
-        mokkipaneeli.setCenter(mokkiScrollaus);
-        GridPane mokkiTaulukko = new GridPane();
-        mokkiTaulukko.setGridLinesVisible(true);
-        mokkiScrollaus.setContent(mokkiTaulukko);
-
-
-        // Palvelupaneelin luonti ja asetus
-        BorderPane palvelupaneeli = new BorderPane();
-        palvelunappula.setOnMouseClicked(e -> {
-            paneeli.setCenter(palvelupaneeli);
-        });
-        ScrollPane palveluScrollaus = new ScrollPane();
-        palvelupaneeli.setCenter(palveluScrollaus);
-        GridPane palveluTaulukko = new GridPane();
-        palveluTaulukko.setGridLinesVisible(true);
-        palveluScrollaus.setContent(palveluTaulukko);
-
-
-        // Varauspaneelin luonti ja asetus
-        BorderPane varauspaneeli = new BorderPane();
-        varausnappula.setOnMouseClicked(e -> {
-            paneeli.setCenter(varauspaneeli);
-        });
-        ScrollPane varausScrollaus = new ScrollPane();
-        varauspaneeli.setCenter(varausScrollaus);
-        GridPane varausTaulukko = new GridPane();
-        varausTaulukko.setGridLinesVisible(true);
-        varausScrollaus.setContent(varausTaulukko);
-
-        // Asiakaspaneelin luonti ja asetus
-        BorderPane asiakaspaneeli = new BorderPane();
-        asiakasnappula.setOnMouseClicked(e -> {
-            paneeli.setCenter(asiakaspaneeli);
-        });
-        ScrollPane asiakasScrollaus = new ScrollPane();
-        asiakaspaneeli.setCenter(asiakasScrollaus);
-        GridPane asiakasTaulukko = new GridPane();
-        asiakasTaulukko.setGridLinesVisible(true);
-        asiakasScrollaus.setContent(asiakasTaulukko);
-
-        // Laskupaneelin luonti ja asetus
-        BorderPane laskupaneeli = new BorderPane();
-        laskunappula.setOnMouseClicked(e -> {
-            paneeli.setCenter(laskupaneeli);
-        });
-        ScrollPane laskuScrollaus = new ScrollPane();
-        varauspaneeli.setCenter(laskuScrollaus);
-        GridPane laskuTaulukko = new GridPane();
-        laskuTaulukko.setGridLinesVisible(true);
-        varausScrollaus.setContent(laskuTaulukko);
-
-
-
-        Rectangle2D bounds = Screen.getPrimary().getVisualBounds();
-        System.out.println("Näytön koko on " + bounds.getWidth() + " x " + bounds.getHeight()); // TEMP
-        Scene aluekehys = new Scene(paneeli, bounds.getWidth(), bounds.getHeight()); // TODO parempi ratkaisu ikkunan koolle
-        ikkuna.setScene(aluekehys);
-        ikkuna.show();
-    }
-
-
-    public void luoAluenakyma() {
-
-        ColumnConstraints kolumniLeveys = new ColumnConstraints();
-        kolumniLeveys.setHalignment(HPos.CENTER);
-        kolumniLeveys.setPrefWidth(200);
-
-        BorderPane aluepaneeli = new BorderPane();
+        Aluenakyma aluepaneeli = new Aluenakyma();
         paneeli.setCenter(aluepaneeli);
         aluenappula.setOnMouseClicked(e -> {
             paneeli.setCenter(aluepaneeli);
@@ -190,47 +110,96 @@ public class Main extends Application {
         aluepaneeli.setCenter(alueScrollaus);
         GridPane alueTaulukko = new GridPane();
         alueTaulukko.setPadding(new Insets(50,50,50,150));
-        alueTaulukko.getColumnConstraints().addAll(kolumniLeveys, kolumniLeveys);
+        alueTaulukko.setAlignment(Pos.CENTER);
         alueTaulukko.setGridLinesVisible(true);
         alueScrollaus.setContent(alueTaulukko);
 
 
-        Nappula alueenLisays = new Nappula("Lisää uusi alue", 200, 30);
+        Nappula alueenLisays = new Nappula("Lisää uusi alue", 190, 30);
         alueTaulukko.add(alueenLisays, 1,0);
 
-        Text aluetunnusOtsikko = new Text("Aluetunnus");
+        Text aluetunnusOtsikko = new Text("    Aluetunnus    ");
         aluetunnusOtsikko.setFont(Font.font(16));
-        Text alueennimiOtsikko = new Text("Alueen nimi");
+        Text alueennimiOtsikko = new Text("    Alueen nimi    ");
         alueennimiOtsikko.setFont(Font.font(16));
         alueTaulukko.add(aluetunnusOtsikko, 0, 1);
         alueTaulukko.add(alueennimiOtsikko, 1, 1);
 
-        ArrayList<Alue> aluelista = new ArrayList<Alue>();
-        aluelista.add(new Alue(1, "Ylläs"));       //TEMP
-        aluelista.add(new Alue(2, "Levi"));        //TEMP
 
 
-        int alueLaskuri = 2;
-        for (Alue obj : aluelista) {
-            Text alueID = new Text(String.valueOf(obj.getAlueID()));
-            alueID.setFont(Font.font(16));
-            Text alueNimi = new Text(String.valueOf(obj.getAlueenNimi()));
-            alueNimi.setFont(Font.font(16));
-            alueTaulukko.add(alueID, 0, alueLaskuri);
+        // Mokkipaneelin luonti ja asetus
+        Mokkinakyma mokkipaneeli = new Mokkinakyma();
+        mokkinappula.setOnMouseClicked(e -> {
+            paneeli.setCenter(mokkipaneeli);
+        });
+        ScrollPane mokkiScrollaus = new ScrollPane();
+        mokkipaneeli.setCenter(mokkiScrollaus);
+        GridPane mokkiTaulukko = new GridPane();
+        mokkiTaulukko.setGridLinesVisible(true);
+        mokkiScrollaus.setContent(mokkiTaulukko);
 
-            alueID.setTextAlignment(TextAlignment.CENTER);
-            alueTaulukko.add(alueNimi, 1, alueLaskuri);
-            //alueNimi.setAlignment(Pos.CENTER);
-            alueNimi.setTextAlignment(TextAlignment.CENTER);
 
-            Nappula poistoNappula = new Nappula("Poista alue", 150, 30);
-            alueTaulukko.add(poistoNappula, 2, alueLaskuri);
-            poistoNappula.setOnMouseClicked(e -> {
-                // poistaAlue();                          //TODO  poistaAlue() - metodin luominen
-            });
+        // Palvelupaneelin luonti ja asetus
+        Palvelunakyma palvelupaneeli = new Palvelunakyma();
+        palvelunappula.setOnMouseClicked(e -> {
+            paneeli.setCenter(palvelupaneeli);
+        });
+        ScrollPane palveluScrollaus = new ScrollPane();
+        palvelupaneeli.setCenter(palveluScrollaus);
+        GridPane palveluTaulukko = new GridPane();
+        palveluTaulukko.setGridLinesVisible(true);
+        palveluScrollaus.setContent(palveluTaulukko);
 
-            alueLaskuri++;
-        }
+
+        // Varauspaneelin luonti ja asetus
+        Varausnakyma varauspaneeli = new Varausnakyma();
+        varausnappula.setOnMouseClicked(e -> {
+            paneeli.setCenter(varauspaneeli);
+        });
+        ScrollPane varausScrollaus = new ScrollPane();
+        varauspaneeli.setCenter(varausScrollaus);
+        GridPane varausTaulukko = new GridPane();
+        varausTaulukko.setGridLinesVisible(true);
+        varausScrollaus.setContent(varausTaulukko);
+
+        // Asiakaspaneelin luonti ja asetus
+        Asiakasnakyma asiakaspaneeli = new Asiakasnakyma();
+        asiakasnappula.setOnMouseClicked(e -> {
+            paneeli.setCenter(asiakaspaneeli);
+        });
+        ScrollPane asiakasScrollaus = new ScrollPane();
+        asiakaspaneeli.setCenter(asiakasScrollaus);
+        GridPane asiakasTaulukko = new GridPane();
+        asiakasTaulukko.setGridLinesVisible(true);
+        asiakasScrollaus.setContent(asiakasTaulukko);
+
+        // Laskupaneelin luonti ja asetus
+        Laskunakyma laskupaneeli = new Laskunakyma();
+        laskunappula.setOnMouseClicked(e -> {
+            paneeli.setCenter(laskupaneeli);
+        });
+        ScrollPane laskuScrollaus = new ScrollPane();
+        varauspaneeli.setCenter(laskuScrollaus);
+        GridPane laskuTaulukko = new GridPane();
+        laskuTaulukko.setGridLinesVisible(true);
+        varausScrollaus.setContent(laskuTaulukko);
+
+
+        // Lasketaan koko ikkunalle
+        Rectangle2D bounds = Screen.getPrimary().getVisualBounds();
+        double boundsW = bounds.getWidth();
+        double boundsH = bounds.getHeight();
+        // Ikkunan mittasuhde jaettuna kahteen muuttujaan
+        double suhdeW = 5;
+        double suhdeH = 3;
+        double boundsSuhdeMin = Math.min(boundsW / suhdeW, boundsH / suhdeH);
+        // Kuinka suuren osan näytön leveydestä tai korkeudesta ikkuna vie enintään
+        double maxOsuus = 0.9;
+        double W = boundsSuhdeMin * maxOsuus * suhdeW;
+        double H = boundsSuhdeMin * maxOsuus * suhdeH;
+        Scene aluekehys = new Scene(paneeli, W, H);
+        ikkuna.setScene(aluekehys);
+        ikkuna.show();
     }
 
     public static void main(String[] args) {
