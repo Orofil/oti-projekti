@@ -78,15 +78,8 @@ public class Main extends Application {
 
 
         // Mokkipaneelin luonti ja asetus
-        Mokkinakyma mokkipaneeli = new Mokkinakyma();
-        mokkinappula.setOnMouseClicked(e -> {
-            paneeli.setCenter(mokkipaneeli);
-        });
-        ScrollPane mokkiScrollaus = new ScrollPane();
-        mokkipaneeli.setCenter(mokkiScrollaus);
-        GridPane mokkiTaulukko = new GridPane();
-        mokkiTaulukko.setGridLinesVisible(true);
-        mokkiScrollaus.setContent(mokkiTaulukko);
+
+        luoMokkinakyma();
 
 
         // Palvelupaneelin luonti ja asetus
@@ -220,26 +213,113 @@ public class Main extends Application {
         aluelista.add(new Alue(2, "Levi"));        //TEMP
 
 
-        int alueLaskuri = 2;
+        int laskuri = 2;
         for (Alue obj : aluelista) {
             Text alueID = new Text(String.valueOf(obj.getAlueID()));
             alueID.setFont(fontti);
             Text alueNimi = new Text(String.valueOf(obj.getAlueenNimi()));
             alueNimi.setFont(fontti);
-            alueTaulukko.add(alueID, 0, alueLaskuri);
+            alueTaulukko.add(alueID, 0, laskuri);
 
             alueID.setTextAlignment(TextAlignment.CENTER);
-            alueTaulukko.add(alueNimi, 1, alueLaskuri);
+            alueTaulukko.add(alueNimi, 1, laskuri);
             //alueNimi.setAlignment(Pos.CENTER);
             alueNimi.setTextAlignment(TextAlignment.CENTER);
 
             Nappula poistoNappula = new Nappula("Poista alue", 150, 30);
-            alueTaulukko.add(poistoNappula, 2, alueLaskuri);
+            alueTaulukko.add(poistoNappula, 2, laskuri);
             poistoNappula.setOnMouseClicked(e -> {
                 // poistaAlue();                          //TODO  poistaAlue() - metodin luominen
             });
 
-            alueLaskuri++;
+            laskuri++;
+        }
+    }
+    
+    public void luoMokkinakyma() {
+        ColumnConstraints kolumniLeveys = new ColumnConstraints();
+        kolumniLeveys.setHalignment(HPos.CENTER);
+        kolumniLeveys.setPrefWidth(200);
+
+        BorderPane mokkipaneeli = new BorderPane();
+        paneeli.setCenter(mokkipaneeli);
+        mokkinappula.setOnMouseClicked(e -> {
+            paneeli.setCenter(mokkipaneeli);
+        });
+
+        GridPane mokkiHaku = new GridPane();
+        mokkiHaku.setPadding(new Insets(50,50,50,0));
+        mokkiHaku.setHgap(200);
+        mokkiHaku.setVgap(15);
+        mokkipaneeli.setTop(mokkiHaku);
+
+        TextField mokkiHakuKentta = new TextField();
+        Label mokkiHakuKenttaLabel = new Label("Hae mökkiä: ", mokkiHakuKentta);
+        mokkiHakuKenttaLabel.setFont(fontti);
+        mokkiHakuKenttaLabel.setContentDisplay(ContentDisplay.RIGHT);
+        mokkiHaku.add(mokkiHakuKenttaLabel, 1, 1);
+        Nappula mokkiHakuNappula = new Nappula("Suorita haku", 190, 30);
+        mokkiHaku.add(mokkiHakuNappula, 1, 2);
+        mokkiHaku.add(new Text("Näytä tulokset järjestyksessä"), 2, 0);
+
+        ToggleGroup toggleMokki = new ToggleGroup();
+
+        RadioButton uusinMokki = new RadioButton("uusin - vanhin");
+        mokkiHaku.add(uusinMokki, 2, 1);
+        uusinMokki.setToggleGroup(toggleMokki);
+
+        RadioButton vanhinMokki = new RadioButton("vanhin - uusin");
+        mokkiHaku.add(vanhinMokki, 2, 2);
+        vanhinMokki.setToggleGroup(toggleMokki);
+
+        RadioButton aakkosMokki = new RadioButton("A - Ö");
+        mokkiHaku.add(aakkosMokki, 2, 3);
+        aakkosMokki.setToggleGroup(toggleMokki);
+
+        ScrollPane mokkiScrollaus = new ScrollPane();
+        mokkipaneeli.setCenter(mokkiScrollaus);
+        GridPane mokkiTaulukko = new GridPane();
+        mokkiTaulukko.setPadding(new Insets(50,50,50,150));
+        mokkiTaulukko.getColumnConstraints().addAll(kolumniLeveys, kolumniLeveys);
+        mokkiTaulukko.setGridLinesVisible(true);
+        mokkiScrollaus.setContent(mokkiTaulukko);
+
+
+        Nappula mokkienLisays = new Nappula("Lisää uusi mökki", 200, 30);
+        mokkiTaulukko.add(mokkienLisays, 1,0);
+
+        Text mokkitunnusOtsikko = new Text("Mökkitunnus");
+        mokkitunnusOtsikko.setFont(fontti);
+        Text mokkiennimiOtsikko = new Text("Mökin nimi");
+        mokkiennimiOtsikko.setFont(fontti);
+        mokkiTaulukko.add(mokkitunnusOtsikko, 0, 1);
+        mokkiTaulukko.add(mokkiennimiOtsikko, 1, 1);
+
+        ArrayList<Mokki> mokkilista = new ArrayList<Mokki>();
+        mokkilista.add(new Mokki(1, "Ylläs"));       //TEMP
+        mokkilista.add(new Mokki(2, "Levi"));        //TEMP
+
+
+        int mokkiLaskuri = 2;
+        for (Mokki obj : mokkilista) {
+            Text mokkiID = new Text(String.valueOf(obj.getMokkiID()));
+            mokkiID.setFont(fontti);
+            Text mokkiNimi = new Text(String.valueOf(obj.getMokkiNimi()));
+            mokkiNimi.setFont(fontti);
+            mokkiTaulukko.add(mokkiID, 0, mokkiLaskuri);
+
+            mokkiID.setTextAlignment(TextAlignment.CENTER);
+            mokkiTaulukko.add(mokkiNimi, 1, mokkiLaskuri);
+            //mokkiNimi.setAlignment(Pos.CENTER);
+            mokkiNimi.setTextAlignment(TextAlignment.CENTER);
+
+            Nappula poistoNappula = new Nappula("Poista mokki", 150, 30);
+            mokkiTaulukko.add(poistoNappula, 2, mokkiLaskuri);
+            poistoNappula.setOnMouseClicked(e -> {
+                // poistamokki();                          //TODO  poistamokki() - metodin luominen
+            });
+
+            mokkiLaskuri++;
         }
     }
 

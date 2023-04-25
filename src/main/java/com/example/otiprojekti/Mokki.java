@@ -25,6 +25,12 @@ public class Mokki {
         this.varustelu=varustelu;
     }
 
+    //TEMP
+    public Mokki(int id, String nimi) {
+        this.mokkiID = id;
+        this.mokkiNimi = nimi;
+    }
+
     //Palauttaa mökin ID:n
     public int getMokkiID() {
         return mokkiID;
