@@ -40,6 +40,8 @@ public class Main extends Application {
 
     public BorderPane paneeli = new BorderPane();
 
+    private final Font fontti = Font.font(16);
+
     @Override
     public void start(Stage ikkuna) {
 
@@ -171,7 +173,7 @@ public class Main extends Application {
 
         TextField alueHakuKentta = new TextField();
         Label alueHakuKenttaLabel = new Label("Hae aluetta: ", alueHakuKentta);
-        alueHakuKenttaLabel.setFont(Font.font(16));
+        alueHakuKenttaLabel.setFont(fontti);
         alueHakuKenttaLabel.setContentDisplay(ContentDisplay.BOTTOM);
         alueHaku.add(alueHakuKenttaLabel, 1, 1);
         Nappula alueHakuNappula = new Nappula("Suorita haku", 190, 30);
@@ -205,9 +207,9 @@ public class Main extends Application {
         alueTaulukko.add(alueenLisays, 1,0);
 
         Text aluetunnusOtsikko = new Text("Aluetunnus");
-        aluetunnusOtsikko.setFont(Font.font(16));
+        aluetunnusOtsikko.setFont(fontti);
         Text alueennimiOtsikko = new Text("Alueen nimi");
-        alueennimiOtsikko.setFont(Font.font(16));
+        alueennimiOtsikko.setFont(fontti);
         alueTaulukko.add(aluetunnusOtsikko, 0, 1);
         alueTaulukko.add(alueennimiOtsikko, 1, 1);
 
@@ -219,9 +221,9 @@ public class Main extends Application {
         int alueLaskuri = 2;
         for (Alue obj : aluelista) {
             Text alueID = new Text(String.valueOf(obj.getAlueID()));
-            alueID.setFont(Font.font(16));
+            alueID.setFont(fontti);
             Text alueNimi = new Text(String.valueOf(obj.getAlueenNimi()));
-            alueNimi.setFont(Font.font(16));
+            alueNimi.setFont(fontti);
             alueTaulukko.add(alueID, 0, alueLaskuri);
 
             alueID.setTextAlignment(TextAlignment.CENTER);
