@@ -12,7 +12,7 @@ https://www.tutorialspoint.com/jdbc/jdbc-create-database.htm
  */
 public class SQL {
     // API:tietokanta://palvelimen_nimi:portin_numero/tietokannan_nimi
-    private static final String DB_URL = "jdbc:mysql://localhost/";
+    private static final String DB_URL = "jdbc:mysql://localhost/"; // TODO loppuun tietokannan nimi jos se tehdään jo etukäteen
     // Käyttäjänimi
     private static final String USER = "root";
     // Salasana
