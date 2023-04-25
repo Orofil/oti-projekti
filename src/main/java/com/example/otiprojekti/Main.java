@@ -4,7 +4,6 @@ import com.example.otiprojekti.nakymat.*;
 import javafx.application.Application;
 import javafx.geometry.HPos;
 import javafx.geometry.Insets;
-import javafx.geometry.Pos;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
@@ -18,8 +17,6 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
-import javafx.scene.paint.Color;
-import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
 
 import java.util.ArrayList;
@@ -46,19 +43,14 @@ public class Main extends Application {
 
     @Override
     public void start(Stage ikkuna) {
-
-
-
+        // Vasen valikko
         VBox painikkeet = new VBox();
-
-        // TODO näiden mittojen pitää mukautua ikkunan kokoon jos se muuttuu näytön koon mukaan
-        Rectangle palkki = new Rectangle(220, 100, Color.BLACK);
-        Rectangle palkki2 = new Rectangle(220, 500, Color.BLACK);
-
-        painikkeet.getChildren().addAll(palkki, aluenappula, mokkinappula, palvelunappula,
-                varausnappula, asiakasnappula, laskunappula, palkki2);
+        painikkeet.setPadding(new Insets(100,0,0,0));
+        painikkeet.getChildren().addAll(aluenappula, mokkinappula, palvelunappula,
+                varausnappula, asiakasnappula, laskunappula);
 
         paneeli.setLeft(painikkeet);
+        paneeli.getLeft().setStyle("-fx-background-color: black");
 
         // TODO tälle "laastariratkaisulle" jokin parempi tapa, kuten erillisessä luokassa oleva julkinen metodi kuvan avaamiseen
         Image ylapalkinkuva;
@@ -160,10 +152,10 @@ public class Main extends Application {
         paneeli.setCenter(aluepaneeli);
         aluenappula.setOnMouseClicked(e -> {
             paneeli.setCenter(aluepaneeli);
-            for (Nappula n : nappulat) {
-                n.deselect();
-            }
-            aluenappula.select();
+//            for (Nappula2 n : nappulat) {
+//                n.deselect();
+//            }
+//            aluenappula.select();
         });
 
         GridPane alueHaku = new GridPane();
@@ -251,10 +243,10 @@ public class Main extends Application {
         paneeli.setCenter(mokkipaneeli);
         mokkinappula.setOnMouseClicked(e -> {
             paneeli.setCenter(mokkipaneeli);
-            for (Nappula n : nappulat) {
-                n.deselect();
-            }
-            mokkinappula.select();
+//            for (Nappula n : nappulat) {
+//                n.deselect();
+//            }
+//            mokkinappula.select();
         });
 
         GridPane mokkiHaku = new GridPane();
@@ -323,7 +315,7 @@ public class Main extends Application {
             //mokkiNimi.setAlignment(Pos.CENTER);
             mokkiNimi.setTextAlignment(TextAlignment.CENTER);
 
-            Nappula poistoNappula = new Nappula("Poista mokki", 150, 30);
+            Nappula poistoNappula = new Nappula("Poista mökki", 150, 30);
             mokkiTaulukko.add(poistoNappula, 2, mokkiLaskuri);
             poistoNappula.setOnMouseClicked(e -> {
                 // poistamokki();                          //TODO  poistamokki() - metodin luominen
