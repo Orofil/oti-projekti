@@ -20,8 +20,8 @@ public class Nappula extends Label {
         setContentDisplay(ContentDisplay.CENTER);
         setTextFill(Color.WHITE);
         setFont(Font.font(18));
-        setOnMouseEntered( e -> nappula.setStroke(Color.WHITE));
-        setOnMouseExited( e -> nappula.setStroke(Color.BLACK));
+        setOnMouseEntered(e -> nappula.setStroke(Color.WHITE));
+        setOnMouseExited(e -> nappula.setStroke(Color.BLACK));
     }
 
     public Nappula(String teksti) {
