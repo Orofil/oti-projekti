@@ -13,6 +13,7 @@ public class Nappula extends Button {
         setContentDisplay(ContentDisplay.CENTER);
         setFont(Font.font(18));
         setTextFill(Color.WHITE);
+        // TODO näille erillinen stylesheet
         setStyle("-fx-background-radius: 0; -fx-background-color: black; -fx-border-color: black");
         setOnMouseEntered(e -> setStyle("-fx-background-radius: 0; -fx-background-color: black; -fx-border-color: white"));
         setOnMouseExited(e -> setStyle("-fx-background-radius: 0; -fx-background-color: black; -fx-border-color: black"));

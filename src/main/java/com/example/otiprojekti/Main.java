@@ -28,14 +28,16 @@ public class Main extends Application {
      */
     private static final String IMGPOLKU = "src/main/resources/com/example/otiprojekti/";
 
-    public Nappula aluenappula = new Nappula("Alueet");
-    public Nappula mokkinappula = new Nappula("Mökit");
-    public Nappula palvelunappula = new Nappula("Palvelut");
-    public Nappula varausnappula = new Nappula("Varaukset");
-    public Nappula asiakasnappula = new Nappula("Asiakkaat");
-    public Nappula laskunappula = new Nappula("Laskut");
-    public Nappula[] nappulat = new Nappula[] {
+    // TODO tehdäänkö näistä private?
+    public ToggleNappula aluenappula = new ToggleNappula("Alueet");
+    public ToggleNappula mokkinappula = new ToggleNappula("Mökit");
+    public ToggleNappula palvelunappula = new ToggleNappula("Palvelut");
+    public ToggleNappula varausnappula = new ToggleNappula("Varaukset");
+    public ToggleNappula asiakasnappula = new ToggleNappula("Asiakkaat");
+    public ToggleNappula laskunappula = new ToggleNappula("Laskut");
+    public ToggleNappula[] nappulat = new ToggleNappula[] {
             aluenappula, mokkinappula, palvelunappula, varausnappula, asiakasnappula, laskunappula};
+    private ToggleGroup tgSivuvalikko = new ToggleGroup();
 
     public BorderPane paneeli = new BorderPane();
 
@@ -44,6 +46,10 @@ public class Main extends Application {
     @Override
     public void start(Stage ikkuna) {
         // Vasen valikko
+        for (ToggleNappula n : nappulat) {
+            n.setToggleGroup(tgSivuvalikko);
+        }
+
         VBox painikkeet = new VBox();
         painikkeet.setPadding(new Insets(100,0,0,0));
         painikkeet.getChildren().addAll(aluenappula, mokkinappula, palvelunappula,
