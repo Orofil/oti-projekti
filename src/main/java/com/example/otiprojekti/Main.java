@@ -37,6 +37,8 @@ public class Main extends Application {
     public Nappula varausnappula = new Nappula("Varaukset");
     public Nappula asiakasnappula = new Nappula("Asiakkaat");
     public Nappula laskunappula = new Nappula("Laskut");
+    public Nappula[] nappulat = new Nappula[] {
+            aluenappula, mokkinappula, palvelunappula, varausnappula, asiakasnappula, laskunappula};
 
     public BorderPane paneeli = new BorderPane();
 
@@ -158,12 +160,10 @@ public class Main extends Application {
         paneeli.setCenter(aluepaneeli);
         aluenappula.setOnMouseClicked(e -> {
             paneeli.setCenter(aluepaneeli);
+            for (Nappula n : nappulat) {
+                n.deselect();
+            }
             aluenappula.select();
-            mokkinappula.deselect();
-            palvelunappula.deselect();
-            varausnappula.deselect();
-            asiakasnappula.deselect();
-            laskunappula.deselect();
         });
 
         GridPane alueHaku = new GridPane();
@@ -251,6 +251,10 @@ public class Main extends Application {
         paneeli.setCenter(mokkipaneeli);
         mokkinappula.setOnMouseClicked(e -> {
             paneeli.setCenter(mokkipaneeli);
+            for (Nappula n : nappulat) {
+                n.deselect();
+            }
+            mokkinappula.select();
         });
 
         GridPane mokkiHaku = new GridPane();

@@ -37,7 +37,7 @@ public class Nappula extends Label {
     }
 
     public void select() {
-        nappula.setFill(Color.GRAY);
+        nappula.setFill(Color.rgb(70,70,70));
     }
 
     public void deselect() {
