@@ -16,7 +16,7 @@ public class SQL {
     // Käyttäjänimi
     private static final String USER = "root";
     // Salasana
-    private static final String PASS = "OLIOLegendaarinenJatk2-3sa"; // TODO salasana pitää lisätä
+    private static final String PASS = ""; // TODO salasana pitää lisätä
 
     private static final String POLKU = "src/main/resources/com/example/otiprojekti/";
 
