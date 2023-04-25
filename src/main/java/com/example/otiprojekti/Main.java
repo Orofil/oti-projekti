@@ -57,19 +57,16 @@ public class Main extends Application {
         paneeli.setLeft(painikkeet);
 
         // TODO tälle "laastariratkaisulle" jokin parempi tapa, kuten erillisessä luokassa oleva julkinen metodi kuvan avaamiseen
+        Image ylapalkinkuva;
         try {
-            Image ylapalkinkuva = new Image(IMGPOLKU + "ylapalkki.png");
-            ImageView ylapalkki = new ImageView(ylapalkinkuva);
-            ylapalkki.setFitWidth(1600); // TODO näiden mittojen pitää mukautua ikkunan kokoon jos se muuttuu näytön koon mukaan
-            ylapalkki.setFitHeight(100);
-            paneeli.setTop(ylapalkki);
+            ylapalkinkuva = new Image(IMGPOLKU + "ylapalkki.png");
         } catch (Exception e) {
-            Image ylapalkinkuva = new Image("ylapalkki.png");
-            ImageView ylapalkki = new ImageView(ylapalkinkuva);
-            ylapalkki.setFitWidth(1600);
-            ylapalkki.setFitHeight(100);
-            paneeli.setTop(ylapalkki);
+            ylapalkinkuva = new Image("ylapalkki.png");
         }
+        ImageView ylapalkki = new ImageView(ylapalkinkuva);
+        ylapalkki.setFitWidth(1600); // TODO näiden mittojen pitää mukautua ikkunan kokoon jos se muuttuu näytön koon mukaan
+        ylapalkki.setFitHeight(100);
+        paneeli.setTop(ylapalkki);
 
 
 
