@@ -158,6 +158,12 @@ public class Main extends Application {
         paneeli.setCenter(aluepaneeli);
         aluenappula.setOnMouseClicked(e -> {
             paneeli.setCenter(aluepaneeli);
+            aluenappula.select();
+            mokkinappula.deselect();
+            palvelunappula.deselect();
+            varausnappula.deselect();
+            asiakasnappula.deselect();
+            laskunappula.deselect();
         });
 
         GridPane alueHaku = new GridPane();
