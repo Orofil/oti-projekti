@@ -25,15 +25,7 @@ public class Nappula extends Label {
     }
 
     public Nappula(String teksti) {
-        nappula = new Rectangle(219, 40, Color.BLACK);
-        nappula.setStroke(Color.BLACK);
-        setText(teksti);
-        setGraphic(nappula);
-        setContentDisplay(ContentDisplay.CENTER);
-        setTextFill(Color.WHITE);
-        setFont(Font.font(18));
-        setOnMouseEntered( e -> nappula.setStroke(Color.WHITE));
-        setOnMouseExited( e -> nappula.setStroke(Color.BLACK));
+        this(teksti, 219, 40);
     }
 
     public void select() {
