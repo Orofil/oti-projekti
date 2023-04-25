@@ -149,6 +149,8 @@ public class Main extends Application {
         double H = boundsSuhdeMin * maxOsuus * suhdeH;
         Scene aluekehys = new Scene(paneeli, W, H);
         ikkuna.setScene(aluekehys);
+        ikkuna.setMaxWidth(1600);
+        ikkuna.setMaxHeight(800);
         ikkuna.show();
     }
 
@@ -174,7 +176,7 @@ public class Main extends Application {
         TextField alueHakuKentta = new TextField();
         Label alueHakuKenttaLabel = new Label("Hae aluetta: ", alueHakuKentta);
         alueHakuKenttaLabel.setFont(fontti);
-        alueHakuKenttaLabel.setContentDisplay(ContentDisplay.BOTTOM);
+        alueHakuKenttaLabel.setContentDisplay(ContentDisplay.RIGHT);
         alueHaku.add(alueHakuKenttaLabel, 1, 1);
         Nappula alueHakuNappula = new Nappula("Suorita haku", 190, 30);
         alueHaku.add(alueHakuNappula, 1, 2);
