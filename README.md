@@ -14,7 +14,7 @@ Savonia AMK:n Ohjelmistotuotanto I -kurssin ohjelmistoprojekti.
 - __Lasku__
 - __Mokki__
 - __Palvelu__
-- __SQL__
+- __Tietokanta__
 - __Varaus__
 
 ### Resurssit
