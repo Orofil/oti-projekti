@@ -53,7 +53,7 @@ INSERT INTO mokki(alue_id, postinro, mokkinimi, katuosoite, hinta, kuvaus, henki
   (1, '83960', 'Kultaloma', 'Kultahietikko-katu 2', 215, 'Viihtyisä, juuri valmistunut mökki upealla paikalla', 6, 'Kiitettävä'),
   (3, '93830', 'Villa Valkea', 'Lomaharjuntie 10', 400, 'Luksustason mökki kaikilla varusteilla', 10, 'Erinomainen'),
   (5, '98530', 'Ukko-Paavon pirtti', 'Ukontie 4D', 199, 'Perinteinen kelohirsimökki', 4, 'Hyvä'),
-  (7, '99130', 'Villa Marina B', 'Saunakuja 7B', 220, 'Järven äärellä josta pääset yksityisesti nauttimaan', 2, 'Hyvä),
+  (7, '99130', 'Villa Marina B', 'Saunakuja 7B', 220, 'Järven äärellä josta pääset yksityisesti nauttimaan', 2, 'Hyvä'),
   (8, '89920', 'Rentoloma', 'Järvenrantatie 5A', 220, 'Rentouttava sohva jossa nautit lomasta', 2, 'Hyvä'),
   (4, '95980', 'Hovilantie 9A', 'Hovilantie 9A', 300, 'Upea mökki viimeisen päälle sijainnilla', 3, 'Kiitettävä'),
   (6, '88610', 'Villa Järvenraito', 'Pihkapolku 10', 350.99, 'Sisältää kaikki pelit ja pensselit', 5, 'Kiitettävä'),
