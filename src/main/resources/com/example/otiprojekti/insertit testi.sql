@@ -49,11 +49,12 @@ INSERT INTO palvelu(alue_id, nimi, tyyppi, kuvaus, hinta, alv) VALUES
   (7, '', 4, '', 34.20, 10),
   (5, '', 2, '', 10, 10);
 
+-- TODO pitäisiköhän varustelussa kuitenkin lukea, mitä mökkiin kuuluu, kuten sauna, jotain keittiöjuttuja yms.
 INSERT INTO mokki(alue_id, postinro, mokkinimi, katuosoite, hinta, kuvaus, henkilomaara, varustelu) VALUES
   (1, '83960', 'Kultaloma', 'Kultahietikko-katu 2', 215, 'Viihtyisä, juuri valmistunut mökki upealla paikalla', 6, 'Kiitettävä'),
   (3, '93830', 'Villa Valkea', 'Lomaharjuntie 10', 400, 'Luksustason mökki kaikilla varusteilla', 10, 'Erinomainen'),
   (5, '98530', 'Ukko-Paavon pirtti', 'Ukontie 4D', 199, 'Perinteinen kelohirsimökki', 4, 'Hyvä'),
-  (7, '99130', 'Villa Marina B', 'Saunakuja 7B', 220, 'Järven äärellä josta pääset yksityisesti nauttimaan', 2, 'Hyvä),
+  (7, '99130', 'Villa Marina B', 'Saunakuja 7B', 220, 'Järven äärellä josta pääset yksityisesti nauttimaan', 2, 'Hyvä'),
   (8, '89920', 'Rentoloma', 'Järvenrantatie 5A', 220, 'Rentouttava sohva jossa nautit lomasta', 2, 'Hyvä'),
   (4, '95980', 'Hovilantie 9A', 'Hovilantie 9A', 300, 'Upea mökki viimeisen päälle sijainnilla', 3, 'Kiitettävä'),
   (6, '88610', 'Villa Järvenraito', 'Pihkapolku 10', 350.99, 'Sisältää kaikki pelit ja pensselit', 5, 'Kiitettävä'),
@@ -62,7 +63,7 @@ INSERT INTO mokki(alue_id, postinro, mokkinimi, katuosoite, hinta, kuvaus, henki
   (2, '73310', 'Talvipirtti', 'Järvenrantatie 22D', 219, 'Hyvin varusteltu talviharrastukseen', 2, 'Kiitettävä');
 
 -- TODO päivämäärät, osa vahvistuspäivämääristä on tarkoituksella tyhjiä, sellaisia voi tehdä enemmänkin maksumuistutuksen testausta varten
-INSERT INTO varaus(asiakas_id, mokki_mokki_id, varattu_pvm, vahvistus_pvm, varattu_alkupvm, varattu_loppupvm) VALUES
+INSERT INTO varaus(asiakas_id, mokki_id, varattu_pvm, vahvistus_pvm, varattu_alkupvm, varattu_loppupvm) VALUES
   (1, 4, '2023-04-30 17:20:01', '2023-- ::', '2023-- ::', '2023-- ::'),
   (2, 7, '2023-04-15 20:20:20', '2023-- ::', '2023-- ::', '2023-- ::'),
   (3, 2, '2023-04-26 14:52:53', '', '2023-- ::', '2023-- ::'),

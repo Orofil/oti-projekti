@@ -97,8 +97,14 @@ public class Tietokanta {
     public void insertAsiakas(String postinro, String etunimi, String sukunimi,
                                      String lahiosoite, String email, String puhelinnro) throws SQLException {
         stm = con.prepareStatement( // TODO missä exceptionit käsitellään
-                "INSERT INTO asiakas(postinro,etunimi,sukunimi,lahiosoite,email,puhelinnro) VALUES",
-                new String[] {postinro, etunimi, sukunimi, lahiosoite, email, puhelinnro});
+                "INSERT INTO asiakas(postinro,etunimi,sukunimi,lahiosoite,email,puhelinnro)" +
+                "VALUES (?,?,?,?,?,?)");
+        stm.setString(1, postinro);
+        stm.setString(2, etunimi);
+        stm.setString(3, sukunimi);
+        stm.setString(4, lahiosoite);
+        stm.setString(5, email);
+        stm.setString(6, puhelinnro);
         stm.executeUpdate();
     }
 
@@ -115,8 +121,9 @@ public class Tietokanta {
      */
     public void insertMokki(int alue_id, String postinro, String mokkinimi, String katuosoite,
                                    BigDecimal hinta, String kuvaus, int henkilomaara, String varustelu) throws SQLException {
-        PreparedStatement stm = con.prepareStatement( // TODO missä exceptionit käsitellään
-                "INSERT INTO mokki(alue_id,postinro,mokkinimi,katuosoite,hinta,kuvaus,henkilomaara,varustelu) VALUES");
+        stm = con.prepareStatement( // TODO missä exceptionit käsitellään
+                "INSERT INTO mokki(alue_id,postinro,mokkinimi,katuosoite,hinta,kuvaus,henkilomaara,varustelu)" +
+                "VALUES (?,?,?,?,?,?,?,?)");
         stm.setInt(1, alue_id);
         stm.setString(2, postinro);
         stm.setString(3, mokkinimi);
@@ -139,8 +146,9 @@ public class Tietokanta {
      */
     public void insertVaraus(int asiakas_id, int mokki_id, String varattu_pvm,
                                     String vahvistus_pvm, String varattu_alkupvm, String varattu_loppupvm) throws SQLException {
-        PreparedStatement stm = con.prepareStatement( // TODO missä exceptionit käsitellään
-                "INSERT INTO varaus(asiakas_id,mokki_mokki_id,varattu_pvm,vahvistus_pvm,varattu_alkupvm,varattu_loppupvm) VALUES");
+        stm = con.prepareStatement( // TODO missä exceptionit käsitellään
+                "INSERT INTO varaus(asiakas_id,mokki_id,varattu_pvm,vahvistus_pvm,varattu_alkupvm,varattu_loppupvm) " +
+                "VALUES (?,?,?,?,?,?)");
         stm.setInt(1, asiakas_id);
         stm.setInt(2, mokki_id);
         stm.setString(3, varattu_pvm);
@@ -161,8 +169,9 @@ public class Tietokanta {
      */
     public void insertPalvelu(int alue_id, String nimi, int tyyppi, String kuvaus,
                               BigDecimal hinta, BigDecimal alv) throws SQLException {
-        PreparedStatement stm = con.prepareStatement( // TODO missä exceptionit käsitellään
-                "INSERT INTO palvelu(palvelu_id,alue_id,nimi,tyyppi,kuvaus,hinta,alv) VALUES");
+        stm = con.prepareStatement( // TODO missä exceptionit käsitellään
+                "INSERT INTO palvelu(palvelu_id,alue_id,nimi,tyyppi,kuvaus,hinta,alv)" +
+                "VALUES (?,?,?,?,?,?,?)");
         stm.setInt(1, alue_id);
         stm.setString(2, nimi);
         stm.setInt(3, tyyppi);
@@ -170,5 +179,25 @@ public class Tietokanta {
         stm.setBigDecimal(5, hinta);
         stm.setBigDecimal(6, alv);
         stm.executeUpdate();
+    }
+
+    /**
+     * Syöttää tietokantaan alueen.
+     * @param nimi Tyyppiä varchar(40).
+     */
+    public void insertAlue(String nimi) throws SQLException {
+        stm = con.prepareStatement( // TODO missä exceptionit käsitellään
+                "INSERT INTO alue(nimi) " +
+                "VALUES (?)");
+        stm.setString(1, nimi);
+        stm.executeUpdate();
+    }
+
+    public void insertPosti(String postinro, String toimipaikka) throws SQLException {
+        stm = con.prepareStatement( // TODO missä exceptionit käsitellään
+                "INSERT INTO posti(postinro, toimipaikka) " +
+                "VALUES (?,?)");
+        stm.setString(1, postinro);
+        stm.setString(2, toimipaikka);
     }
 }
