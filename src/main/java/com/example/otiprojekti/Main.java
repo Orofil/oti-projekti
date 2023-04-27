@@ -7,16 +7,15 @@ import javafx.geometry.Insets;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
-import javafx.scene.layout.ColumnConstraints;
+import javafx.scene.layout.*;
+import javafx.scene.paint.Color;
+import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextAlignment;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.GridPane;
-import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
 
 import java.time.LocalDateTime;
@@ -44,6 +43,8 @@ public class Main extends Application {
 
     private final Font fontti = Font.font(16);
 
+    Text isoOtsikkoTeksti = new Text("ALUEET");
+
     @Override
     public void start(Stage ikkuna) {
         // Vasen valikko
@@ -69,7 +70,18 @@ public class Main extends Application {
         ImageView ylapalkki = new ImageView(ylapalkinkuva);
         ylapalkki.setFitWidth(1600); // TODO näiden mittojen pitää mukautua ikkunan kokoon jos se muuttuu näytön koon mukaan
         ylapalkki.setFitHeight(100);
-        paneeli.setTop(ylapalkki);
+        Pane ylapalkkipaneeli = new Pane();
+        ylapalkkipaneeli.getChildren().add(ylapalkki);
+
+        paneeli.setTop(ylapalkkipaneeli);
+
+        isoOtsikkoTeksti.setFont(Font.font("Tahoma", FontWeight.BOLD, 24));
+        isoOtsikkoTeksti.setFill(Color.DARKGREEN);
+
+        ylapalkkipaneeli.getChildren().add(isoOtsikkoTeksti);
+        isoOtsikkoTeksti.setX(318);
+        isoOtsikkoTeksti.setY(85);
+
 
 
 
@@ -143,6 +155,7 @@ public class Main extends Application {
         paneeli.setCenter(aluepaneeli);
         aluenappula.setOnMouseClicked(e -> {
             paneeli.setCenter(aluepaneeli);
+            isoOtsikkoTeksti.setText("ALUEET");
 //            for (Nappula2 n : nappulat) {
 //                n.deselect();
 //            }
@@ -239,9 +252,10 @@ public class Main extends Application {
         lyhyt.setPrefWidth(80);
 
         BorderPane mokkipaneeli = new BorderPane();
-        paneeli.setCenter(mokkipaneeli);
+        //paneeli.setCenter(mokkipaneeli);
         mokkinappula.setOnMouseClicked(e -> {
             paneeli.setCenter(mokkipaneeli);
+            isoOtsikkoTeksti.setText("MÖKIT");
 //            for (Nappula n : nappulat) {
 //                n.deselect();
 //            }
@@ -380,9 +394,10 @@ public class Main extends Application {
         lyhyt.setPrefWidth(80);
 
         BorderPane palvelupaneeli = new BorderPane();
-        paneeli.setCenter(palvelupaneeli);
+        //paneeli.setCenter(palvelupaneeli);
         palvelunappula.setOnMouseClicked(e -> {
             paneeli.setCenter(palvelupaneeli);
+            isoOtsikkoTeksti.setText("PALVELUT");
 //            for (Nappula n : nappulat) {
 //                n.deselect();
 //            }
@@ -512,9 +527,10 @@ public class Main extends Application {
         lyhyt.setPrefWidth(80);
 
         BorderPane varauspaneeli = new BorderPane();
-        paneeli.setCenter(varauspaneeli);
+        //paneeli.setCenter(varauspaneeli);
         varausnappula.setOnMouseClicked(e -> {
             paneeli.setCenter(varauspaneeli);
+            isoOtsikkoTeksti.setText("VARAUKSET");
 //            for (Nappula n : nappulat) {
 //                n.deselect();
 //            }
@@ -638,6 +654,12 @@ public class Main extends Application {
     public void luoAsiakasnakyma() {
 
     }
+
+    public void luoLaskunakyma() {
+
+    }
+
+
 
     public static void main(String[] args) {
         launch();
