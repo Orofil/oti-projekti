@@ -9,6 +9,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
+import javafx.scene.shape.Rectangle;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextAlignment;
@@ -61,18 +62,23 @@ public class Main extends Application {
         paneeli.getLeft().setStyle("-fx-background-color: black");
 
         // TODO tälle "laastariratkaisulle" jokin parempi tapa, kuten erillisessä luokassa oleva julkinen metodi kuvan avaamiseen
-        Image ylapalkinkuva;
+        Image logonkuva;
         try {
-            ylapalkinkuva = new Image(IMGPOLKU + "ylapalkki.png");
+            logonkuva = new Image(IMGPOLKU + "vnlogo.png");
         } catch (Exception e) {
-            ylapalkinkuva = new Image("ylapalkki.png");
+            logonkuva = new Image("vnlogo.png");
         }
-        ImageView ylapalkki = new ImageView(ylapalkinkuva);
-        ylapalkki.setFitWidth(1600); // TODO näiden mittojen pitää mukautua ikkunan kokoon jos se muuttuu näytön koon mukaan
-        ylapalkki.setFitHeight(100);
-        Pane ylapalkkipaneeli = new Pane();
-        ylapalkkipaneeli.getChildren().add(ylapalkki);
+        ImageView logo = new ImageView(logonkuva);
+        logo.setFitWidth(75);
+        logo.setFitHeight(75);
 
+        Pane ylapalkkipaneeli = new Pane();
+        ylapalkkipaneeli.getChildren().add(logo);
+        ylapalkkipaneeli.setBackground
+                (new Background(new BackgroundFill(Color.DARKSEAGREEN, null, null)));
+        logo.setX(73);
+        logo.setY(22);
+        ylapalkkipaneeli.setMinHeight(110);
         paneeli.setTop(ylapalkkipaneeli);
 
         isoOtsikkoTeksti.setFont(Font.font("Tahoma", FontWeight.BOLD, 24));
@@ -106,15 +112,7 @@ public class Main extends Application {
         luoAsiakasnakyma();
 
         // Laskupaneelin luonti ja asetus
-        Laskunakyma laskupaneeli = new Laskunakyma();
-        laskunappula.setOnMouseClicked(e -> {
-            paneeli.setCenter(laskupaneeli);
-        });
-        ScrollPane laskuScrollaus = new ScrollPane();
-        laskupaneeli.setCenter(laskuScrollaus);
-        GridPane laskuTaulukko = new GridPane();
-        laskuTaulukko.setGridLinesVisible(true);
-        laskuScrollaus.setContent(laskuTaulukko);
+        luoLaskunakyma();
 
 
         // Lasketaan koko ikkunalle
@@ -773,7 +771,139 @@ public class Main extends Application {
     }
 
     public void luoLaskunakyma() {
+        ColumnConstraints kolumniLeveys = new ColumnConstraints();
+        kolumniLeveys.setHalignment(HPos.CENTER);
+        kolumniLeveys.setPrefWidth(200);
 
+        ColumnConstraints semi = new ColumnConstraints();
+        semi.setHalignment(HPos.CENTER);
+        semi.setPrefWidth(140);
+
+        ColumnConstraints lyhyt = new ColumnConstraints();
+        lyhyt.setHalignment(HPos.CENTER);
+        lyhyt.setPrefWidth(80);
+
+        BorderPane laskupaneeli = new BorderPane();
+        //paneeli.setCenter(laskupaneeli);
+        laskunappula.setOnMouseClicked(e -> {
+            paneeli.setCenter(laskupaneeli);
+            isoOtsikkoTeksti.setText("LASKUT");
+//            for (Nappula n : nappulat) {
+//                n.deselect();
+//            }
+//            laskunappula.select();
+        });
+
+        GridPane laskuHaku = new GridPane();
+        laskuHaku.setPadding(new Insets(50,50,50,0));
+        laskuHaku.setHgap(100);
+        laskuHaku.setVgap(15);
+        laskupaneeli.setTop(laskuHaku);
+
+        TextField laskuHakuKentta = new TextField();
+        Label laskuHakuKenttaLabel = new Label("Hae laskuja: ", laskuHakuKentta);
+        laskuHakuKenttaLabel.setFont(fontti);
+        laskuHakuKenttaLabel.setContentDisplay(ContentDisplay.RIGHT);
+        laskuHaku.add(laskuHakuKenttaLabel, 1, 1);
+        Nappula laskuHakuNappula = new Nappula("Suorita haku", 190, 30);
+        laskuHaku.add(laskuHakuNappula, 1, 2);
+        laskuHaku.add(new Text("Näytä tulokset järjestyksessä"), 2, 0);
+
+        ToggleGroup togglelasku = new ToggleGroup();
+
+        RadioButton uusinlasku = new RadioButton("uusin - vanhin");
+        laskuHaku.add(uusinlasku, 2, 1);
+        uusinlasku.setToggleGroup(togglelasku);
+
+        RadioButton vanhinlasku = new RadioButton("vanhin - uusin");
+        laskuHaku.add(vanhinlasku, 2, 2);
+        vanhinlasku.setToggleGroup(togglelasku);
+
+        RadioButton aakkoslasku = new RadioButton("varaustunnuksen mukaan");
+        laskuHaku.add(aakkoslasku, 2, 3);
+        aakkoslasku.setToggleGroup(togglelasku);
+
+
+        ScrollPane laskuScrollaus = new ScrollPane();
+        laskupaneeli.setCenter(laskuScrollaus);
+        GridPane laskuTaulukko = new GridPane();
+        laskuTaulukko.setPadding(new Insets(20,20,20,20));
+        laskuTaulukko.getColumnConstraints().addAll(lyhyt, kolumniLeveys, lyhyt, semi, lyhyt);
+        laskuTaulukko.setGridLinesVisible(true);
+        laskuScrollaus.setContent(laskuTaulukko);
+
+
+        Nappula laskunLisays = new Nappula("Lisää uusi lasku", 200, 30);
+        laskuTaulukko.add(laskunLisays, 1,0);
+
+        Text laskutunnusOtsikko = new Text("Laskunro.");
+        laskutunnusOtsikko.setFont(fontti);
+        Text laskuVarausOtsikko = new Text("Varaus");
+        laskuVarausOtsikko.setFont(fontti);
+        Text laskuSummaOtsikko = new Text("Summa");
+        laskuSummaOtsikko.setFont(fontti);
+        Text laskuStatusOtsikko = new Text("Status");
+        laskuStatusOtsikko.setFont(fontti);
+
+
+        laskuTaulukko.add(laskutunnusOtsikko, 0, 1);
+        laskuTaulukko.add(laskuVarausOtsikko, 1, 1);
+        laskuTaulukko.add(laskuSummaOtsikko, 2, 1);
+        laskuTaulukko.add(laskuStatusOtsikko, 3, 1);
+
+        ArrayList<Lasku> laskulista = new ArrayList<Lasku>();
+        laskulista.add(new Lasku(
+                24, 345, 240, 14,
+                "Maksettu"));
+        laskulista.add(new Lasku(
+                25, 346, 380, 14,
+                "Maksamatta"));     //TEMP
+
+
+        int laskuLaskuri = 2;
+        for (Lasku obj : laskulista) {
+            Text laskuID = new Text(String.valueOf(obj.getLaskuID()));
+            laskuID.setFont(fontti);
+            Text laskuVaraus = new Text(String.valueOf(obj.getVarausID()));
+            laskuVaraus.setFont(fontti);
+            Text laskuSumma = new Text(String.valueOf(obj.getLaskunSumma()));
+            laskuSumma.setFont(fontti);
+            Text laskuStatus = new Text(String.valueOf(obj.getLaskunStatus()));
+            laskuStatus.setFont(fontti);
+
+
+            laskuTaulukko.add(laskuID, 0, laskuLaskuri);
+            laskuTaulukko.add(laskuVaraus, 1, laskuLaskuri);
+            laskuTaulukko.add(laskuSumma, 2, laskuLaskuri);
+            laskuTaulukko.add(laskuStatus, 3, laskuLaskuri);
+
+
+            Nappula poistoNappula = new Nappula("Poista", 200, 30);
+            laskuTaulukko.add(poistoNappula, 4, laskuLaskuri);
+            poistoNappula.setOnMouseClicked(e -> {
+                // poistalasku();                          //TODO  poistalasku() - metodin luominen
+            });
+
+            Nappula muokkausNappula = new Nappula("Muokkaa", 100, 30);
+            laskuTaulukko.add(muokkausNappula, 5, laskuLaskuri);
+            muokkausNappula.setOnMouseClicked(e -> {
+                // muokkaaLasku();                          //TODO  muokkaamokki() - metodin luominen
+            });
+
+            Nappula tarkasteleNappula = new Nappula("Tarkastele tietoja", 160, 30);
+            laskuTaulukko.add(tarkasteleNappula, 6, laskuLaskuri);
+            tarkasteleNappula.setOnMouseClicked(e -> {
+                // tarkasteleLasku();                          //TODO  tarkasteleMokkia() - metodin luominen
+            });
+
+            Nappula luoLaskuNappula = new Nappula("Vie tiedostoksi", 170, 30);
+            laskuTaulukko.add(luoLaskuNappula, 7, laskuLaskuri);
+            luoLaskuNappula.setOnMouseClicked(e -> {
+                // luoLasku();                          //TODO  tarkasteleMokkia() - metodin luominen
+            });
+
+            laskuLaskuri++;
+        }
     }
 
 

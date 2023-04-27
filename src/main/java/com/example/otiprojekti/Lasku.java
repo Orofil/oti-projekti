@@ -12,7 +12,13 @@ public class Lasku {
     private String laskunStatus;
 
     //alustaja
-    public Lasku(int laskuID, int varausID, double laskunSumma, double laskuAlv, String laskunStatus) {}
+    public Lasku(int laskuID, int varausID, double laskunSumma, double laskuAlv, String laskunStatus) {
+        this.laskuID = laskuID;
+        this.varausID = varausID;
+        this.laskunSumma = laskunSumma;
+        this.laskuAlv = laskuAlv;
+        this.laskunStatus = laskunStatus;
+    }
 
     public int getLaskuID() {
         return laskuID;
