@@ -41,7 +41,8 @@ public class Alue {
 
     @Override
     public String toString() {
-        return super.toString();
+        String str = "Alueen ID on " + alueID + "\n Alueen nimi on " + alueenNimi;
+        return str;
     }
 
 
