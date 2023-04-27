@@ -87,7 +87,7 @@ public class Tietokanta {
 
     /**
      * Syöttää tietokantaan asiakkaan.
-     * @param postinro Tyyppiä char(5). Oltava taulukossa posti.
+     * @param postinro Tyyppiä char(5). Oltava taulussa posti.
      * @param etunimi Tyyppiä varchar(20).
      * @param sukunimi Tyyppiä varchar(40).
      * @param lahiosoite Tyyppiä varchar(40).
@@ -104,8 +104,8 @@ public class Tietokanta {
 
     /**
      * Syöttää tietokantaan mökin.
-     * @param alue_id Tyyppiä int. Oltava taulukossa alue.
-     * @param postinro Tyyppiä char(5). Oltava taulukossa posti.
+     * @param alue_id Tyyppiä int. Oltava taulussa alue.
+     * @param postinro Tyyppiä char(5). Oltava taulussa posti.
      * @param mokkinimi Tyyppiä varchar(45).
      * @param katuosoite Tyyppiä varchar(45).
      * @param hinta Tyyppiä double(8,2).
@@ -147,6 +147,28 @@ public class Tietokanta {
         stm.setString(4, vahvistus_pvm);
         stm.setString(5, varattu_alkupvm);
         stm.setString(6, varattu_loppupvm);
+        stm.executeUpdate();
+    }
+
+    /**
+     * Syöttää tietokantaan palvelun.
+     * @param alue_id Tyyppiä int. Oltava taulussa alue.
+     * @param nimi Tyyppiä varchar(40).
+     * @param tyyppi Tyyppiä int.
+     * @param kuvaus Tyyppiä varchar(255).
+     * @param hinta Tyyppiä double(8,2).
+     * @param alv Tyyppiä int.
+     */
+    public void insertPalvelu(int alue_id, String nimi, int tyyppi, String kuvaus,
+                              BigDecimal hinta, BigDecimal alv) throws SQLException {
+        PreparedStatement stm = con.prepareStatement( // TODO missä exceptionit käsitellään
+                "INSERT INTO palvelu(palvelu_id,alue_id,nimi,tyyppi,kuvaus,hinta,alv) VALUES");
+        stm.setInt(1, alue_id);
+        stm.setString(2, nimi);
+        stm.setInt(3, tyyppi);
+        stm.setString(4, kuvaus);
+        stm.setBigDecimal(5, hinta);
+        stm.setBigDecimal(6, alv);
         stm.executeUpdate();
     }
 }
