@@ -19,6 +19,7 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 
 
@@ -87,15 +88,7 @@ public class Main extends Application {
 
 
         // Varauspaneelin luonti ja asetus
-        Varausnakyma varauspaneeli = new Varausnakyma();
-        varausnappula.setOnMouseClicked(e -> {
-            paneeli.setCenter(varauspaneeli);
-        });
-        ScrollPane varausScrollaus = new ScrollPane();
-        varauspaneeli.setCenter(varausScrollaus);
-        GridPane varausTaulukko = new GridPane();
-        varausTaulukko.setGridLinesVisible(true);
-        varausScrollaus.setContent(varausTaulukko);
+        luoVarausnakyma();
 
         // Asiakaspaneelin luonti ja asetus
         Asiakasnakyma asiakaspaneeli = new Asiakasnakyma();
@@ -114,10 +107,10 @@ public class Main extends Application {
             paneeli.setCenter(laskupaneeli);
         });
         ScrollPane laskuScrollaus = new ScrollPane();
-        varauspaneeli.setCenter(laskuScrollaus);
+        laskupaneeli.setCenter(laskuScrollaus);
         GridPane laskuTaulukko = new GridPane();
         laskuTaulukko.setGridLinesVisible(true);
-        varausScrollaus.setContent(laskuTaulukko);
+        laskuScrollaus.setContent(laskuTaulukko);
 
 
         // Lasketaan koko ikkunalle
@@ -506,6 +499,143 @@ public class Main extends Application {
     }
 
     public void luoVarausnakyma() {
+        ColumnConstraints kolumniLeveys = new ColumnConstraints();
+        kolumniLeveys.setHalignment(HPos.CENTER);
+        kolumniLeveys.setPrefWidth(200);
+
+        ColumnConstraints semi = new ColumnConstraints();
+        semi.setHalignment(HPos.CENTER);
+        semi.setPrefWidth(120);
+
+        ColumnConstraints lyhyt = new ColumnConstraints();
+        lyhyt.setHalignment(HPos.CENTER);
+        lyhyt.setPrefWidth(80);
+
+        BorderPane varauspaneeli = new BorderPane();
+        paneeli.setCenter(varauspaneeli);
+        varausnappula.setOnMouseClicked(e -> {
+            paneeli.setCenter(varauspaneeli);
+//            for (Nappula n : nappulat) {
+//                n.deselect();
+//            }
+//            varausnappula.select();
+        });
+
+        GridPane varausHaku = new GridPane();
+        varausHaku.setPadding(new Insets(50,50,50,0));
+        varausHaku.setHgap(100);
+        varausHaku.setVgap(15);
+        varauspaneeli.setTop(varausHaku);
+
+        TextField varausHakuKentta = new TextField();
+        Label varausHakuKenttaLabel = new Label("Hae varausta: ", varausHakuKentta);
+        varausHakuKenttaLabel.setFont(fontti);
+        varausHakuKenttaLabel.setContentDisplay(ContentDisplay.RIGHT);
+        varausHaku.add(varausHakuKenttaLabel, 1, 1);
+        Nappula varausHakuNappula = new Nappula("Suorita haku", 190, 30);
+        varausHaku.add(varausHakuNappula, 1, 2);
+        varausHaku.add(new Text("Näytä tulokset järjestyksessä"), 2, 0);
+
+        ToggleGroup togglevaraus = new ToggleGroup();
+
+        RadioButton uusinvaraus = new RadioButton("uusin - vanhin");
+        varausHaku.add(uusinvaraus, 2, 1);
+        uusinvaraus.setToggleGroup(togglevaraus);
+
+        RadioButton vanhinvaraus = new RadioButton("vanhin - uusin");
+        varausHaku.add(vanhinvaraus, 2, 2);
+        vanhinvaraus.setToggleGroup(togglevaraus);
+
+        RadioButton aakkosvaraus = new RadioButton("A - Ö");
+        varausHaku.add(aakkosvaraus, 3, 1);
+        aakkosvaraus.setToggleGroup(togglevaraus);
+
+        RadioButton alueittainvaraus = new RadioButton("alueittain");
+        varausHaku.add(alueittainvaraus, 3, 2);
+        aakkosvaraus.setToggleGroup(togglevaraus);
+
+        ScrollPane varausScrollaus = new ScrollPane();
+        varauspaneeli.setCenter(varausScrollaus);
+        GridPane varausTaulukko = new GridPane();
+        varausTaulukko.setPadding(new Insets(20,20,20,20));
+        varausTaulukko.getColumnConstraints().addAll(semi, kolumniLeveys, lyhyt, kolumniLeveys);
+        varausTaulukko.setGridLinesVisible(true);
+        varausScrollaus.setContent(varausTaulukko);
+
+
+        Nappula varausnLisays = new Nappula("Lisää uusi varaus", 200, 30);
+        varausTaulukko.add(varausnLisays, 1,0);
+
+        Text varaustunnusOtsikko = new Text("Varaustunnus");
+        varaustunnusOtsikko.setFont(fontti);
+        Text varausAsiakasOtsikko = new Text("Asiakas");
+        varausAsiakasOtsikko.setFont(fontti);
+        Text varausAlueOtsikko = new Text("Alue");
+        varausAlueOtsikko.setFont(fontti);
+        Text varausSummaOtsikko = new Text("Summa");
+        varausSummaOtsikko.setFont(fontti);
+        Text varausMokkiOtsikko = new Text("Mökki");
+        varausMokkiOtsikko.setFont(fontti);
+        Text varausPalvelutOtsikko = new Text("Palvelut");
+        varausPalvelutOtsikko.setFont(fontti);
+
+        varausTaulukko.add(varaustunnusOtsikko, 0, 1);
+        varausTaulukko.add(varausAsiakasOtsikko, 1, 1);
+        varausTaulukko.add(varausMokkiOtsikko, 2, 1);
+
+        ArrayList<Varaus> varauslista = new ArrayList<Varaus>();
+        varauslista.add(new Varaus(123, 122, 234,
+                LocalDateTime.of(2022, 9, 30, 12, 50),
+                LocalDateTime.of(2022, 9, 30, 12, 52 ),
+                LocalDateTime.of(2022, 10, 8, 15, 30),
+                LocalDateTime.of(2022, 10, 10, 12, 0 )));
+        varauslista.add(new Varaus(13, 12, 24,
+                LocalDateTime.of(2023, 1, 15, 13, 50),
+                LocalDateTime.of(2023, 1, 15, 14, 52 ),
+                LocalDateTime.of(2023, 3, 6, 15, 30),
+                LocalDateTime.of(2023, 3, 12, 12, 0 )));        //TEMP
+
+
+        int varausLaskuri = 2;
+        for (Varaus obj : varauslista) {
+            Text varausID = new Text(String.valueOf(obj.getVarausID()));
+            varausID.setFont(fontti);
+            Text varausNimi = new Text(String.valueOf(obj.getAsiakasID()));
+            varausNimi.setFont(fontti);
+            Text varausMokki = new Text(String.valueOf(obj.getMokkiID()));
+            varausMokki.setFont(fontti);
+
+
+            varausID.setTextAlignment(TextAlignment.CENTER);
+            varausTaulukko.add(varausID, 0, varausLaskuri);
+            varausTaulukko.add(varausNimi, 1, varausLaskuri);
+            varausTaulukko.add(varausMokki, 2, varausLaskuri);
+
+            //varausNimi.setAlignment(Pos.CENTER);
+            varausNimi.setTextAlignment(TextAlignment.CENTER);
+
+            Nappula poistoNappula = new Nappula("Poista varaus", 200, 30);
+            varausTaulukko.add(poistoNappula, 3, varausLaskuri);
+            poistoNappula.setOnMouseClicked(e -> {
+                // poistavaraus();                          //TODO  poistavaraus() - metodin luominen
+            });
+
+            Nappula muokkausNappula = new Nappula("Muokkaa", 120, 30);
+            varausTaulukko.add(muokkausNappula, 4, varausLaskuri);
+            muokkausNappula.setOnMouseClicked(e -> {
+                // muokkaaMokki();                          //TODO  muokkaamokki() - metodin luominen
+            });
+            Nappula tarkasteleNappula = new Nappula("Tarkastele tietoja", 170, 30);
+            varausTaulukko.add(tarkasteleNappula, 5, varausLaskuri);
+            tarkasteleNappula.setOnMouseClicked(e -> {
+                // tarkasteleMokkia();                          //TODO  tarkasteleMokkia() - metodin luominen
+            });
+
+            varausLaskuri++;
+        }
+    }
+
+    public void luoAsiakasnakyma() {
 
     }
 
