@@ -9,6 +9,11 @@ public class Alue {
     //alustaja
     public Alue(int alueID, String alueenNimi) {}
 
+    public Alue(int id, String nimi) { // TEMP
+        this.alueID = id;
+        this.alueenNimi = nimi;
+    }
+
     public int getAlueID() {
         return alueID;
     }

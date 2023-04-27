@@ -1,4 +1,4 @@
-package com.example.otiprojekti;
+package testit;
 
 import javafx.application.Application;
 import javafx.geometry.Rectangle2D;
@@ -7,7 +7,7 @@ import javafx.stage.Stage;
 
 public class resoluutiotesti extends Application {
     @Override
-    public void start(Stage stage) throws Exception {
+    public void start(Stage stage) {
         Rectangle2D bounds = Screen.getPrimary().getVisualBounds();
         System.out.println("Näytön koko on " + bounds.getWidth() + " x " + bounds.getHeight());
     }

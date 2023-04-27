@@ -25,6 +25,7 @@ public class Mokki {
         this.varustelu=varustelu;
     }
 
+
     //Palauttaa mökin ID:n
     public int getMokkiID() {
         return mokkiID;

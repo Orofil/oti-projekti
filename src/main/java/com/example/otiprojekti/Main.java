@@ -1,156 +1,469 @@
 package com.example.otiprojekti;
 
+import com.example.otiprojekti.nakymat.*;
 import javafx.application.Application;
+import javafx.geometry.HPos;
+import javafx.geometry.Insets;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.Scene;
+import javafx.scene.control.*;
+import javafx.scene.layout.ColumnConstraints;
+import javafx.scene.text.Text;
+import javafx.scene.text.TextAlignment;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
-import javafx.scene.control.ContentDisplay;
-import javafx.scene.control.Label;
-import javafx.scene.control.ScrollPane;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
-import javafx.scene.paint.Color;
-import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
+
+import java.util.ArrayList;
 
 
 public class Main extends Application {
+    /**
+     * Polku projektin resurssikansioon.
+     */
     private static final String IMGPOLKU = "src/main/resources/com/example/otiprojekti/";
+
+    // TODO tehdäänkö näistä private?
+    public ToggleNappula aluenappula = new ToggleNappula("Alueet");
+    public ToggleNappula mokkinappula = new ToggleNappula("Mökit");
+    public ToggleNappula palvelunappula = new ToggleNappula("Palvelut");
+    public ToggleNappula varausnappula = new ToggleNappula("Varaukset");
+    public ToggleNappula asiakasnappula = new ToggleNappula("Asiakkaat");
+    public ToggleNappula laskunappula = new ToggleNappula("Laskut");
+    public ToggleNappula[] nappulat = new ToggleNappula[] {
+            aluenappula, mokkinappula, palvelunappula, varausnappula, asiakasnappula, laskunappula};
+    private ToggleGroup tgSivuvalikko = new ToggleGroup();
+
+    public BorderPane paneeli = new BorderPane();
+
+    private final Font fontti = Font.font(16);
 
     @Override
     public void start(Stage ikkuna) {
-        BorderPane paneeli = new BorderPane();
+        // Vasen valikko
+        for (ToggleNappula n : nappulat) {
+            n.setToggleGroup(tgSivuvalikko);
+        }
 
         VBox painikkeet = new VBox();
-
-        Rectangle palkki = new Rectangle(220, 100, Color.BLACK);
-        Rectangle palkki2 = new Rectangle(220, 500, Color.BLACK);
-
-        Rectangle aluenappula = new Rectangle(219, 40, Color.BLACK);
-        aluenappula.setStroke(Color.BLACK);
-        Label alueteksti = new Label("Alueet", aluenappula);
-        alueteksti.setContentDisplay(ContentDisplay.CENTER);
-        alueteksti.setTextFill(Color.WHITE);
-        alueteksti.setFont(Font.font(18));
-        alueteksti.setOnMouseEntered( e -> {
-            aluenappula.setStroke(Color.WHITE);
-        });
-        alueteksti.setOnMouseExited( e -> {
-            aluenappula.setStroke(Color.BLACK);
-        });
-
-        Rectangle mokkinappula = new Rectangle(219, 40, Color.BLACK);
-        mokkinappula.setStroke(Color.BLACK);
-        Label mokkiteksti = new Label("Mökit", mokkinappula);
-        mokkiteksti.setContentDisplay(ContentDisplay.CENTER);
-        mokkiteksti.setTextFill(Color.WHITE);
-        mokkiteksti.setFont(Font.font(18));
-        mokkiteksti.setOnMouseEntered( e -> {
-            mokkinappula.setStroke(Color.WHITE);
-        });
-        mokkiteksti.setOnMouseExited( e -> {
-            mokkinappula.setStroke(Color.BLACK);
-        });
-
-        Rectangle palvelunappula = new Rectangle(219, 40, Color.BLACK);
-        palvelunappula.setStroke(Color.BLACK);
-        Label palveluteksti = new Label("Palvelut", palvelunappula);
-        palveluteksti.setContentDisplay(ContentDisplay.CENTER);
-        palveluteksti.setTextFill(Color.WHITE);
-        palveluteksti.setFont(Font.font(18));
-        palveluteksti.setOnMouseEntered( e -> {
-            palvelunappula.setStroke(Color.WHITE);
-        });
-        palveluteksti.setOnMouseExited( e -> {
-            palvelunappula.setStroke(Color.BLACK);
-        });
-
-        Rectangle varausnappula = new Rectangle(219, 40, Color.BLACK);
-        varausnappula.setStroke(Color.BLACK);
-        Label varausteksti = new Label("Varaukset", varausnappula);
-        varausteksti.setContentDisplay(ContentDisplay.CENTER);
-        varausteksti.setTextFill(Color.WHITE);
-        varausteksti.setFont(Font.font(18));
-        varausteksti.setOnMouseEntered( e -> {
-            varausnappula.setStroke(Color.WHITE);
-        });
-        varausteksti.setOnMouseExited( e -> {
-            varausnappula.setStroke(Color.BLACK);
-        });
-
-
-        Rectangle asiakasnappula = new Rectangle(219, 40, Color.BLACK);
-        asiakasnappula.setStroke(Color.BLACK);
-        Label asiakasteksti = new Label("Asiakkaat", asiakasnappula);
-        asiakasteksti.setContentDisplay(ContentDisplay.CENTER);
-        asiakasteksti.setTextFill(Color.WHITE);
-        asiakasteksti.setFont(Font.font(18));
-        asiakasteksti.setOnMouseEntered( e -> {
-            asiakasnappula.setStroke(Color.WHITE);
-        });
-        asiakasteksti.setOnMouseExited( e -> {
-            asiakasnappula.setStroke(Color.BLACK);
-        });
-
-
-        Rectangle laskunappula = new Rectangle(219, 40, Color.BLACK);
-        laskunappula.setStroke(Color.BLACK);
-        Label laskuteksti = new Label("Laskut", laskunappula);
-        laskuteksti.setContentDisplay(ContentDisplay.CENTER);
-        laskuteksti.setTextFill(Color.WHITE);
-        laskuteksti.setFont(Font.font(18));
-        laskuteksti.setOnMouseEntered( e -> {
-            laskunappula.setStroke(Color.WHITE);
-        });
-        laskuteksti.setOnMouseExited( e -> {
-            laskunappula.setStroke(Color.BLACK);
-        });
-
-
-        painikkeet.getChildren().addAll
-                (palkki, alueteksti, mokkiteksti, palveluteksti, varausteksti, asiakasteksti, laskuteksti, palkki2);
-
-
+        painikkeet.setPadding(new Insets(100,0,0,0));
+        painikkeet.getChildren().addAll(aluenappula, mokkinappula, palvelunappula,
+                varausnappula, asiakasnappula, laskunappula);
 
         paneeli.setLeft(painikkeet);
+        paneeli.getLeft().setStyle("-fx-background-color: black");
 
+        // TODO tälle "laastariratkaisulle" jokin parempi tapa, kuten erillisessä luokassa oleva julkinen metodi kuvan avaamiseen
+        Image ylapalkinkuva;
         try {
-            Image ylapalkinkuva = new Image(IMGPOLKU+"ylapalkki.png");
-            ImageView ylapalkki = new ImageView(ylapalkinkuva);
-            ylapalkki.setFitWidth(1600);
-            ylapalkki.setFitHeight(100);
-            paneeli.setTop(ylapalkki);
+            ylapalkinkuva = new Image(IMGPOLKU + "ylapalkki.png");
         } catch (Exception e) {
-            Image ylapalkinkuva = new Image("ylapalkki.png");
-            ImageView ylapalkki = new ImageView(ylapalkinkuva);
-            ylapalkki.setFitWidth(1600);
-            ylapalkki.setFitHeight(100);
-            paneeli.setTop(ylapalkki);
+            ylapalkinkuva = new Image("ylapalkki.png");
         }
+        ImageView ylapalkki = new ImageView(ylapalkinkuva);
+        ylapalkki.setFitWidth(1600); // TODO näiden mittojen pitää mukautua ikkunan kokoon jos se muuttuu näytön koon mukaan
+        ylapalkki.setFitHeight(100);
+        paneeli.setTop(ylapalkki);
+
+
+
+        //aluepaneeli.setTop(new Nappula("Paina tästä!")); // TEMP
+
+        luoAluenakyma();
+
+
+        // Mokkipaneelin luonti ja asetus
+
+        luoMokkinakyma();
+
+
+        // Palvelupaneelin luonti ja asetus
+        luoPalvelunakyma();
+
+
+        // Varauspaneelin luonti ja asetus
+        Varausnakyma varauspaneeli = new Varausnakyma();
+        varausnappula.setOnMouseClicked(e -> {
+            paneeli.setCenter(varauspaneeli);
+        });
+        ScrollPane varausScrollaus = new ScrollPane();
+        varauspaneeli.setCenter(varausScrollaus);
+        GridPane varausTaulukko = new GridPane();
+        varausTaulukko.setGridLinesVisible(true);
+        varausScrollaus.setContent(varausTaulukko);
+
+        // Asiakaspaneelin luonti ja asetus
+        Asiakasnakyma asiakaspaneeli = new Asiakasnakyma();
+        asiakasnappula.setOnMouseClicked(e -> {
+            paneeli.setCenter(asiakaspaneeli);
+        });
+        ScrollPane asiakasScrollaus = new ScrollPane();
+        asiakaspaneeli.setCenter(asiakasScrollaus);
+        GridPane asiakasTaulukko = new GridPane();
+        asiakasTaulukko.setGridLinesVisible(true);
+        asiakasScrollaus.setContent(asiakasTaulukko);
+
+        // Laskupaneelin luonti ja asetus
+        Laskunakyma laskupaneeli = new Laskunakyma();
+        laskunappula.setOnMouseClicked(e -> {
+            paneeli.setCenter(laskupaneeli);
+        });
+        ScrollPane laskuScrollaus = new ScrollPane();
+        varauspaneeli.setCenter(laskuScrollaus);
+        GridPane laskuTaulukko = new GridPane();
+        laskuTaulukko.setGridLinesVisible(true);
+        varausScrollaus.setContent(laskuTaulukko);
+
+
+        // Lasketaan koko ikkunalle
+        Rectangle2D bounds = Screen.getPrimary().getVisualBounds();
+        double boundsW = bounds.getWidth();
+        double boundsH = bounds.getHeight();
+        // Ikkunan mittasuhde jaettuna kahteen muuttujaan
+        double suhdeW = 5.5;
+        double suhdeH = 3;
+        double boundsSuhdeMin = Math.min(boundsW / suhdeW, boundsH / suhdeH);
+        // Kuinka suuren osan näytön leveydestä tai korkeudesta ikkuna vie enintään
+        double maxOsuus = 0.9;
+        double W = boundsSuhdeMin * maxOsuus * suhdeW;
+        double H = boundsSuhdeMin * maxOsuus * suhdeH;
+        Scene aluekehys = new Scene(paneeli, W, H);
+        ikkuna.setScene(aluekehys);
+        ikkuna.setMaxWidth(1600);
+        ikkuna.setMaxHeight(800);
+        ikkuna.show();
+    }
+
+
+    public void luoAluenakyma() {
+
+        ColumnConstraints kolumniLeveys = new ColumnConstraints();
+        kolumniLeveys.setHalignment(HPos.CENTER);
+        kolumniLeveys.setPrefWidth(200);
 
         BorderPane aluepaneeli = new BorderPane();
         paneeli.setCenter(aluepaneeli);
+        aluenappula.setOnMouseClicked(e -> {
+            paneeli.setCenter(aluepaneeli);
+//            for (Nappula2 n : nappulat) {
+//                n.deselect();
+//            }
+//            aluenappula.select();
+        });
+
+        GridPane alueHaku = new GridPane();
+        alueHaku.setPadding(new Insets(50,50,50,0));
+        alueHaku.setHgap(200);
+        alueHaku.setVgap(15);
+        aluepaneeli.setTop(alueHaku);
+
+        TextField alueHakuKentta = new TextField();
+        Label alueHakuKenttaLabel = new Label("Hae aluetta: ", alueHakuKentta);
+        alueHakuKenttaLabel.setFont(fontti);
+        alueHakuKenttaLabel.setContentDisplay(ContentDisplay.RIGHT);
+        alueHaku.add(alueHakuKenttaLabel, 1, 1);
+        Nappula alueHakuNappula = new Nappula("Suorita haku", 190, 30);
+        alueHaku.add(alueHakuNappula, 1, 2);
+        alueHaku.add(new Text("Näytä tulokset järjestyksessä"), 2, 0);
+
+        ToggleGroup toggleAlue = new ToggleGroup();
+
+        RadioButton uusinAlue = new RadioButton("uusin - vanhin");
+        alueHaku.add(uusinAlue, 2, 1);
+        uusinAlue.setToggleGroup(toggleAlue);
+
+        RadioButton vanhinAlue = new RadioButton("vanhin - uusin");
+        alueHaku.add(vanhinAlue, 2, 2);
+        vanhinAlue.setToggleGroup(toggleAlue);
+
+        RadioButton aakkosAlue = new RadioButton("A - Ö");
+        alueHaku.add(aakkosAlue, 2, 3);
+        aakkosAlue.setToggleGroup(toggleAlue);
 
         ScrollPane alueScrollaus = new ScrollPane();
         aluepaneeli.setCenter(alueScrollaus);
-
         GridPane alueTaulukko = new GridPane();
+        alueTaulukko.setPadding(new Insets(50,50,50,150));
+        alueTaulukko.getColumnConstraints().addAll(kolumniLeveys, kolumniLeveys);
+        alueTaulukko.setGridLinesVisible(true);
         alueScrollaus.setContent(alueTaulukko);
-        alueTaulukko.add(new Rectangle(350, 350), 0, 0);
-        alueTaulukko.add(new Rectangle(350, 350), 1, 1);
-        alueTaulukko.add(new Rectangle(350, 350), 0, 2);
-        alueTaulukko.add(new Rectangle(350, 350), 1, 3);
 
 
-        Rectangle2D bounds = Screen.getPrimary().getVisualBounds();
-        System.out.println("Näytön koko on " + bounds.getWidth() + " x " + bounds.getHeight());
-        Scene aluekehys = new Scene(paneeli, bounds.getWidth(), bounds.getHeight());
-        ikkuna.setScene(aluekehys);
-        ikkuna.show();
+        Nappula alueenLisays = new Nappula("Lisää uusi alue", 200, 30);
+        alueTaulukko.add(alueenLisays, 1,0);
+
+        Text aluetunnusOtsikko = new Text("Aluetunnus");
+        aluetunnusOtsikko.setFont(fontti);
+        Text alueennimiOtsikko = new Text("Alueen nimi");
+        alueennimiOtsikko.setFont(fontti);
+        alueTaulukko.add(aluetunnusOtsikko, 0, 1);
+        alueTaulukko.add(alueennimiOtsikko, 1, 1);
+
+        ArrayList<Alue> aluelista = new ArrayList<Alue>();
+        aluelista.add(new Alue(1, "Ylläs"));       //TEMP
+        aluelista.add(new Alue(2, "Levi"));        //TEMP
+
+
+        int laskuri = 2;
+        for (Alue obj : aluelista) {
+            Text alueID = new Text(String.valueOf(obj.getAlueID()));
+            alueID.setFont(fontti);
+            Text alueNimi = new Text(String.valueOf(obj.getAlueenNimi()));
+            alueNimi.setFont(fontti);
+            alueTaulukko.add(alueID, 0, laskuri);
+
+            alueID.setTextAlignment(TextAlignment.CENTER);
+            alueTaulukko.add(alueNimi, 1, laskuri);
+            //alueNimi.setAlignment(Pos.CENTER);
+            alueNimi.setTextAlignment(TextAlignment.CENTER);
+
+            Nappula poistoNappula = new Nappula("Poista alue", 150, 30);
+            alueTaulukko.add(poistoNappula, 2, laskuri);
+            poistoNappula.setOnMouseClicked(e -> {
+                // poistaAlue();                          //TODO  poistaAlue() - metodin luominen
+            });
+
+            laskuri++;
+        }
+    }
+    
+    public void luoMokkinakyma() {
+        ColumnConstraints kolumniLeveys = new ColumnConstraints();
+        kolumniLeveys.setHalignment(HPos.CENTER);
+        kolumniLeveys.setPrefWidth(170);
+
+        ColumnConstraints semi = new ColumnConstraints();
+        semi.setHalignment(HPos.CENTER);
+        semi.setPrefWidth(120);
+
+        ColumnConstraints lyhyt = new ColumnConstraints();
+        lyhyt.setHalignment(HPos.CENTER);
+        lyhyt.setPrefWidth(80);
+
+        BorderPane mokkipaneeli = new BorderPane();
+        paneeli.setCenter(mokkipaneeli);
+        mokkinappula.setOnMouseClicked(e -> {
+            paneeli.setCenter(mokkipaneeli);
+//            for (Nappula n : nappulat) {
+//                n.deselect();
+//            }
+//            mokkinappula.select();
+        });
+
+        GridPane mokkiHaku = new GridPane();
+        mokkiHaku.setPadding(new Insets(50,50,50,0));
+        mokkiHaku.setHgap(100);
+        mokkiHaku.setVgap(15);
+        mokkipaneeli.setTop(mokkiHaku);
+
+        TextField mokkiHakuKentta = new TextField();
+        Label mokkiHakuKenttaLabel = new Label("Hae mökkiä: ", mokkiHakuKentta);
+        mokkiHakuKenttaLabel.setFont(fontti);
+        mokkiHakuKenttaLabel.setContentDisplay(ContentDisplay.RIGHT);
+        mokkiHaku.add(mokkiHakuKenttaLabel, 1, 1);
+        Nappula mokkiHakuNappula = new Nappula("Suorita haku", 190, 30);
+        mokkiHaku.add(mokkiHakuNappula, 1, 2);
+        mokkiHaku.add(new Text("Näytä tulokset järjestyksessä"), 2, 0);
+
+        ToggleGroup toggleMokki = new ToggleGroup();
+
+        RadioButton hintaNousevaMokki = new RadioButton("edullisin - kallein");
+        mokkiHaku.add(hintaNousevaMokki, 2, 1);
+        hintaNousevaMokki.setToggleGroup(toggleMokki);
+
+        RadioButton hintaLaskevaMokki = new RadioButton("kallein - edullisin");
+        mokkiHaku.add(hintaLaskevaMokki, 2, 2);
+        hintaLaskevaMokki.setToggleGroup(toggleMokki);
+
+        RadioButton aakkosMokki = new RadioButton("A - Ö");
+        mokkiHaku.add(aakkosMokki, 3, 1);
+        aakkosMokki.setToggleGroup(toggleMokki);
+
+        RadioButton hloMaaraMokki = new RadioButton("hlömäärän mukaan");
+        mokkiHaku.add(hloMaaraMokki, 3, 2);
+        hloMaaraMokki.setToggleGroup(toggleMokki);
+
+        RadioButton alueittainMokki = new RadioButton("alueittain");
+        mokkiHaku.add(alueittainMokki, 3, 3);
+        alueittainMokki.setToggleGroup(toggleMokki);
+
+        ScrollPane mokkiScrollaus = new ScrollPane();
+        mokkipaneeli.setCenter(mokkiScrollaus);
+        GridPane mokkiTaulukko = new GridPane();
+        mokkiTaulukko.setPadding(new Insets(20,20,20,20));
+        mokkiTaulukko.getColumnConstraints().addAll(
+                lyhyt, kolumniLeveys, lyhyt, lyhyt, lyhyt, semi, semi, kolumniLeveys);
+        mokkiTaulukko.setGridLinesVisible(true);
+        mokkiScrollaus.setContent(mokkiTaulukko);
+
+
+        Nappula mokkienLisays = new Nappula("Lisää uusi mökki", 200, 30);
+        mokkiTaulukko.add(mokkienLisays, 1,0);
+
+        Text mokkitunnusOtsikko = new Text("Tunnus");
+        mokkitunnusOtsikko.setFont(fontti);
+        Text mokinnimiOtsikko = new Text("Mökki");
+        mokinnimiOtsikko.setFont(fontti);
+        Text mokinAlueOtsikko = new Text("Alue");
+        mokinAlueOtsikko.setFont(fontti);
+        Text mokinHintaOtsikko = new Text("Hinta/vrk");
+        mokinHintaOtsikko.setFont(fontti);
+        Text mokinHloMaaraOtsikko = new Text("Hlö.määrä");
+        mokinHloMaaraOtsikko.setFont(fontti);
+
+        mokkiTaulukko.add(mokkitunnusOtsikko, 0, 1);
+        mokkiTaulukko.add(mokinnimiOtsikko, 1, 1);
+        mokkiTaulukko.add(mokinAlueOtsikko, 2, 1);
+        mokkiTaulukko.add(mokinHintaOtsikko, 3, 1);
+        mokkiTaulukko.add(mokinHloMaaraOtsikko, 4, 1);
+
+
+
+        ArrayList<Mokki> mokkilista = new ArrayList<Mokki>();
+        mokkilista.add(new Mokki(1,1, 34110,"Sininen mökki", "Sinitie 2",
+        200, "Valoisa hirsimökki koko perheelle tai pienelle kaveriporukalle saunalla ja porealtaalla.",
+        6, "Sauna, poreallas"));       //TEMP
+        mokkilista.add(new Mokki(2,1, 34100,"Punainen mökki", "Sinitie 3",
+                250, "Viihtyisä ja tilava hirsimökki koko perheelle tai kaveriporukalle saunalla ja porealtaalla.",
+                8, "Sauna, poreallas"));       //TEMP
+
+
+        int mokkiLaskuri = 2;
+        for (Mokki obj : mokkilista) {
+            Text mokkiID = new Text(String.valueOf(obj.getMokkiID()));
+            mokkiID.setFont(fontti);
+            Text mokkiNimi = new Text(String.valueOf(obj.getMokkiNimi()));
+            mokkiNimi.setFont(fontti);
+            Text mokkiAlue = new Text(String.valueOf(obj.getAlueID()));
+            mokkiAlue.setFont(fontti);
+            Text mokkiHinta = new Text(String.valueOf(obj.getHinta()));
+            mokkiHinta.setFont(fontti);
+            Text mokkiHloMaara = new Text(String.valueOf(obj.getHloMaara()));
+            mokkiHloMaara.setFont(fontti);
+
+            mokkiTaulukko.add(mokkiID, 0, mokkiLaskuri);
+            mokkiTaulukko.add(mokkiNimi, 1, mokkiLaskuri);
+            mokkiTaulukko.add(mokkiAlue, 2, mokkiLaskuri);
+            mokkiTaulukko.add(mokkiHinta, 3, mokkiLaskuri);
+            mokkiTaulukko.add(mokkiHloMaara, 4, mokkiLaskuri);
+
+            Nappula poistoNappula = new Nappula("Poista", 120, 30);
+            mokkiTaulukko.add(poistoNappula, 5, mokkiLaskuri);
+            poistoNappula.setOnMouseClicked(e -> {
+                // poistamokki();                          //TODO  poistamokki() - metodin luominen
+            });
+            Nappula muokkausNappula = new Nappula("Muokkaa", 120, 30);
+            mokkiTaulukko.add(muokkausNappula, 6, mokkiLaskuri);
+            muokkausNappula.setOnMouseClicked(e -> {
+                // muokkaaMokki();                          //TODO  muokkaamokki() - metodin luominen
+            });
+            Nappula tarkasteleNappula = new Nappula("Tarkastele tietoja", 170, 30);
+            mokkiTaulukko.add(tarkasteleNappula, 7, mokkiLaskuri);
+            tarkasteleNappula.setOnMouseClicked(e -> {
+                // tarkasteleMokkia();                          //TODO  tarkasteleMokkia() - metodin luominen
+            });
+
+            mokkiLaskuri++;
+        }
+    }
+    
+    public void luoPalvelunakyma() {
+        ColumnConstraints kolumniLeveys = new ColumnConstraints();
+        kolumniLeveys.setHalignment(HPos.CENTER);
+        kolumniLeveys.setPrefWidth(200);
+
+        BorderPane palvelupaneeli = new BorderPane();
+        paneeli.setCenter(palvelupaneeli);
+        palvelunappula.setOnMouseClicked(e -> {
+            paneeli.setCenter(palvelupaneeli);
+//            for (Nappula n : nappulat) {
+//                n.deselect();
+//            }
+//            palvelunappula.select();
+        });
+
+        GridPane palveluHaku = new GridPane();
+        palveluHaku.setPadding(new Insets(50,50,50,0));
+        palveluHaku.setHgap(200);
+        palveluHaku.setVgap(15);
+        palvelupaneeli.setTop(palveluHaku);
+
+        TextField palveluHakuKentta = new TextField();
+        Label palveluHakuKenttaLabel = new Label("Hae palveluita: ", palveluHakuKentta);
+        palveluHakuKenttaLabel.setFont(fontti);
+        palveluHakuKenttaLabel.setContentDisplay(ContentDisplay.RIGHT);
+        palveluHaku.add(palveluHakuKenttaLabel, 1, 1);
+        Nappula palveluHakuNappula = new Nappula("Suorita haku", 190, 30);
+        palveluHaku.add(palveluHakuNappula, 1, 2);
+        palveluHaku.add(new Text("Näytä tulokset järjestyksessä"), 2, 0);
+
+        ToggleGroup togglepalvelu = new ToggleGroup();
+
+        RadioButton uusinpalvelu = new RadioButton("uusin - vanhin");
+        palveluHaku.add(uusinpalvelu, 2, 1);
+        uusinpalvelu.setToggleGroup(togglepalvelu);
+
+        RadioButton vanhinpalvelu = new RadioButton("vanhin - uusin");
+        palveluHaku.add(vanhinpalvelu, 2, 2);
+        vanhinpalvelu.setToggleGroup(togglepalvelu);
+
+        RadioButton aakkospalvelu = new RadioButton("A - Ö");
+        palveluHaku.add(aakkospalvelu, 2, 3);
+        aakkospalvelu.setToggleGroup(togglepalvelu);
+
+        ScrollPane palveluScrollaus = new ScrollPane();
+        palvelupaneeli.setCenter(palveluScrollaus);
+        GridPane palveluTaulukko = new GridPane();
+        palveluTaulukko.setPadding(new Insets(50,50,50,150));
+        palveluTaulukko.getColumnConstraints().addAll(kolumniLeveys, kolumniLeveys);
+        palveluTaulukko.setGridLinesVisible(true);
+        palveluScrollaus.setContent(palveluTaulukko);
+
+
+        Nappula palveluenLisays = new Nappula("Lisää uusi palvelu", 200, 30);
+        palveluTaulukko.add(palveluenLisays, 1,0);
+
+        Text palvelutunnusOtsikko = new Text("Palvelun tunnus");
+        palvelutunnusOtsikko.setFont(fontti);
+        Text palveluennimiOtsikko = new Text("Palvelu");
+        palveluennimiOtsikko.setFont(fontti);
+        palveluTaulukko.add(palvelutunnusOtsikko, 0, 1);
+        palveluTaulukko.add(palveluennimiOtsikko, 1, 1);
+
+        ArrayList<Palvelu> palvelulista = new ArrayList<Palvelu>();
+        palvelulista.add(new Palvelu(1, 1, "Moottorikelkkavuokra",
+                "Välinevuokraus", "Moottorikelkan vuokraus 1 hlö 3h", 60, 24));       //TEMP
+        palvelulista.add(new Palvelu(2, 1, "Kuumakivihieronta 60 min",
+                "Hieronta", "Kuumakivihieronta 60 min koulutetulla hierojalla Levin elämyshoitolassa",
+                70, 24));        //TEMP
+
+
+        int palveluLaskuri = 2;
+        for (Palvelu obj : palvelulista) {
+            Text palveluID = new Text(String.valueOf(obj.getPalveluID()));
+            palveluID.setFont(fontti);
+            Text palveluNimi = new Text(String.valueOf(obj.getPalvelunNimi()));
+            palveluNimi.setFont(fontti);
+            palveluTaulukko.add(palveluID, 0, palveluLaskuri);
+
+            palveluID.setTextAlignment(TextAlignment.CENTER);
+            palveluTaulukko.add(palveluNimi, 1, palveluLaskuri);
+            //palveluNimi.setAlignment(Pos.CENTER);
+            palveluNimi.setTextAlignment(TextAlignment.CENTER);
+
+            Nappula poistoNappula = new Nappula("Poista palvelu", 150, 30);
+            palveluTaulukko.add(poistoNappula, 2, palveluLaskuri);
+            poistoNappula.setOnMouseClicked(e -> {
+                // poistapalvelu();                          //TODO  poistapalvelu() - metodin luominen
+            });
+
+            palveluLaskuri++;
+        }
     }
 
     public static void main(String[] args) {

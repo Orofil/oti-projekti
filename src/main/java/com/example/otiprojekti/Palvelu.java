@@ -20,6 +20,8 @@ public class Palvelu {
         this.palvelunHinta=palvelunHinta;
         this.palvelunAlv=palvelunAlv;
     }
+
+
     //Getterit palveluidlle ja alueidlle
 
     public int getPalveluID() {
