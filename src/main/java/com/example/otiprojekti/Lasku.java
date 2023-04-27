@@ -56,7 +56,10 @@ public class Lasku {
 
     @Override
     public String toString() {
-        return super.toString();
+        String str = "LaskuID on " + laskuID + "\n VarausID on " + varausID +
+                "\n Laskun summa on " + laskunSumma + "\n Laskun alv on " + laskuAlv +
+                "\n Laskun tila on " + laskunStatus;
+        return str;
     }
 
     @Override
