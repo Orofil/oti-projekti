@@ -7,7 +7,6 @@ public class Alue {
     private String alueenNimi;
 
     //alustaja
-
     public Alue(int id, String nimi) { // TEMP
         this.alueID = id;
         this.alueenNimi = nimi;
