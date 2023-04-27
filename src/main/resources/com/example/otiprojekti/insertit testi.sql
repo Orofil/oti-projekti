@@ -37,17 +37,17 @@ INSERT INTO asiakas(postinro, etunimi, sukunimi, lahiosoite, email, puhelinnro) 
 -- TODO palveluiden nimet ja kuvaukset
 -- TODO joku merkitys tyypille
 INSERT INTO palvelu(alue_id, nimi, tyyppi, kuvaus, hinta, alv) VALUES
-  (1, '', 1, '', 45.9, 10),
-  (1, '', 2, '', 30, 10),
-  (2, '', 3, '', 10.99, 10),
-  (2, '', 1, '', 8.90, 10),
-  (4, '', 4, '', 20, 10),
-  (6, '', 3, '', 15, 10),
-  (7, '', 3, '', 20, 10),
-  (8, '', 2, '', 19.99, 10),
-  (5, '', 1, '', 9.99, 10),
-  (7, '', 4, '', 34.20, 10),
-  (5, '', 2, '', 10, 10);
+  (1, 'Siivouspalvelu', 1, 'Mökin siivous', 170, 10),
+    (1, 'Liinavaatevuokraus', 2, 'Liinavaatteiden vuokraaminen ', 30, 10),
+    (2, 'Moottorikelkkavuokraus', 3, 'Voit vuokrata moottorikelkan käyttöön', 150, 10),
+    (2, 'Lasketteluvälinevuokraus', 1, 'Valittavana mikä tahansa lasketteluväline', 59.8, 10),
+    (4, 'Kalastusvälinevuokraus', 4, 'Kalastus setti jolla voi heittokalastaa ', 20, 10),
+    (6, 'Hiihtovälinevuokraus', 3, 'Hiihtosukset, sekä sauvat joilla voi hiihtää', 30, 10),
+    (7, 'Venevuokraus', 3, 'Vene jossa on pieni moottori jolla voi ajella', 90, 10),
+    (8, 'Lumikenkävuokraus', 2, 'Lumikenkäsetti yhdelle sisältäen sauvat', 19.99, 10),
+    (5, 'Ohjelmapalvelu', 1, 'Voit tilata palvelun, joka tarjoaa erilaisia aktiviteetteja', 9.99, 10),
+    (7, 'Hierontapalvelu', 4, 'Voit valita vapaamuotoisen hieronnan', 34.20, 10),
+    (5, 'Kylpyläpalvelu', 2, 'Varaa rentouttava hetki mukavassa kylpylässä', 50, 10);
 
 -- TODO pitäisiköhän varustelussa kuitenkin lukea, mitä mökkiin kuuluu, kuten sauna, jotain keittiöjuttuja yms.
 INSERT INTO mokki(alue_id, postinro, mokkinimi, katuosoite, hinta, kuvaus, henkilomaara, varustelu) VALUES
