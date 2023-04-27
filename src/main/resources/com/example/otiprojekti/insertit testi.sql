@@ -49,6 +49,7 @@ INSERT INTO palvelu(alue_id, nimi, tyyppi, kuvaus, hinta, alv) VALUES
   (7, '', 4, '', 34.20, 10),
   (5, '', 2, '', 10, 10);
 
+-- TODO pitäisiköhän varustelussa kuitenkin lukea, mitä mökkiin kuuluu, kuten sauna, jotain keittiöjuttuja yms.
 INSERT INTO mokki(alue_id, postinro, mokkinimi, katuosoite, hinta, kuvaus, henkilomaara, varustelu) VALUES
   (1, '83960', 'Kultaloma', 'Kultahietikko-katu 2', 215, 'Viihtyisä, juuri valmistunut mökki upealla paikalla', 6, 'Kiitettävä'),
   (3, '93830', 'Villa Valkea', 'Lomaharjuntie 10', 400, 'Luksustason mökki kaikilla varusteilla', 10, 'Erinomainen'),
