@@ -92,12 +92,12 @@ public class Asiakas {
     public String toString() {
         return "Asiakas[" +
                 "asiakasID=" + asiakasID +
-                "sukunimi=" + sukunimi +
-                "etunimi=" + etunimi +
-                "email=" + email +
-                "lahiosoite=" + lahiosoite +
-                "postinro=" + postinro +
-                "puhnro=" + puhnro +
+                ", sukunimi=" + sukunimi +
+                ", etunimi=" + etunimi +
+                ", email=" + email +
+                ", lahiosoite=" + lahiosoite +
+                ", postinro=" + postinro +
+                ", puhnro=" + puhnro +
                 "]";
     }
 
