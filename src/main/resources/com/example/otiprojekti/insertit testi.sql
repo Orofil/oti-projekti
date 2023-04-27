@@ -62,7 +62,7 @@ INSERT INTO mokki(alue_id, postinro, mokkinimi, katuosoite, hinta, kuvaus, henki
   (2, '73310', 'Talvipirtti', 'Järvenrantatie 22D', 219, 'Hyvin varusteltu talviharrastukseen', 2, 'Kiitettävä');
 
 -- TODO päivämäärät, osa vahvistuspäivämääristä on tarkoituksella tyhjiä, sellaisia voi tehdä enemmänkin maksumuistutuksen testausta varten
-INSERT INTO varaus(asiakas_id, mokki_mokki_id, varattu_pvm, vahvistus_pvm, varattu_alkupvm, varattu_loppupvm) VALUES
+INSERT INTO varaus(asiakas_id, mokki_id, varattu_pvm, vahvistus_pvm, varattu_alkupvm, varattu_loppupvm) VALUES
   (1, 4, '2023-04-30 17:20:01', '2023-- ::', '2023-- ::', '2023-- ::'),
   (2, 7, '2023-04-15 20:20:20', '2023-- ::', '2023-- ::', '2023-- ::'),
   (3, 2, '2023-04-26 14:52:53', '', '2023-- ::', '2023-- ::'),
