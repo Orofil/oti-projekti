@@ -14,11 +14,11 @@ https://www.tutorialspoint.com/jdbc/jdbc-create-database.htm
  */
 public class Tietokanta {
     // API:tietokanta://palvelimen_nimi:portin_numero/tietokannan_nimi
-    private final String DB_URL = "jdbc:mysql://localhost/vn"; // TODO loppuun tietokannan nimi jos se tehdään jo etukäteen
+    private final String DB_URL = "jdbc:mysql://localhost/vn";
     // Käyttäjänimi
-    private final String USER = "root";
+    private final String USER = "kayttaja";
     // Salasana
-    private final String PASS = ""; // TODO salasana pitää lisätä
+    private final String PASS = "koira1";
 
     private final String POLKU = "src/main/resources/com/example/otiprojekti/";
 
