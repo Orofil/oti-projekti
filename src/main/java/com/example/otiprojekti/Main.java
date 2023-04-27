@@ -83,15 +83,7 @@ public class Main extends Application {
 
 
         // Palvelupaneelin luonti ja asetus
-        Palvelunakyma palvelupaneeli = new Palvelunakyma();
-        palvelunappula.setOnMouseClicked(e -> {
-            paneeli.setCenter(palvelupaneeli);
-        });
-        ScrollPane palveluScrollaus = new ScrollPane();
-        palvelupaneeli.setCenter(palveluScrollaus);
-        GridPane palveluTaulukko = new GridPane();
-        palveluTaulukko.setGridLinesVisible(true);
-        palveluScrollaus.setContent(palveluTaulukko);
+        luoPalvelunakyma();
 
 
         // Varauspaneelin luonti ja asetus
@@ -133,7 +125,7 @@ public class Main extends Application {
         double boundsW = bounds.getWidth();
         double boundsH = bounds.getHeight();
         // Ikkunan mittasuhde jaettuna kahteen muuttujaan
-        double suhdeW = 5;
+        double suhdeW = 5.5;
         double suhdeH = 3;
         double boundsSuhdeMin = Math.min(boundsW / suhdeW, boundsH / suhdeH);
         // Kuinka suuren osan näytön leveydestä tai korkeudesta ikkuna vie enintään
@@ -243,7 +235,15 @@ public class Main extends Application {
     public void luoMokkinakyma() {
         ColumnConstraints kolumniLeveys = new ColumnConstraints();
         kolumniLeveys.setHalignment(HPos.CENTER);
-        kolumniLeveys.setPrefWidth(200);
+        kolumniLeveys.setPrefWidth(170);
+
+        ColumnConstraints semi = new ColumnConstraints();
+        semi.setHalignment(HPos.CENTER);
+        semi.setPrefWidth(120);
+
+        ColumnConstraints lyhyt = new ColumnConstraints();
+        lyhyt.setHalignment(HPos.CENTER);
+        lyhyt.setPrefWidth(80);
 
         BorderPane mokkipaneeli = new BorderPane();
         paneeli.setCenter(mokkipaneeli);
@@ -257,7 +257,7 @@ public class Main extends Application {
 
         GridPane mokkiHaku = new GridPane();
         mokkiHaku.setPadding(new Insets(50,50,50,0));
-        mokkiHaku.setHgap(200);
+        mokkiHaku.setHgap(100);
         mokkiHaku.setVgap(15);
         mokkipaneeli.setTop(mokkiHaku);
 
@@ -272,23 +272,32 @@ public class Main extends Application {
 
         ToggleGroup toggleMokki = new ToggleGroup();
 
-        RadioButton uusinMokki = new RadioButton("uusin - vanhin");
-        mokkiHaku.add(uusinMokki, 2, 1);
-        uusinMokki.setToggleGroup(toggleMokki);
+        RadioButton hintaNousevaMokki = new RadioButton("edullisin - kallein");
+        mokkiHaku.add(hintaNousevaMokki, 2, 1);
+        hintaNousevaMokki.setToggleGroup(toggleMokki);
 
-        RadioButton vanhinMokki = new RadioButton("vanhin - uusin");
-        mokkiHaku.add(vanhinMokki, 2, 2);
-        vanhinMokki.setToggleGroup(toggleMokki);
+        RadioButton hintaLaskevaMokki = new RadioButton("kallein - edullisin");
+        mokkiHaku.add(hintaLaskevaMokki, 2, 2);
+        hintaLaskevaMokki.setToggleGroup(toggleMokki);
 
         RadioButton aakkosMokki = new RadioButton("A - Ö");
-        mokkiHaku.add(aakkosMokki, 2, 3);
+        mokkiHaku.add(aakkosMokki, 3, 1);
         aakkosMokki.setToggleGroup(toggleMokki);
+
+        RadioButton hloMaaraMokki = new RadioButton("hlömäärän mukaan");
+        mokkiHaku.add(hloMaaraMokki, 3, 2);
+        hloMaaraMokki.setToggleGroup(toggleMokki);
+
+        RadioButton alueittainMokki = new RadioButton("alueittain");
+        mokkiHaku.add(alueittainMokki, 3, 3);
+        alueittainMokki.setToggleGroup(toggleMokki);
 
         ScrollPane mokkiScrollaus = new ScrollPane();
         mokkipaneeli.setCenter(mokkiScrollaus);
         GridPane mokkiTaulukko = new GridPane();
-        mokkiTaulukko.setPadding(new Insets(50,50,50,150));
-        mokkiTaulukko.getColumnConstraints().addAll(kolumniLeveys, kolumniLeveys);
+        mokkiTaulukko.setPadding(new Insets(20,20,20,20));
+        mokkiTaulukko.getColumnConstraints().addAll(
+                lyhyt, kolumniLeveys, lyhyt, lyhyt, lyhyt, semi, semi, kolumniLeveys);
         mokkiTaulukko.setGridLinesVisible(true);
         mokkiScrollaus.setContent(mokkiTaulukko);
 
@@ -296,16 +305,32 @@ public class Main extends Application {
         Nappula mokkienLisays = new Nappula("Lisää uusi mökki", 200, 30);
         mokkiTaulukko.add(mokkienLisays, 1,0);
 
-        Text mokkitunnusOtsikko = new Text("Mökkitunnus");
+        Text mokkitunnusOtsikko = new Text("Tunnus");
         mokkitunnusOtsikko.setFont(fontti);
-        Text mokkiennimiOtsikko = new Text("Mökin nimi");
-        mokkiennimiOtsikko.setFont(fontti);
+        Text mokinnimiOtsikko = new Text("Mökki");
+        mokinnimiOtsikko.setFont(fontti);
+        Text mokinAlueOtsikko = new Text("Alue");
+        mokinAlueOtsikko.setFont(fontti);
+        Text mokinHintaOtsikko = new Text("Hinta/vrk");
+        mokinHintaOtsikko.setFont(fontti);
+        Text mokinHloMaaraOtsikko = new Text("Hlö.määrä");
+        mokinHloMaaraOtsikko.setFont(fontti);
+
         mokkiTaulukko.add(mokkitunnusOtsikko, 0, 1);
-        mokkiTaulukko.add(mokkiennimiOtsikko, 1, 1);
+        mokkiTaulukko.add(mokinnimiOtsikko, 1, 1);
+        mokkiTaulukko.add(mokinAlueOtsikko, 2, 1);
+        mokkiTaulukko.add(mokinHintaOtsikko, 3, 1);
+        mokkiTaulukko.add(mokinHloMaaraOtsikko, 4, 1);
+
+
 
         ArrayList<Mokki> mokkilista = new ArrayList<Mokki>();
-        mokkilista.add(new Mokki(1, "Ylläs"));       //TEMP
-        mokkilista.add(new Mokki(2, "Levi"));        //TEMP
+        mokkilista.add(new Mokki(1,1, 34110,"Sininen mökki", "Sinitie 2",
+        200, "Valoisa hirsimökki koko perheelle tai pienelle kaveriporukalle saunalla ja porealtaalla.",
+        6, "Sauna, poreallas"));       //TEMP
+        mokkilista.add(new Mokki(2,1, 34100,"Punainen mökki", "Sinitie 3",
+                250, "Viihtyisä ja tilava hirsimökki koko perheelle tai kaveriporukalle saunalla ja porealtaalla.",
+                8, "Sauna, poreallas"));       //TEMP
 
 
         int mokkiLaskuri = 2;
@@ -314,20 +339,130 @@ public class Main extends Application {
             mokkiID.setFont(fontti);
             Text mokkiNimi = new Text(String.valueOf(obj.getMokkiNimi()));
             mokkiNimi.setFont(fontti);
+            Text mokkiAlue = new Text(String.valueOf(obj.getAlueID()));
+            mokkiAlue.setFont(fontti);
+            Text mokkiHinta = new Text(String.valueOf(obj.getHinta()));
+            mokkiHinta.setFont(fontti);
+            Text mokkiHloMaara = new Text(String.valueOf(obj.getHloMaara()));
+            mokkiHloMaara.setFont(fontti);
+
             mokkiTaulukko.add(mokkiID, 0, mokkiLaskuri);
-
-            mokkiID.setTextAlignment(TextAlignment.CENTER);
             mokkiTaulukko.add(mokkiNimi, 1, mokkiLaskuri);
-            //mokkiNimi.setAlignment(Pos.CENTER);
-            mokkiNimi.setTextAlignment(TextAlignment.CENTER);
+            mokkiTaulukko.add(mokkiAlue, 2, mokkiLaskuri);
+            mokkiTaulukko.add(mokkiHinta, 3, mokkiLaskuri);
+            mokkiTaulukko.add(mokkiHloMaara, 4, mokkiLaskuri);
 
-            Nappula poistoNappula = new Nappula("Poista mökki", 150, 30);
-            mokkiTaulukko.add(poistoNappula, 2, mokkiLaskuri);
+            Nappula poistoNappula = new Nappula("Poista", 120, 30);
+            mokkiTaulukko.add(poistoNappula, 5, mokkiLaskuri);
             poistoNappula.setOnMouseClicked(e -> {
                 // poistamokki();                          //TODO  poistamokki() - metodin luominen
             });
+            Nappula muokkausNappula = new Nappula("Muokkaa", 120, 30);
+            mokkiTaulukko.add(muokkausNappula, 6, mokkiLaskuri);
+            muokkausNappula.setOnMouseClicked(e -> {
+                // muokkaaMokki();                          //TODO  muokkaamokki() - metodin luominen
+            });
+            Nappula tarkasteleNappula = new Nappula("Tarkastele tietoja", 170, 30);
+            mokkiTaulukko.add(tarkasteleNappula, 7, mokkiLaskuri);
+            tarkasteleNappula.setOnMouseClicked(e -> {
+                // tarkasteleMokkia();                          //TODO  tarkasteleMokkia() - metodin luominen
+            });
 
             mokkiLaskuri++;
+        }
+    }
+    
+    public void luoPalvelunakyma() {
+        ColumnConstraints kolumniLeveys = new ColumnConstraints();
+        kolumniLeveys.setHalignment(HPos.CENTER);
+        kolumniLeveys.setPrefWidth(200);
+
+        BorderPane palvelupaneeli = new BorderPane();
+        paneeli.setCenter(palvelupaneeli);
+        palvelunappula.setOnMouseClicked(e -> {
+            paneeli.setCenter(palvelupaneeli);
+//            for (Nappula n : nappulat) {
+//                n.deselect();
+//            }
+//            palvelunappula.select();
+        });
+
+        GridPane palveluHaku = new GridPane();
+        palveluHaku.setPadding(new Insets(50,50,50,0));
+        palveluHaku.setHgap(200);
+        palveluHaku.setVgap(15);
+        palvelupaneeli.setTop(palveluHaku);
+
+        TextField palveluHakuKentta = new TextField();
+        Label palveluHakuKenttaLabel = new Label("Hae palveluita: ", palveluHakuKentta);
+        palveluHakuKenttaLabel.setFont(fontti);
+        palveluHakuKenttaLabel.setContentDisplay(ContentDisplay.RIGHT);
+        palveluHaku.add(palveluHakuKenttaLabel, 1, 1);
+        Nappula palveluHakuNappula = new Nappula("Suorita haku", 190, 30);
+        palveluHaku.add(palveluHakuNappula, 1, 2);
+        palveluHaku.add(new Text("Näytä tulokset järjestyksessä"), 2, 0);
+
+        ToggleGroup togglepalvelu = new ToggleGroup();
+
+        RadioButton uusinpalvelu = new RadioButton("uusin - vanhin");
+        palveluHaku.add(uusinpalvelu, 2, 1);
+        uusinpalvelu.setToggleGroup(togglepalvelu);
+
+        RadioButton vanhinpalvelu = new RadioButton("vanhin - uusin");
+        palveluHaku.add(vanhinpalvelu, 2, 2);
+        vanhinpalvelu.setToggleGroup(togglepalvelu);
+
+        RadioButton aakkospalvelu = new RadioButton("A - Ö");
+        palveluHaku.add(aakkospalvelu, 2, 3);
+        aakkospalvelu.setToggleGroup(togglepalvelu);
+
+        ScrollPane palveluScrollaus = new ScrollPane();
+        palvelupaneeli.setCenter(palveluScrollaus);
+        GridPane palveluTaulukko = new GridPane();
+        palveluTaulukko.setPadding(new Insets(50,50,50,150));
+        palveluTaulukko.getColumnConstraints().addAll(kolumniLeveys, kolumniLeveys);
+        palveluTaulukko.setGridLinesVisible(true);
+        palveluScrollaus.setContent(palveluTaulukko);
+
+
+        Nappula palveluenLisays = new Nappula("Lisää uusi palvelu", 200, 30);
+        palveluTaulukko.add(palveluenLisays, 1,0);
+
+        Text palvelutunnusOtsikko = new Text("Palvelun tunnus");
+        palvelutunnusOtsikko.setFont(fontti);
+        Text palveluennimiOtsikko = new Text("Palvelu");
+        palveluennimiOtsikko.setFont(fontti);
+        palveluTaulukko.add(palvelutunnusOtsikko, 0, 1);
+        palveluTaulukko.add(palveluennimiOtsikko, 1, 1);
+
+        ArrayList<Palvelu> palvelulista = new ArrayList<Palvelu>();
+        palvelulista.add(new Palvelu(1, 1, "Moottorikelkkavuokra",
+                "Välinevuokraus", "Moottorikelkan vuokraus 1 hlö 3h", 60, 24));       //TEMP
+        palvelulista.add(new Palvelu(2, 1, "Kuumakivihieronta 60 min",
+                "Hieronta", "Kuumakivihieronta 60 min koulutetulla hierojalla Levin elämyshoitolassa",
+                70, 24));        //TEMP
+
+
+        int palveluLaskuri = 2;
+        for (Palvelu obj : palvelulista) {
+            Text palveluID = new Text(String.valueOf(obj.getPalveluID()));
+            palveluID.setFont(fontti);
+            Text palveluNimi = new Text(String.valueOf(obj.getPalvelunNimi()));
+            palveluNimi.setFont(fontti);
+            palveluTaulukko.add(palveluID, 0, palveluLaskuri);
+
+            palveluID.setTextAlignment(TextAlignment.CENTER);
+            palveluTaulukko.add(palveluNimi, 1, palveluLaskuri);
+            //palveluNimi.setAlignment(Pos.CENTER);
+            palveluNimi.setTextAlignment(TextAlignment.CENTER);
+
+            Nappula poistoNappula = new Nappula("Poista palvelu", 150, 30);
+            palveluTaulukko.add(poistoNappula, 2, palveluLaskuri);
+            poistoNappula.setOnMouseClicked(e -> {
+                // poistapalvelu();                          //TODO  poistapalvelu() - metodin luominen
+            });
+
+            palveluLaskuri++;
         }
     }
 
