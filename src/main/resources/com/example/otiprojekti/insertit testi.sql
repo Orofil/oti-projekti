@@ -94,4 +94,13 @@ INSERT INTO lasku(lasku_id, varaus_id, summa, alv) VALUES
 
 -- TODO kaikki
 INSERT INTO varauksen_palvelut(varaus_id, palvelu_id, lkm) VALUES
-  ();
+  (1,6,2),
+  (2,1,1),
+  (3,10,1),
+  (4,4,0),
+  (5,3,1),
+  (6,2,4),
+  (7,2,2),
+  (8,1,1),
+  (9,5,3),
+  (10,7,2),
