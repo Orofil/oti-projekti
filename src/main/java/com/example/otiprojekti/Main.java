@@ -158,7 +158,7 @@ public class Main extends Application {
 
         GridPane alueHaku = new GridPane();
         alueHaku.setPadding(new Insets(50,50,50,0));
-        alueHaku.setHgap(200);
+        alueHaku.setHgap(100);
         alueHaku.setVgap(15);
         aluepaneeli.setTop(alueHaku);
 
@@ -188,7 +188,7 @@ public class Main extends Application {
         ScrollPane alueScrollaus = new ScrollPane();
         aluepaneeli.setCenter(alueScrollaus);
         GridPane alueTaulukko = new GridPane();
-        alueTaulukko.setPadding(new Insets(50,50,50,150));
+        alueTaulukko.setPadding(new Insets(20,20,20,20));
         alueTaulukko.getColumnConstraints().addAll(kolumniLeveys, kolumniLeveys);
         alueTaulukko.setGridLinesVisible(true);
         alueScrollaus.setContent(alueTaulukko);
@@ -373,9 +373,18 @@ public class Main extends Application {
     }
     
     public void luoPalvelunakyma() {
+
         ColumnConstraints kolumniLeveys = new ColumnConstraints();
         kolumniLeveys.setHalignment(HPos.CENTER);
         kolumniLeveys.setPrefWidth(200);
+
+        ColumnConstraints semi = new ColumnConstraints();
+        semi.setHalignment(HPos.CENTER);
+        semi.setPrefWidth(120);
+
+        ColumnConstraints lyhyt = new ColumnConstraints();
+        lyhyt.setHalignment(HPos.CENTER);
+        lyhyt.setPrefWidth(80);
 
         BorderPane palvelupaneeli = new BorderPane();
         paneeli.setCenter(palvelupaneeli);
@@ -389,7 +398,7 @@ public class Main extends Application {
 
         GridPane palveluHaku = new GridPane();
         palveluHaku.setPadding(new Insets(50,50,50,0));
-        palveluHaku.setHgap(200);
+        palveluHaku.setHgap(100);
         palveluHaku.setVgap(15);
         palvelupaneeli.setTop(palveluHaku);
 
@@ -413,27 +422,38 @@ public class Main extends Application {
         vanhinpalvelu.setToggleGroup(togglepalvelu);
 
         RadioButton aakkospalvelu = new RadioButton("A - Ö");
-        palveluHaku.add(aakkospalvelu, 2, 3);
+        palveluHaku.add(aakkospalvelu, 3, 1);
+        aakkospalvelu.setToggleGroup(togglepalvelu);
+
+        RadioButton alueittainpalvelu = new RadioButton("alueittain");
+        palveluHaku.add(alueittainpalvelu, 3, 2);
         aakkospalvelu.setToggleGroup(togglepalvelu);
 
         ScrollPane palveluScrollaus = new ScrollPane();
         palvelupaneeli.setCenter(palveluScrollaus);
         GridPane palveluTaulukko = new GridPane();
-        palveluTaulukko.setPadding(new Insets(50,50,50,150));
-        palveluTaulukko.getColumnConstraints().addAll(kolumniLeveys, kolumniLeveys);
+        palveluTaulukko.setPadding(new Insets(20,20,20,20));
+        palveluTaulukko.getColumnConstraints().addAll(semi, kolumniLeveys, lyhyt, lyhyt);
         palveluTaulukko.setGridLinesVisible(true);
         palveluScrollaus.setContent(palveluTaulukko);
 
 
-        Nappula palveluenLisays = new Nappula("Lisää uusi palvelu", 200, 30);
-        palveluTaulukko.add(palveluenLisays, 1,0);
+        Nappula palvelunLisays = new Nappula("Lisää uusi palvelu", 200, 30);
+        palveluTaulukko.add(palvelunLisays, 1,0);
 
-        Text palvelutunnusOtsikko = new Text("Palvelun tunnus");
+        Text palvelutunnusOtsikko = new Text("Tunnus");
         palvelutunnusOtsikko.setFont(fontti);
-        Text palveluennimiOtsikko = new Text("Palvelu");
-        palveluennimiOtsikko.setFont(fontti);
+        Text palvelunnimiOtsikko = new Text("Palvelu");
+        palvelunnimiOtsikko.setFont(fontti);
+        Text palveluAlueOtsikko = new Text("Alue");
+        palveluAlueOtsikko.setFont(fontti);
+        Text palvelunHintaOtsikko = new Text("Hinta");
+        palvelunHintaOtsikko.setFont(fontti);
+
         palveluTaulukko.add(palvelutunnusOtsikko, 0, 1);
-        palveluTaulukko.add(palveluennimiOtsikko, 1, 1);
+        palveluTaulukko.add(palvelunnimiOtsikko, 1, 1);
+        palveluTaulukko.add(palveluAlueOtsikko, 2, 1);
+        palveluTaulukko.add(palvelunHintaOtsikko, 3, 1);
 
         ArrayList<Palvelu> palvelulista = new ArrayList<Palvelu>();
         palvelulista.add(new Palvelu(1, 1, "Moottorikelkkavuokra",
@@ -449,21 +469,44 @@ public class Main extends Application {
             palveluID.setFont(fontti);
             Text palveluNimi = new Text(String.valueOf(obj.getPalvelunNimi()));
             palveluNimi.setFont(fontti);
-            palveluTaulukko.add(palveluID, 0, palveluLaskuri);
+            Text palveluAlue = new Text(String.valueOf(obj.getAlueID()));
+            palveluAlue.setFont(fontti);
+            Text palveluHinta = new Text(String.valueOf(obj.getPalvelunHinta()));
+            palveluHinta.setFont(fontti);
+
 
             palveluID.setTextAlignment(TextAlignment.CENTER);
+            palveluTaulukko.add(palveluID, 0, palveluLaskuri);
             palveluTaulukko.add(palveluNimi, 1, palveluLaskuri);
+            palveluTaulukko.add(palveluAlue, 2, palveluLaskuri);
+            palveluTaulukko.add(palveluHinta, 3, palveluLaskuri);
+
             //palveluNimi.setAlignment(Pos.CENTER);
             palveluNimi.setTextAlignment(TextAlignment.CENTER);
 
             Nappula poistoNappula = new Nappula("Poista palvelu", 150, 30);
-            palveluTaulukko.add(poistoNappula, 2, palveluLaskuri);
+            palveluTaulukko.add(poistoNappula, 4, palveluLaskuri);
             poistoNappula.setOnMouseClicked(e -> {
                 // poistapalvelu();                          //TODO  poistapalvelu() - metodin luominen
             });
 
+            Nappula muokkausNappula = new Nappula("Muokkaa", 120, 30);
+            palveluTaulukko.add(muokkausNappula, 5, palveluLaskuri);
+            muokkausNappula.setOnMouseClicked(e -> {
+                // muokkaaMokki();                          //TODO  muokkaamokki() - metodin luominen
+            });
+            Nappula tarkasteleNappula = new Nappula("Tarkastele tietoja", 170, 30);
+            palveluTaulukko.add(tarkasteleNappula, 6, palveluLaskuri);
+            tarkasteleNappula.setOnMouseClicked(e -> {
+                // tarkasteleMokkia();                          //TODO  tarkasteleMokkia() - metodin luominen
+            });
+
             palveluLaskuri++;
         }
+    }
+
+    public void luoVarausnakyma() {
+
     }
 
     public static void main(String[] args) {
