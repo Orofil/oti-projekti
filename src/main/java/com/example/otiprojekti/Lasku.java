@@ -1,6 +1,8 @@
 package com.example.otiprojekti;
 
+import java.io.IOException;
 import java.util.Objects;
+import java.io.FileWriter;
 
 public class Lasku {
     private int laskuID;
@@ -70,5 +72,18 @@ public class Lasku {
     }
 
 
-    public void vieDokumentiksi() {}
+    public void vieDokumentiksi() {
+        try {
+            FileWriter writer = new FileWriter("tiedostonimi.txt");
+            writer.write("Laskun tunnus: " + getLaskuID() + "\n");
+            writer.write("Varauksen tunnus: " + getVarausID() + "\n");
+            writer.write("Laskun summa: " + getLaskunSumma() + "\n");
+            writer.write("Laskun alv: " + getLaskuAlv() + "\n");
+            writer.write("Laskun tila: " + getLaskunStatus() + "\n");
+            writer.close();
+        }
+        catch (IOException e) {
+            System.out.println("Laskutietojen tallennuksessa tapahtui virhe.");
+        }
+    }
 }
