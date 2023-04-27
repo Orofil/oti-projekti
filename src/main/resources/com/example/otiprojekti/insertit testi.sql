@@ -98,4 +98,4 @@ INSERT INTO varauksen_palvelut(varaus_id, palvelu_id, lkm) VALUES
   (7,2,2),
   (8,1,1),
   (9,5,3),
-  (10,7,2),
+  (10,7,2);
