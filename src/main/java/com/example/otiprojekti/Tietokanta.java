@@ -41,10 +41,11 @@ public class Tietokanta {
         }
     }
 
+    // TEMP testaustarkoitukseen
     public static void main(String[] args) throws SQLException, IOException {
         Tietokanta tietokanta = new Tietokanta();
 
-        // TEMP testi-insertit
+        // Tehdään testi-insertit
         tietokanta.testiInsertit();
     }
 
