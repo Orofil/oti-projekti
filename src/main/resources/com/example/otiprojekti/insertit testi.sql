@@ -24,15 +24,15 @@ INSERT INTO posti(postinro, toimipaikka) VALUES
   ('89920', 'RUHTINANSALMI'); -- Hossa
 
 INSERT INTO asiakas(postinro, etunimi, sukunimi, lahiosoite, email, puhelinnro) VALUES
-  ('95980', 'Jaakko', 'Saano', 'Lataajanpolku 2 A', 'saano.jaakko@gmail.com', '+358 49 46856'), -- TODO Meidän nimet voi poistaa näistä jos nämä tulee lopulliseen ohjelmaan
-  ('83960', 'Veikka', 'Kukko', 'Hallikatu 44', 'kukko.veikka@gmail.com', '+358 50 09442955'),
-  ('89920', 'Veeti', 'Rajatammi', 'Urheilukatu 10', 'rajatammi.veeti@gmail.com', '+358 50 34837179'),
-  ('34130', 'Oliver', 'Lehto', 'Ruotsinkatu 7 B 6', 'lehto.oliver@gmail.com', '+46 72 272 84 52'),
-  ('83960', 'Maria', 'Nieminen', 'Tehdaskatu 56', 'marianieminen@outlook.com', '+7 924 351-09-15'),
-  ('19700', 'Helmi', 'Koskinen', 'Nurmitie 1 D', 'koskhelmi@hotmail.com', '+358 50 8737755'),
-  ('98530', 'Matias', 'Mäkinen', 'Poikkikatu 18', 'matias.makinen@gmail.com', '+55 77 98426-5222'),
-  ('73200', 'Lauri', 'Korhonen', 'Vitostie 6551', 'lauri1293@gmail.com', '+358 49 4652246'),
-  ('88610', 'Olavi', 'Virtanen', 'Koukkukatu 21', 'virtanen.olavi@gmail.com', '+358 42 6859');
+  ('95980', 'Jaakko', 'Saano', 'Lataajanpolku 2 A', 'saano.jaakko@gmail.com', '+3584946856'), -- TODO Meidän nimet voi poistaa näistä jos nämä tulee lopulliseen ohjelmaan
+  ('83960', 'Veikka', 'Kukko', 'Hallikatu 44', 'kukko.veikka@gmail.com', '+3585009442955'),
+  ('89920', 'Veeti', 'Rajatammi', 'Urheilukatu 10', 'rajatammi.veeti@gmail.com', '+3585034837179'),
+  ('34130', 'Oliver', 'Lehto', 'Ruotsinkatu 7 B 6', 'lehto.oliver@gmail.com', '+46722728452'),
+  ('83960', 'Maria', 'Nieminen', 'Tehdaskatu 56', 'marianieminen@outlook.com', '+79243510915'),
+  ('19700', 'Helmi', 'Koskinen', 'Nurmitie 1 D', 'koskhelmi@hotmail.com', '+358508737755'),
+  ('98530', 'Matias', 'Mäkinen', 'Poikkikatu 18', 'matias.makinen@gmail.com', '+5577984265222'),
+  ('73200', 'Lauri', 'Korhonen', 'Vitostie 6551', 'lauri1293@gmail.com', '+358494652246'),
+  ('88610', 'Olavi', 'Virtanen', 'Koukkukatu 21', 'virtanen.olavi@gmail.com', '+358426859');
 
 -- TODO palveluiden nimet ja kuvaukset
 -- TODO joku merkitys tyypille
