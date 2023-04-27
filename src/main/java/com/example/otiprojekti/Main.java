@@ -103,15 +103,7 @@ public class Main extends Application {
         luoVarausnakyma();
 
         // Asiakaspaneelin luonti ja asetus
-        Asiakasnakyma asiakaspaneeli = new Asiakasnakyma();
-        asiakasnappula.setOnMouseClicked(e -> {
-            paneeli.setCenter(asiakaspaneeli);
-        });
-        ScrollPane asiakasScrollaus = new ScrollPane();
-        asiakaspaneeli.setCenter(asiakasScrollaus);
-        GridPane asiakasTaulukko = new GridPane();
-        asiakasTaulukko.setGridLinesVisible(true);
-        asiakasScrollaus.setContent(asiakasTaulukko);
+        luoAsiakasnakyma();
 
         // Laskupaneelin luonti ja asetus
         Laskunakyma laskupaneeli = new Laskunakyma();
@@ -652,7 +644,132 @@ public class Main extends Application {
     }
 
     public void luoAsiakasnakyma() {
+        ColumnConstraints kolumniLeveys = new ColumnConstraints();
+        kolumniLeveys.setHalignment(HPos.CENTER);
+        kolumniLeveys.setPrefWidth(200);
 
+        ColumnConstraints semi = new ColumnConstraints();
+        semi.setHalignment(HPos.CENTER);
+        semi.setPrefWidth(140);
+
+        ColumnConstraints lyhyt = new ColumnConstraints();
+        lyhyt.setHalignment(HPos.CENTER);
+        lyhyt.setPrefWidth(80);
+
+        BorderPane asiakaspaneeli = new BorderPane();
+        //paneeli.setCenter(asiakaspaneeli);
+        asiakasnappula.setOnMouseClicked(e -> {
+            paneeli.setCenter(asiakaspaneeli);
+            isoOtsikkoTeksti.setText("ASIAKKAAT");
+//            for (Nappula n : nappulat) {
+//                n.deselect();
+//            }
+//            asiakasnappula.select();
+        });
+
+        GridPane asiakasHaku = new GridPane();
+        asiakasHaku.setPadding(new Insets(50,50,50,0));
+        asiakasHaku.setHgap(100);
+        asiakasHaku.setVgap(15);
+        asiakaspaneeli.setTop(asiakasHaku);
+
+        TextField asiakasHakuKentta = new TextField();
+        Label asiakasHakuKenttaLabel = new Label("Hae asiakasta: ", asiakasHakuKentta);
+        asiakasHakuKenttaLabel.setFont(fontti);
+        asiakasHakuKenttaLabel.setContentDisplay(ContentDisplay.RIGHT);
+        asiakasHaku.add(asiakasHakuKenttaLabel, 1, 1);
+        Nappula asiakasHakuNappula = new Nappula("Suorita haku", 190, 30);
+        asiakasHaku.add(asiakasHakuNappula, 1, 2);
+        asiakasHaku.add(new Text("Näytä tulokset järjestyksessä"), 2, 0);
+
+        ToggleGroup toggleasiakas = new ToggleGroup();
+
+        RadioButton uusinasiakas = new RadioButton("uusin - vanhin");
+        asiakasHaku.add(uusinasiakas, 2, 1);
+        uusinasiakas.setToggleGroup(toggleasiakas);
+
+        RadioButton vanhinasiakas = new RadioButton("vanhin - uusin");
+        asiakasHaku.add(vanhinasiakas, 2, 2);
+        vanhinasiakas.setToggleGroup(toggleasiakas);
+
+        RadioButton aakkosasiakas = new RadioButton("A - Ö");
+        asiakasHaku.add(aakkosasiakas, 2, 3);
+        aakkosasiakas.setToggleGroup(toggleasiakas);
+
+
+        ScrollPane asiakasScrollaus = new ScrollPane();
+        asiakaspaneeli.setCenter(asiakasScrollaus);
+        GridPane asiakasTaulukko = new GridPane();
+        asiakasTaulukko.setPadding(new Insets(20,20,20,20));
+        asiakasTaulukko.getColumnConstraints().addAll(lyhyt, kolumniLeveys, kolumniLeveys, semi, lyhyt);
+        asiakasTaulukko.setGridLinesVisible(true);
+        asiakasScrollaus.setContent(asiakasTaulukko);
+
+
+        Nappula asiakasnLisays = new Nappula("Lisää uusi asiakas", 200, 30);
+        asiakasTaulukko.add(asiakasnLisays, 1,0);
+
+        Text asiakastunnusOtsikko = new Text("AsiakasID");
+        asiakastunnusOtsikko.setFont(fontti);
+        Text asiakasNimiOtsikko = new Text("Asiakas");
+        asiakasNimiOtsikko.setFont(fontti);
+        Text asiakasEmailOtsikko = new Text("Email");
+        asiakasEmailOtsikko.setFont(fontti);
+        Text asiakasPuhNroOtsikko = new Text("Puh.nro.");
+        asiakasPuhNroOtsikko.setFont(fontti);
+
+
+        asiakasTaulukko.add(asiakastunnusOtsikko, 0, 1);
+        asiakasTaulukko.add(asiakasNimiOtsikko, 1, 1);
+        asiakasTaulukko.add(asiakasEmailOtsikko, 2, 1);
+        asiakasTaulukko.add(asiakasPuhNroOtsikko, 3, 1);
+
+        ArrayList<Asiakas> asiakaslista = new ArrayList<Asiakas>();
+        asiakaslista.add(new Asiakas(
+                24, 34560, "Kukko", "Veikka",
+                "veikka.kukko@gmail.com", "Savontie 26", "0440153888"));
+        asiakaslista.add(new Asiakas(
+                25, 34572, "Kukka", "Jukka",
+                "jukka.kukka@gmail.com", "Savontie 27", "0504643299"));       //TEMP
+
+
+        int asiakasLaskuri = 2;
+        for (Asiakas obj : asiakaslista) {
+            Text asiakasID = new Text(String.valueOf(obj.getAsiakasID()));
+            asiakasID.setFont(fontti);
+            Text asiakasNimi = new Text(obj.getEtunimi() +" "+ obj.getSukunimi());
+            asiakasNimi.setFont(fontti);
+            Text asiakasEmail = new Text(String.valueOf(obj.getEmail()));
+            asiakasEmail.setFont(fontti);
+            Text asiakasPuhNro = new Text(String.valueOf(obj.getPuhnro()));
+            asiakasPuhNro.setFont(fontti);
+
+
+            asiakasTaulukko.add(asiakasID, 0, asiakasLaskuri);
+            asiakasTaulukko.add(asiakasNimi, 1, asiakasLaskuri);
+            asiakasTaulukko.add(asiakasEmail, 2, asiakasLaskuri);
+            asiakasTaulukko.add(asiakasPuhNro, 3, asiakasLaskuri);
+
+
+            Nappula poistoNappula = new Nappula("Poista", 200, 30);
+            asiakasTaulukko.add(poistoNappula, 4, asiakasLaskuri);
+            poistoNappula.setOnMouseClicked(e -> {
+                // poistaasiakas();                          //TODO  poistaasiakas() - metodin luominen
+            });
+
+            Nappula muokkausNappula = new Nappula("Muokkaa", 120, 30);
+            asiakasTaulukko.add(muokkausNappula, 5, asiakasLaskuri);
+            muokkausNappula.setOnMouseClicked(e -> {
+                // muokkaaMokki();                          //TODO  muokkaamokki() - metodin luominen
+            });
+            Nappula tarkasteleNappula = new Nappula("Tarkastele tietoja", 170, 30);
+            asiakasTaulukko.add(tarkasteleNappula, 6, asiakasLaskuri);
+            tarkasteleNappula.setOnMouseClicked(e -> {
+                // tarkasteleMokkia();                          //TODO  tarkasteleMokkia() - metodin luominen
+            });
+
+            asiakasLaskuri++;
+        }
     }
 
     public void luoLaskunakyma() {
