@@ -138,4 +138,31 @@ public class Tietokanta {
             throw new RuntimeException(e); // TODO virheen käsittely ohjelmassa
         }
     }
+
+    /**
+     * Syöttää tietokantaan varauksen.
+     * @param asiakas_id Tyyppiä int. Oltava taulussa asiakas.
+     * @param mokki_id Tyyppiä int. Oltava taulussa mokki.
+     * @param varattu_pvm Tyyppiä datetime (muotoa YYYY-MM-DD hh:mm:ss).
+     * @param vahvistus_pvm Tyyppiä datetime (muotoa YYYY-MM-DD hh:mm:ss).
+     * @param varattu_alkupvm Tyyppiä datetime (muotoa YYYY-MM-DD hh:mm:ss).
+     * @param varattu_loppupvm Tyyppiä datetime (muotoa YYYY-MM-DD hh:mm:ss).
+     */
+    public static void insertVaraus(int asiakas_id, int mokki_id, String varattu_pvm,
+                                    String vahvistus_pvm, String varattu_alkupvm, String varattu_loppupvm) {
+        // Yhdistetään MySQL:ään TODO tämä voisi ehkä olla jossain muussa
+        try (Connection con = DriverManager.getConnection(DB_URL, USER, PASS)) {
+            PreparedStatement stm = con.prepareStatement(
+                    "INSERT INTO varaus(asiakas_id,mokki_mokki_id,varattu_pvm,vahvistus_pvm,varattu_alkupvm,varattu_loppupvm) VALUES");
+            stm.setInt(1, asiakas_id);
+            stm.setInt(2, mokki_id);
+            stm.setString(3, varattu_pvm);
+            stm.setString(4, vahvistus_pvm);
+            stm.setString(5, varattu_alkupvm);
+            stm.setString(6, varattu_loppupvm);
+            stm.executeUpdate();
+        } catch (SQLException e) {
+            throw new RuntimeException(e); // TODO virheen käsittely ohjelmassa
+        }
+    }
 }
