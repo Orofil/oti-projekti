@@ -36,23 +36,19 @@ INSERT INTO asiakas(postinro, etunimi, sukunimi, lahiosoite, email, puhelinnro) 
 
 -- TODO palveluiden nimet ja kuvaukset
 -- TODO joku merkitys tyypille
--- TODO tallennetaanko arvonlisävero prosentteina kuten olen nyt tehnyt?
--- TODO palvelun ID-kentästä voisi varmaan tehdä auto incrementin
-INSERT INTO palvelu(palvelu_id, alue_id, nimi, tyyppi, kuvaus, hinta, alv) VALUES
-  (1, 1, '', 1, '', 45.9, 10),
-  (2, 1, '', 2, '', 30, 10),
-  (3, 2, '', 3, '', 10.99, 10),
-  (4, 2, '', 1, '', 8.90, 10),
-  (5, 4, '', 4, '', 20, 10),
-  (6, 6, '', 3, '', 15, 10),
-  (7, 7, '', 3, '', 20, 10),
-  (8, 8, '', 2, '', 19.99, 10),
-  (9, 5, '', 1, '', 9.99, 10),
-  (10, 7, '', 4, '', 34.20, 10),
-  (11, 5, '', 2, '', 10, 10);
+INSERT INTO palvelu(alue_id, nimi, tyyppi, kuvaus, hinta, alv) VALUES
+  (1, '', 1, '', 45.9, 10),
+  (1, '', 2, '', 30, 10),
+  (2, '', 3, '', 10.99, 10),
+  (2, '', 1, '', 8.90, 10),
+  (4, '', 4, '', 20, 10),
+  (6, '', 3, '', 15, 10),
+  (7, '', 3, '', 20, 10),
+  (8, '', 2, '', 19.99, 10),
+  (5, '', 1, '', 9.99, 10),
+  (7, '', 4, '', 34.20, 10),
+  (5, '', 2, '', 10, 10);
 
--- TODO hinta
--- TODO muutkin jutut
 INSERT INTO mokki(alue_id, postinro, mokkinimi, katuosoite, hinta, kuvaus, henkilomaara, varustelu) VALUES
   (1, '83960', 'Kultaloma', 'Kultahietikko-katu 2', 215, 'Viihtyisä, juuri valmistunut mökki upealla paikalla', 6, 'Kiitettävä'),
   (3, '93830', 'Villa Valkea', 'Lomaharjuntie 10', 400, 'Luksustason mökki kaikilla varusteilla', 10, 'Erinomainen'),
@@ -79,18 +75,17 @@ INSERT INTO varaus(asiakas_id, mokki_mokki_id, varattu_pvm, vahvistus_pvm, varat
   (4, 1, '2023-04-17 19:59:22', '2023-- ::', '2023-- ::', '2023-- ::');
 
 -- TODO summa ja alvista sama juttu kuin palvelussa
--- TODO pitäisikö tässäkin olla auto increment ID:ssä
-INSERT INTO lasku(lasku_id, varaus_id, summa, alv) VALUES
-  (1, 1, 0, 14),
-  (2, 2, 0, 14),
-  (3, 3, 0, 14),
-  (4, 4, 0, 14),
-  (5, 5, 0, 14),
-  (6, 6, 0, 14),
-  (7, 7, 0, 14),
-  (8, 8, 0, 14),
-  (9, 9, 0, 14),
-  (10, 10, 0, 14);
+INSERT INTO lasku(varaus_id, summa, alv) VALUES
+  (1, 0, 14),
+  (2, 0, 14),
+  (3, 0, 14),
+  (4, 0, 14),
+  (5, 0, 14),
+  (6, 0, 14),
+  (7, 0, 14),
+  (8, 0, 14),
+  (9, 0, 14),
+  (10, 0, 14);
 
 -- TODO kaikki
 INSERT INTO varauksen_palvelut(varaus_id, palvelu_id, lkm) VALUES
