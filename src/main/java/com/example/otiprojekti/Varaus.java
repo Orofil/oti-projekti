@@ -10,7 +10,7 @@ public class Varaus {
 
     private LocalDateTime varattuPvm;
     private LocalDateTime vahvistusPvm;
-    private LocalDateTime varausAlkuPvm;
+    private LocalDateTime varausAlkuPvm; // TODO nämä on vähän eri tavalla nimetty kuin tietokannassa, muutetaanko vastaamaan sitä?
     private LocalDateTime varausLoppuPvm;
 
     public Varaus(int varausID,
