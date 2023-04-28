@@ -271,6 +271,7 @@ public class Main extends Application {
 
         ToggleGroup toggleMokki = new ToggleGroup();
 
+        // TODO näille ehkä mieluummin VBox että niillä on samat etäisyydet
         RadioButton hintaNousevaMokki = new RadioButton("edullisin - kallein");
         mokkiHaku.add(hintaNousevaMokki, 2, 1);
         hintaNousevaMokki.setToggleGroup(toggleMokki);
