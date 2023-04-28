@@ -64,12 +64,14 @@ public class Main extends Application {
 
         VBox painikkeet = new VBox();
         painikkeet.setPadding(new Insets(100,0,0,0));
-        painikkeet.getChildren().addAll(aluenappula, mokkinappula, palvelunappula,
-                varausnappula, asiakasnappula, laskunappula);
+        for (ToggleNappula n : nappulat) {
+            painikkeet.getChildren().add(n);
+        }
 
         paneeli.setLeft(painikkeet);
         paneeli.getLeft().setStyle("-fx-background-color: black");
 
+        // Yläpalkki
         Image logonkuva = imageKuvasta("vnlogo.png");
         ImageView logo = new ImageView(logonkuva);
         logo.setFitWidth(75);
@@ -228,6 +230,7 @@ public class Main extends Application {
     }
     
     public void luoMokkinakyma() {
+        // TODO voisiko kolumnileveyden määritellä Main-luokan alussa jos sitä käytetään joka näkymässä, leveyden voisi sitten asettaa täällä erikseen
         ColumnConstraints kolumniLeveys = new ColumnConstraints();
         kolumniLeveys.setHalignment(HPos.CENTER);
         kolumniLeveys.setPrefWidth(170);
