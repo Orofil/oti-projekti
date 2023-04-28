@@ -70,13 +70,7 @@ public class Main extends Application {
         paneeli.setLeft(painikkeet);
         paneeli.getLeft().setStyle("-fx-background-color: black");
 
-        // TODO tälle "laastariratkaisulle" jokin parempi tapa, kuten erillisessä luokassa oleva julkinen metodi kuvan avaamiseen
-        Image logonkuva;
-        try {
-            logonkuva = new Image(IMGPOLKU + "vnlogo.png");
-        } catch (Exception e) {
-            logonkuva = new Image("vnlogo.png");
-        }
+        Image logonkuva = imageKuvasta("vnlogo.png");
         ImageView logo = new ImageView(logonkuva);
         logo.setFitWidth(75);
         logo.setFitHeight(75);
@@ -205,7 +199,7 @@ public class Main extends Application {
         alueTaulukko.add(aluetunnusOtsikko, 0, 1);
         alueTaulukko.add(alueennimiOtsikko, 1, 1);
 
-        ArrayList<Alue> aluelista = new ArrayList<Alue>();
+        ArrayList<Alue> aluelista = new ArrayList<>();
         aluelista.add(new Alue(1, "Ylläs"));       //TEMP
         aluelista.add(new Alue(2, "Levi"));        //TEMP
 
@@ -911,9 +905,15 @@ public class Main extends Application {
         }
     }
 
-
-
     public static void main(String[] args) {
         launch();
+    }
+
+    private Image imageKuvasta(String kuva) {
+        try {
+            return new Image(IMGPOLKU + kuva);
+        } catch (Exception e) { // TODO tarkenna vain siihen tiettyyn Exceptioniin mikä tulee
+            return new Image(kuva);
+        }
     }
 }
