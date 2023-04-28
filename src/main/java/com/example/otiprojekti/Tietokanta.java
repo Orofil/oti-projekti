@@ -236,9 +236,9 @@ public class Tietokanta {
     public ArrayList<Varaus> haeVaraus() throws SQLException {
         stm = con.prepareStatement("SELECT * FROM varaus"); // TODO missä exceptionit käsitellään, sama muihinkin metodeihin
         ResultSet rs = stm.executeQuery();
+        ArrayList<Varaus> tulokset = varausLuokaksi(rs);
         stm.close();
-
-        return varausLuokaksi(rs);
+        return tulokset;
     }
 
 
@@ -280,8 +280,8 @@ public class Tietokanta {
                     rs.getInt("mokki_id"),
                     LocalDateTime.parse(rs.getString("varattu_pvm"), dateTimeFormat),
                     LocalDateTime.parse(rs.getString("vahvistus_pvm"), dateTimeFormat),
-                    LocalDateTime.parse(rs.getString("varaus_alkupvm"), dateTimeFormat),
-                    LocalDateTime.parse(rs.getString("varaus_loppupvm"), dateTimeFormat)));
+                    LocalDateTime.parse(rs.getString("varattu_alkupvm"), dateTimeFormat),
+                    LocalDateTime.parse(rs.getString("varattu_loppupvm"), dateTimeFormat)));
         }
         return varaukset;
     }

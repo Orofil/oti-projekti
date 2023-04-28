@@ -19,6 +19,7 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.text.Font;
 
+import java.sql.SQLException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 
@@ -133,6 +134,15 @@ public class Main extends Application {
         ikkuna.setMaxWidth(MAX_LEVEYS);
         ikkuna.setMaxHeight(MAX_KORKEUS);
         ikkuna.show();
+
+        // Tietokantayhteys
+        Tietokanta tietokanta = new Tietokanta();
+        try {
+            // Tulostetaan tietokantaan erikseen syötetyt varaukset
+            System.out.println(tietokanta.haeVaraus()); // TEMP
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
     }
 
 
