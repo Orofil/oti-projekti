@@ -5,6 +5,8 @@ import java.math.BigDecimal;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.sql.*;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 
 /*
@@ -24,6 +26,11 @@ public class Tietokanta {
 
     private Connection con;
     private PreparedStatement stm;
+
+    /**
+     * SQL:n käyttämä muotoilu DateTime-tietotyypeissä
+     */
+    private final DateTimeFormatter dateTimeFormat = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 
     public Tietokanta() {
         // Tarkistetaan löytyykö tarvittavaa luokkaa yhdistämiseen
@@ -85,6 +92,24 @@ public class Tietokanta {
         }
     }
 
+
+
+    ///// Tietojen syöttö tietokantaan
+    // TODO lasku
+
+    /**
+     * Syöttää tietokantaan alueen.
+     * @param nimi Tyyppiä varchar(40).
+     */
+    public void insertAlue(String nimi) throws SQLException {
+        stm = con.prepareStatement( // TODO missä exceptionit käsitellään
+                "INSERT INTO alue(nimi) " +
+                        "VALUES (?)");
+        stm.setString(1, nimi);
+        stm.executeUpdate();
+        stm.close();
+    }
+
     /**
      * Syöttää tietokantaan asiakkaan.
      * @param postinro Tyyppiä char(5). Oltava taulussa posti.
@@ -106,6 +131,7 @@ public class Tietokanta {
         stm.setString(5, email);
         stm.setString(6, puhelinnro);
         stm.executeUpdate();
+        stm.close();
     }
 
     /**
@@ -133,6 +159,45 @@ public class Tietokanta {
         stm.setInt(7, henkilomaara);
         stm.setString(8, varustelu);
         stm.executeUpdate();
+        stm.close();
+    }
+
+    /**
+     * Syöttää tietokantaan palvelun.
+     * @param alue_id Tyyppiä int. Oltava taulussa alue.
+     * @param nimi Tyyppiä varchar(40).
+     * @param tyyppi Tyyppiä int.
+     * @param kuvaus Tyyppiä varchar(255).
+     * @param hinta Tyyppiä double(8,2).
+     * @param alv Tyyppiä int.
+     */
+    public void insertPalvelu(int alue_id, String nimi, int tyyppi, String kuvaus,
+                              BigDecimal hinta, BigDecimal alv) throws SQLException {
+        stm = con.prepareStatement( // TODO missä exceptionit käsitellään
+                "INSERT INTO palvelu(palvelu_id,alue_id,nimi,tyyppi,kuvaus,hinta,alv)" +
+                        "VALUES (?,?,?,?,?,?,?)");
+        stm.setInt(1, alue_id);
+        stm.setString(2, nimi);
+        stm.setInt(3, tyyppi);
+        stm.setString(4, kuvaus);
+        stm.setBigDecimal(5, hinta);
+        stm.setBigDecimal(6, alv);
+        stm.executeUpdate();
+        stm.close();
+    }
+
+    /**
+     * Syöttää tietokantaan postinumeron.
+     * @param postinro Tyyppiä char(5).
+     * @param toimipaikka Tyyppiä varchar(45).
+     */
+    public void insertPosti(String postinro, String toimipaikka) throws SQLException {
+        stm = con.prepareStatement( // TODO missä exceptionit käsitellään
+                "INSERT INTO posti(postinro, toimipaikka) " +
+                        "VALUES (?,?)");
+        stm.setString(1, postinro);
+        stm.setString(2, toimipaikka);
+        stm.close();
     }
 
     /**
@@ -156,48 +221,68 @@ public class Tietokanta {
         stm.setString(5, varattu_alkupvm);
         stm.setString(6, varattu_loppupvm);
         stm.executeUpdate();
+        stm.close();
+    }
+
+
+
+    ///// Tietokannasta hakemiset
+    // TODO vaikka mitä tarvittavia hakuja
+
+    /**
+     * Hakee tietokannasta kaikki varaukset.
+     * @return Lista {@link Varaus Varauksista}
+     */
+    public ArrayList<Varaus> haeVaraus() throws SQLException {
+        stm = con.prepareStatement("SELECT * FROM varaus"); // TODO missä exceptionit käsitellään, sama muihinkin metodeihin
+        ResultSet rs = stm.executeQuery();
+        stm.close();
+
+        return muutaVaraus(rs);
+    }
+
+
+
+    ///// Muuttamiset tietokannan tiedoista olioihin
+    // TODO alue, lasku, mokki, palvelu (postia ei ilmeisesti tehdä erillisenä olioluokkana, mutta en tiedä miksi sitten esim. alue tehdään)
+
+    /**
+     * Muuttaa tietokannasta saadun ResultSetin {@link Asiakas Asiakas}-olioiksi.
+     * @param rs Tietokannasta saatu ResultSet asiakkaita
+     * @return Lista asiakkaista
+     */
+    private ArrayList<Asiakas> muutaAsiakas(ResultSet rs) throws SQLException {
+        ArrayList<Asiakas> asiakkaat = new ArrayList<>();
+        while (rs.next()) {
+            asiakkaat.add(new Asiakas(
+                    rs.getInt("asiakas_id"),
+                    rs.getInt("postinro"), // TODO toimiiko getInt vai pitääkö käyttää Integer.valueOf koska tietokannassa postinro on tyyppiä char
+                    rs.getString("etunimi"),
+                    rs.getString("sukunimi"),
+                    rs.getString("lahiosoite"),
+                    rs.getString("email"),
+                    rs.getString("puhelinnro")));
+        }
+        return asiakkaat;
     }
 
     /**
-     * Syöttää tietokantaan palvelun.
-     * @param alue_id Tyyppiä int. Oltava taulussa alue.
-     * @param nimi Tyyppiä varchar(40).
-     * @param tyyppi Tyyppiä int.
-     * @param kuvaus Tyyppiä varchar(255).
-     * @param hinta Tyyppiä double(8,2).
-     * @param alv Tyyppiä int.
+     * Muuttaa tietokannasta saadun ResultSetin {@link Varaus Varaus}-olioiksi.
+     * @param rs Tietokannasta saatu ResultSet varauksia
+     * @return Lista varauksista
      */
-    public void insertPalvelu(int alue_id, String nimi, int tyyppi, String kuvaus,
-                              BigDecimal hinta, BigDecimal alv) throws SQLException {
-        stm = con.prepareStatement( // TODO missä exceptionit käsitellään
-                "INSERT INTO palvelu(palvelu_id,alue_id,nimi,tyyppi,kuvaus,hinta,alv)" +
-                "VALUES (?,?,?,?,?,?,?)");
-        stm.setInt(1, alue_id);
-        stm.setString(2, nimi);
-        stm.setInt(3, tyyppi);
-        stm.setString(4, kuvaus);
-        stm.setBigDecimal(5, hinta);
-        stm.setBigDecimal(6, alv);
-        stm.executeUpdate();
-    }
-
-    /**
-     * Syöttää tietokantaan alueen.
-     * @param nimi Tyyppiä varchar(40).
-     */
-    public void insertAlue(String nimi) throws SQLException {
-        stm = con.prepareStatement( // TODO missä exceptionit käsitellään
-                "INSERT INTO alue(nimi) " +
-                "VALUES (?)");
-        stm.setString(1, nimi);
-        stm.executeUpdate();
-    }
-
-    public void insertPosti(String postinro, String toimipaikka) throws SQLException {
-        stm = con.prepareStatement( // TODO missä exceptionit käsitellään
-                "INSERT INTO posti(postinro, toimipaikka) " +
-                "VALUES (?,?)");
-        stm.setString(1, postinro);
-        stm.setString(2, toimipaikka);
+    private ArrayList<Varaus> muutaVaraus(ResultSet rs) throws SQLException {
+        ArrayList<Varaus> varaukset = new ArrayList<>();
+        while (rs.next()) {
+            varaukset.add(new Varaus(
+                    rs.getInt("varaus_id"),
+                    rs.getInt("asiakas_id"),
+                    rs.getInt("mokki_id"),
+                    LocalDateTime.parse(rs.getString("varattu_pvm"), dateTimeFormat),
+                    LocalDateTime.parse(rs.getString("vahvistus_pvm"), dateTimeFormat),
+                    LocalDateTime.parse(rs.getString("varaus_alkupvm"), dateTimeFormat),
+                    LocalDateTime.parse(rs.getString("varaus_loppupvm"), dateTimeFormat)));
+        }
+        return varaukset;
     }
 }
