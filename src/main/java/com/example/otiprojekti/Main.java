@@ -29,6 +29,15 @@ public class Main extends Application {
      */
     private static final String IMGPOLKU = "src/main/resources/com/example/otiprojekti/";
 
+    // Ikkunan mittasuhde jaettuna kahteen kenttään
+    private final double SUHDE_W = 5.5;
+    private final double SUHDE_H = 3;
+    // Kuinka suuren osan näytön leveydestä tai korkeudesta ikkuna vie enintään
+    private final double MAX_OSUUS = 0.9;
+    // Ikkunan suurin sallittu koko
+    private final int MAX_LEVEYS = 1600; // TODO Näiden suhde ei ole sama kuin tuo oletussuhde mikä on vähän outoa
+    private final int MAX_KORKEUS = 800;
+
     // TODO tehdäänkö näistä private?
     public ToggleNappula aluenappula = new ToggleNappula("Alueet");
     public ToggleNappula mokkinappula = new ToggleNappula("Mökit");
@@ -119,18 +128,14 @@ public class Main extends Application {
         Rectangle2D bounds = Screen.getPrimary().getVisualBounds();
         double boundsW = bounds.getWidth();
         double boundsH = bounds.getHeight();
-        // Ikkunan mittasuhde jaettuna kahteen muuttujaan
-        double suhdeW = 5.5;
-        double suhdeH = 3;
-        double boundsSuhdeMin = Math.min(boundsW / suhdeW, boundsH / suhdeH);
-        // Kuinka suuren osan näytön leveydestä tai korkeudesta ikkuna vie enintään
-        double maxOsuus = 0.9;
-        double W = boundsSuhdeMin * maxOsuus * suhdeW;
-        double H = boundsSuhdeMin * maxOsuus * suhdeH;
+        double boundsSuhdeMin = Math.min(boundsW / SUHDE_W, boundsH / SUHDE_H);
+        double W = Math.min(boundsSuhdeMin * MAX_OSUUS * SUHDE_W, MAX_LEVEYS);
+        double H = Math.min(boundsSuhdeMin * MAX_OSUUS * SUHDE_H, MAX_KORKEUS);
+
         Scene aluekehys = new Scene(paneeli, W, H);
         ikkuna.setScene(aluekehys);
-        ikkuna.setMaxWidth(1600);
-        ikkuna.setMaxHeight(800);
+        ikkuna.setMaxWidth(MAX_LEVEYS);
+        ikkuna.setMaxHeight(MAX_KORKEUS);
         ikkuna.show();
     }
 
