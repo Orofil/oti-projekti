@@ -230,11 +230,23 @@ public class Tietokanta {
     // TODO vaikka mitä tarvittavia hakuja
 
     /**
+     * Hakee tietokannasta kaikki mökit.
+     * @return Lista {@link Mokki Mokeista}
+     */
+    public ArrayList<Mokki> haeMokki() throws SQLException {
+        stm = con.prepareStatement("SELECT * FROM mokki"); // TODO missä exceptionit käsitellään, sama muihinkin metodeihin
+        ResultSet rs = stm.executeQuery();
+        ArrayList<Mokki> tulokset = mokkiLuokaksi(rs);
+        stm.close();
+        return tulokset;
+    }
+
+    /**
      * Hakee tietokannasta kaikki varaukset.
      * @return Lista {@link Varaus Varauksista}
      */
     public ArrayList<Varaus> haeVaraus() throws SQLException {
-        stm = con.prepareStatement("SELECT * FROM varaus"); // TODO missä exceptionit käsitellään, sama muihinkin metodeihin
+        stm = con.prepareStatement("SELECT * FROM varaus");
         ResultSet rs = stm.executeQuery();
         ArrayList<Varaus> tulokset = varausLuokaksi(rs);
         stm.close();
@@ -264,6 +276,23 @@ public class Tietokanta {
                     rs.getString("puhelinnro")));
         }
         return asiakkaat;
+    }
+
+    private ArrayList<Mokki> mokkiLuokaksi(ResultSet rs) throws SQLException {
+        ArrayList<Mokki> mokit = new ArrayList<>();
+        while (rs.next()) {
+            mokit.add(new Mokki(
+                    rs.getInt("mokki_id"),
+                    rs.getInt("alue_id"),
+                    rs.getInt("postinro"), // TODO toimiiko getInt vai pitääkö käyttää Integer.valueOf koska tietokannassa postinro on tyyppiä char
+                    rs.getString("mokkinimi"),
+                    rs.getString("katuosoite"),
+                    rs.getDouble("hinta"), // TODO käytetäänkö bigdecimal vai muutetaanko vaan kokonaisluvuksi kaikki hinnat
+                    rs.getString("kuvaus"),
+                    rs.getInt("henkilomaara"),
+                    rs.getString("varustelu")));
+        }
+        return mokit;
     }
 
     /**
