@@ -238,7 +238,7 @@ public class Tietokanta {
         ResultSet rs = stm.executeQuery();
         stm.close();
 
-        return muutaVaraus(rs);
+        return varausLuokaksi(rs);
     }
 
 
@@ -251,7 +251,7 @@ public class Tietokanta {
      * @param rs Tietokannasta saatu ResultSet asiakkaita
      * @return Lista asiakkaista
      */
-    private ArrayList<Asiakas> muutaAsiakas(ResultSet rs) throws SQLException {
+    private ArrayList<Asiakas> asiakasLuokaksi(ResultSet rs) throws SQLException {
         ArrayList<Asiakas> asiakkaat = new ArrayList<>();
         while (rs.next()) {
             asiakkaat.add(new Asiakas(
@@ -271,7 +271,7 @@ public class Tietokanta {
      * @param rs Tietokannasta saatu ResultSet varauksia
      * @return Lista varauksista
      */
-    private ArrayList<Varaus> muutaVaraus(ResultSet rs) throws SQLException {
+    private ArrayList<Varaus> varausLuokaksi(ResultSet rs) throws SQLException {
         ArrayList<Varaus> varaukset = new ArrayList<>();
         while (rs.next()) {
             varaukset.add(new Varaus(
