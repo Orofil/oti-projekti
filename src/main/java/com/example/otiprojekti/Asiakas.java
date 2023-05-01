@@ -58,10 +58,11 @@ public class Asiakas {
     }
 
     /**
+     * @param sukunimiEnsin Kirjoitetaanko sukunimi ensin vai ei
      * @return Asiakkaan etu- ja sukunimi
      */
-    public String getNimi() {
-        return etunimi + " " + sukunimi;
+    public String getNimi(boolean sukunimiEnsin) {
+        return sukunimiEnsin ? sukunimi + " " + etunimi : etunimi + " " + sukunimi;
     }
 
     public String getEmail() {
