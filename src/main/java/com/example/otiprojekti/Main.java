@@ -212,7 +212,11 @@ public class Main extends Application {
             //alueNimi.setAlignment(Pos.CENTER);
             alueNimi.setTextAlignment(TextAlignment.CENTER);
 
-            Nappula poistoNappula = new Nappula("Poista alue", 150, 30);
+            Nappula poistoNappula = new Nappula("", 150, 30);
+            ImageView roskis = new ImageView(imageKuvasta("roskis.png"));
+            roskis.setFitWidth(22);
+            roskis.setFitHeight(22);
+            poistoNappula.setGraphic(roskis);
             alueTaulukko.add(poistoNappula, 2, rivi);
             poistoNappula.setOnMouseClicked(e -> {
                 // poistaAlue();                          //TODO  poistaAlue() - metodin luominen
@@ -289,7 +293,7 @@ public class Main extends Application {
         GridPane mokkiTaulukko = new GridPane();
         mokkiTaulukko.setPadding(new Insets(20,20,20,20));
         mokkiTaulukko.getColumnConstraints().addAll(
-                lyhyt, kolumniLeveys, lyhyt, lyhyt, lyhyt, semi, semi, kolumniLeveys);
+                lyhyt, kolumniLeveys, lyhyt, lyhyt, lyhyt, lyhyt, lyhyt, kolumniLeveys);
         mokkiTaulukko.setGridLinesVisible(true);
         mokkiScrollaus.setContent(mokkiTaulukko);
 
@@ -343,12 +347,20 @@ public class Main extends Application {
             mokkiTaulukko.add(mokkiHinta, 3, rivi);
             mokkiTaulukko.add(mokkiHloMaara, 4, rivi);
 
-            Nappula poistoNappula = new Nappula("Poista", 120, 30);
+            Nappula poistoNappula = new Nappula("", 150, 30);
+            ImageView roskis = new ImageView(imageKuvasta("roskis.png"));
+            roskis.setFitWidth(22);
+            roskis.setFitHeight(22);
+            poistoNappula.setGraphic(roskis);
             mokkiTaulukko.add(poistoNappula, 5, rivi);
             poistoNappula.setOnMouseClicked(e -> {
                 // poistamokki();                          //TODO  poistamokki() - metodin luominen
             });
-            Nappula muokkausNappula = new Nappula("Muokkaa", 120, 30);
+            Nappula muokkausNappula = new Nappula("", 100, 30);
+            ImageView muokkaus = new ImageView(imageKuvasta("muokkaus.png"));
+            muokkaus.setFitWidth(23);
+            muokkaus.setFitHeight(22);
+            muokkausNappula.setGraphic(muokkaus);
             mokkiTaulukko.add(muokkausNappula, 6, rivi);
             muokkausNappula.setOnMouseClicked(e -> {
                 // muokkaaMokki();                          //TODO  muokkaamokki() - metodin luominen
@@ -423,7 +435,7 @@ public class Main extends Application {
         palvelupaneeli.setCenter(palveluScrollaus);
         GridPane palveluTaulukko = new GridPane();
         palveluTaulukko.setPadding(new Insets(20,20,20,20));
-        palveluTaulukko.getColumnConstraints().addAll(semi, kolumniLeveys, lyhyt, lyhyt);
+        palveluTaulukko.getColumnConstraints().addAll(semi, kolumniLeveys, lyhyt, lyhyt, lyhyt, lyhyt);
         palveluTaulukko.setGridLinesVisible(true);
         palveluScrollaus.setContent(palveluTaulukko);
 
@@ -475,13 +487,21 @@ public class Main extends Application {
             //palveluNimi.setAlignment(Pos.CENTER);
             palveluNimi.setTextAlignment(TextAlignment.CENTER);
 
-            Nappula poistoNappula = new Nappula("Poista palvelu", 150, 30);
+            Nappula poistoNappula = new Nappula("", 150, 30);
+            ImageView roskis = new ImageView(imageKuvasta("roskis.png"));
+            roskis.setFitWidth(22);
+            roskis.setFitHeight(22);
+            poistoNappula.setGraphic(roskis);
             palveluTaulukko.add(poistoNappula, 4, rivi);
             poistoNappula.setOnMouseClicked(e -> {
                 // poistapalvelu();                          //TODO  poistapalvelu() - metodin luominen
             });
 
-            Nappula muokkausNappula = new Nappula("Muokkaa", 120, 30);
+            Nappula muokkausNappula = new Nappula("", 100, 30);
+            ImageView muokkaus = new ImageView(imageKuvasta("muokkaus.png"));
+            muokkaus.setFitWidth(23);
+            muokkaus.setFitHeight(22);
+            muokkausNappula.setGraphic(muokkaus);
             palveluTaulukko.add(muokkausNappula, 5, rivi);
             muokkausNappula.setOnMouseClicked(e -> {
                 // muokkaaMokki();                          //TODO  muokkaamokki() - metodin luominen
@@ -618,13 +638,21 @@ public class Main extends Application {
             //varausNimi.setAlignment(Pos.CENTER);
             varausNimi.setTextAlignment(TextAlignment.CENTER);
 
-            Nappula poistoNappula = new Nappula("Poista varaus", 200, 30);
+            Nappula poistoNappula = new Nappula("", 150, 30);
+            ImageView roskis = new ImageView(imageKuvasta("roskis.png"));
+            roskis.setFitWidth(22);
+            roskis.setFitHeight(22);
+            poistoNappula.setGraphic(roskis);
             varausTaulukko.add(poistoNappula, 3, rivi);
             poistoNappula.setOnMouseClicked(e -> {
                 // poistavaraus();                          //TODO  poistavaraus() - metodin luominen
             });
 
-            Nappula muokkausNappula = new Nappula("Muokkaa", 120, 30);
+            Nappula muokkausNappula = new Nappula("", 100, 30);
+            ImageView muokkaus = new ImageView(imageKuvasta("muokkaus.png"));
+            muokkaus.setFitWidth(23);
+            muokkaus.setFitHeight(22);
+            muokkausNappula.setGraphic(muokkaus);
             varausTaulukko.add(muokkausNappula, 4, rivi);
             muokkausNappula.setOnMouseClicked(e -> {
                 // muokkaaMokki();                          //TODO  muokkaamokki() - metodin luominen
@@ -746,13 +774,21 @@ public class Main extends Application {
             asiakasTaulukko.add(asiakasPuhNro, 3, rivi);
 
 
-            Nappula poistoNappula = new Nappula("Poista", 200, 30);
+            Nappula poistoNappula = new Nappula("", 150, 30);
+            ImageView roskis = new ImageView(imageKuvasta("roskis.png"));
+            roskis.setFitWidth(22);
+            roskis.setFitHeight(22);
+            poistoNappula.setGraphic(roskis);
             asiakasTaulukko.add(poistoNappula, 4, rivi);
             poistoNappula.setOnMouseClicked(e -> {
                 // poistaasiakas();                          //TODO  poistaasiakas() - metodin luominen
             });
 
-            Nappula muokkausNappula = new Nappula("Muokkaa", 120, 30);
+            Nappula muokkausNappula = new Nappula("", 100, 30);
+            ImageView muokkaus = new ImageView(imageKuvasta("muokkaus.png"));
+            muokkaus.setFitWidth(23);
+            muokkaus.setFitHeight(22);
+            muokkausNappula.setGraphic(muokkaus);
             asiakasTaulukko.add(muokkausNappula, 5, rivi);
             muokkausNappula.setOnMouseClicked(e -> {
                 // muokkaaMokki();                          //TODO  muokkaamokki() - metodin luominen
@@ -874,13 +910,21 @@ public class Main extends Application {
             laskuTaulukko.add(laskuStatus, 3, rivi);
 
 
-            Nappula poistoNappula = new Nappula("Poista", 200, 30);
+            Nappula poistoNappula = new Nappula("", 150, 30);
+            ImageView roskis = new ImageView(imageKuvasta("roskis.png"));
+            roskis.setFitWidth(22);
+            roskis.setFitHeight(22);
+            poistoNappula.setGraphic(roskis);
             laskuTaulukko.add(poistoNappula, 4, rivi);
             poistoNappula.setOnMouseClicked(e -> {
                 // poistalasku();                          //TODO  poistalasku() - metodin luominen
             });
 
-            Nappula muokkausNappula = new Nappula("Muokkaa", 100, 30);
+            Nappula muokkausNappula = new Nappula("", 100, 30);
+            ImageView muokkaus = new ImageView(imageKuvasta("muokkaus.png"));
+            muokkaus.setFitWidth(23);
+            muokkaus.setFitHeight(22);
+            muokkausNappula.setGraphic(muokkaus);
             laskuTaulukko.add(muokkausNappula, 5, rivi);
             muokkausNappula.setOnMouseClicked(e -> {
                 // muokkaaLasku();                          //TODO  muokkaamokki() - metodin luominen
@@ -892,7 +936,11 @@ public class Main extends Application {
                 // tarkasteleLasku();                          //TODO  tarkasteleMokkia() - metodin luominen
             });
 
-            Nappula luoLaskuNappula = new Nappula("Vie tiedostoksi", 170, 30);
+            Nappula luoLaskuNappula = new Nappula("", 150, 30);
+            ImageView tiedostoksi = new ImageView(imageKuvasta("tiedostoksi.png"));
+            tiedostoksi.setFitWidth(33);
+            tiedostoksi.setFitHeight(22);
+            luoLaskuNappula.setGraphic(tiedostoksi);
             laskuTaulukko.add(luoLaskuNappula, 7, rivi);
             luoLaskuNappula.setOnMouseClicked(e -> {
                 // luoLasku();                          //TODO  tarkasteleMokkia() - metodin luominen
