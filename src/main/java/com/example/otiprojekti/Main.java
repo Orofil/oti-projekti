@@ -331,10 +331,10 @@ public class Main extends Application {
 
         ArrayList<Mokki> mokkilista = new ArrayList<>();
         mokkilista.add(new Mokki(1,1, 34110,"Sininen mökki", "Sinitie 2",
-        200, "Valoisa hirsimökki koko perheelle tai pienelle kaveriporukalle saunalla ja porealtaalla.",
+        BigDecimal.valueOf(200), "Valoisa hirsimökki koko perheelle tai pienelle kaveriporukalle saunalla ja porealtaalla.",
         6, "Sauna, poreallas"));       //TEMP
         mokkilista.add(new Mokki(2,1, 34100,"Punainen mökki", "Sinitie 3",
-                250, "Viihtyisä ja tilava hirsimökki koko perheelle tai kaveriporukalle saunalla ja porealtaalla.",
+                BigDecimal.valueOf(250), "Viihtyisä ja tilava hirsimökki koko perheelle tai kaveriporukalle saunalla ja porealtaalla.",
                 8, "Sauna, poreallas"));       //TEMP
 
 
@@ -866,12 +866,12 @@ public class Main extends Application {
         laskuTaulukko.add(laskuSummaOtsikko, 2, 1);
         laskuTaulukko.add(laskuStatusOtsikko, 3, 1);
 
-        ArrayList<Lasku> laskulista = new ArrayList<Lasku>();
+        ArrayList<Lasku> laskulista = new ArrayList<>();
         laskulista.add(new Lasku(
-                24, 345, 240, 14,
+                24, 345, BigDecimal.valueOf(240), 14,
                 "Maksettu"));
         laskulista.add(new Lasku(
-                25, 346, 380, 14,
+                25, 346, BigDecimal.valueOf(380), 14,
                 "Maksamatta"));     //TEMP
 
 
