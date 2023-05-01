@@ -41,24 +41,27 @@ public class Main extends Application {
     private final int MAX_KORKEUS = 800;
 
     // TODO tehdäänkö näistä private?
-    public ToggleNappula aluenappula = new ToggleNappula("Alueet");
-    public ToggleNappula mokkinappula = new ToggleNappula("Mökit");
-    public ToggleNappula palvelunappula = new ToggleNappula("Palvelut");
-    public ToggleNappula varausnappula = new ToggleNappula("Varaukset");
-    public ToggleNappula asiakasnappula = new ToggleNappula("Asiakkaat");
-    public ToggleNappula laskunappula = new ToggleNappula("Laskut");
-    public ToggleNappula[] nappulat = new ToggleNappula[] {
+    private final ToggleNappula aluenappula = new ToggleNappula("Alueet");
+    private final ToggleNappula mokkinappula = new ToggleNappula("Mökit");
+    private final ToggleNappula palvelunappula = new ToggleNappula("Palvelut");
+    private final ToggleNappula varausnappula = new ToggleNappula("Varaukset");
+    private final ToggleNappula asiakasnappula = new ToggleNappula("Asiakkaat");
+    private final ToggleNappula laskunappula = new ToggleNappula("Laskut");
+    private final ToggleNappula[] nappulat = new ToggleNappula[] {
             aluenappula, mokkinappula, palvelunappula, varausnappula, asiakasnappula, laskunappula};
-    private ToggleGroup tgSivuvalikko = new ToggleGroup();
+    private final ToggleGroup tgSivuvalikko = new ToggleGroup();
 
-    public BorderPane paneeli = new BorderPane();
+    private final BorderPane paneeli = new BorderPane();
+    private final Text isoOtsikkoTeksti = new Text();
 
-    private final Font fontti = Font.font(16);
+    /**
+     * Fontti, jota käytetään tavalliseen tekstiin.
+     */
+    private static final Font fontti = Font.font(16);
 
-    Text isoOtsikkoTeksti = new Text("ALUEET");
 
     // Tietokantayhteys
-    Tietokanta tietokanta = new Tietokanta();
+    private final Tietokanta tietokanta = new Tietokanta(); // TODO jos tehdään nappi uudelleen yhdistämiseen niin sitten final pitää poistaa koska olio luodaan uudelleen
 
     @Override
     public void start(Stage ikkuna) {
@@ -99,30 +102,18 @@ public class Main extends Application {
         isoOtsikkoTeksti.setY(85);
 
 
-
-
         //aluepaneeli.setTop(new Nappula("Paina tästä!")); // TEMP
 
+        // Luodaan eri paneelit
         luoAluenakyma();
-
-
-        // Mokkipaneelin luonti ja asetus
-
         luoMokkinakyma();
-
-
-        // Palvelupaneelin luonti ja asetus
         luoPalvelunakyma();
-
-
-        // Varauspaneelin luonti ja asetus
         luoVarausnakyma();
-
-        // Asiakaspaneelin luonti ja asetus
         luoAsiakasnakyma();
-
-        // Laskupaneelin luonti ja asetus
         luoLaskunakyma();
+
+        // Valitaan oletuksena aluepaneeli
+        aluenappula.fire();
 
 
         // Lasketaan koko ikkunalle
@@ -131,25 +122,22 @@ public class Main extends Application {
         double boundsH = bounds.getHeight();
         double boundsSuhdeMin = Math.min(boundsW / SUHDE_W, boundsH / SUHDE_H);
         double W = Math.min(boundsSuhdeMin * MAX_OSUUS * SUHDE_W, MAX_LEVEYS);
-        double H = Math.min(boundsSuhdeMin * MAX_OSUUS * SUHDE_H, MAX_KORKEUS);
+        double H = Math.min(boundsSuhdeMin * MAX_OSUUS * SUHDE_H, MAX_KORKEUS); // TODO tämä ei ihan toimi, ikkuna voi mennä yhä vähän liian isoksi
 
-        Scene aluekehys = new Scene(paneeli, W, H);
-        ikkuna.setScene(aluekehys);
+        Scene kehys = new Scene(paneeli, W, H);
+        ikkuna.setScene(kehys);
         ikkuna.setMaxWidth(MAX_LEVEYS);
         ikkuna.setMaxHeight(MAX_KORKEUS);
         ikkuna.show();
     }
 
-
     public void luoAluenakyma() {
-
         ColumnConstraints kolumniLeveys = new ColumnConstraints();
         kolumniLeveys.setHalignment(HPos.CENTER);
         kolumniLeveys.setPrefWidth(200);
 
         BorderPane aluepaneeli = new BorderPane();
-        paneeli.setCenter(aluepaneeli);
-        aluenappula.setOnMouseClicked(e -> {
+        aluenappula.setOnAction(e -> {
             paneeli.setCenter(aluepaneeli);
             isoOtsikkoTeksti.setText("ALUEET");
 //            for (Nappula2 n : nappulat) {
@@ -211,26 +199,26 @@ public class Main extends Application {
         aluelista.add(new Alue(2, "Levi"));        //TEMP
 
 
-        int laskuri = 2;
+        int rivi = 2;
         for (Alue obj : aluelista) {
             Text alueID = new Text(String.valueOf(obj.getAlueID()));
             alueID.setFont(fontti);
             Text alueNimi = new Text(String.valueOf(obj.getAlueenNimi()));
             alueNimi.setFont(fontti);
-            alueTaulukko.add(alueID, 0, laskuri);
+            alueTaulukko.add(alueID, 0, rivi);
 
             alueID.setTextAlignment(TextAlignment.CENTER);
-            alueTaulukko.add(alueNimi, 1, laskuri);
+            alueTaulukko.add(alueNimi, 1, rivi);
             //alueNimi.setAlignment(Pos.CENTER);
             alueNimi.setTextAlignment(TextAlignment.CENTER);
 
             Nappula poistoNappula = new Nappula("Poista alue", 150, 30);
-            alueTaulukko.add(poistoNappula, 2, laskuri);
+            alueTaulukko.add(poistoNappula, 2, rivi);
             poistoNappula.setOnMouseClicked(e -> {
                 // poistaAlue();                          //TODO  poistaAlue() - metodin luominen
             });
 
-            laskuri++;
+            rivi++;
         }
     }
     
@@ -249,8 +237,7 @@ public class Main extends Application {
         lyhyt.setPrefWidth(80);
 
         BorderPane mokkipaneeli = new BorderPane();
-        //paneeli.setCenter(mokkipaneeli);
-        mokkinappula.setOnMouseClicked(e -> {
+        mokkinappula.setOnAction(e -> {
             paneeli.setCenter(mokkipaneeli);
             isoOtsikkoTeksti.setText("MÖKIT");
 //            for (Nappula n : nappulat) {
@@ -328,7 +315,6 @@ public class Main extends Application {
         mokkiTaulukko.add(mokinHloMaaraOtsikko, 4, 1);
 
 
-
         ArrayList<Mokki> mokkilista = new ArrayList<>();
         mokkilista.add(new Mokki(1,1, 34110,"Sininen mökki", "Sinitie 2",
         BigDecimal.valueOf(200), "Valoisa hirsimökki koko perheelle tai pienelle kaveriporukalle saunalla ja porealtaalla.",
@@ -338,7 +324,7 @@ public class Main extends Application {
                 8, "Sauna, poreallas"));       //TEMP
 
 
-        int mokkiLaskuri = 2;
+        int rivi = 2;
         for (Mokki obj : mokkilista) {
             Text mokkiID = new Text(String.valueOf(obj.getMokkiID()));
             mokkiID.setFont(fontti);
@@ -351,34 +337,33 @@ public class Main extends Application {
             Text mokkiHloMaara = new Text(String.valueOf(obj.getHloMaara()));
             mokkiHloMaara.setFont(fontti);
 
-            mokkiTaulukko.add(mokkiID, 0, mokkiLaskuri);
-            mokkiTaulukko.add(mokkiNimi, 1, mokkiLaskuri);
-            mokkiTaulukko.add(mokkiAlue, 2, mokkiLaskuri);
-            mokkiTaulukko.add(mokkiHinta, 3, mokkiLaskuri);
-            mokkiTaulukko.add(mokkiHloMaara, 4, mokkiLaskuri);
+            mokkiTaulukko.add(mokkiID, 0, rivi);
+            mokkiTaulukko.add(mokkiNimi, 1, rivi);
+            mokkiTaulukko.add(mokkiAlue, 2, rivi);
+            mokkiTaulukko.add(mokkiHinta, 3, rivi);
+            mokkiTaulukko.add(mokkiHloMaara, 4, rivi);
 
             Nappula poistoNappula = new Nappula("Poista", 120, 30);
-            mokkiTaulukko.add(poistoNappula, 5, mokkiLaskuri);
+            mokkiTaulukko.add(poistoNappula, 5, rivi);
             poistoNappula.setOnMouseClicked(e -> {
                 // poistamokki();                          //TODO  poistamokki() - metodin luominen
             });
             Nappula muokkausNappula = new Nappula("Muokkaa", 120, 30);
-            mokkiTaulukko.add(muokkausNappula, 6, mokkiLaskuri);
+            mokkiTaulukko.add(muokkausNappula, 6, rivi);
             muokkausNappula.setOnMouseClicked(e -> {
                 // muokkaaMokki();                          //TODO  muokkaamokki() - metodin luominen
             });
             Nappula tarkasteleNappula = new Nappula("Tarkastele tietoja", 170, 30);
-            mokkiTaulukko.add(tarkasteleNappula, 7, mokkiLaskuri);
+            mokkiTaulukko.add(tarkasteleNappula, 7, rivi);
             tarkasteleNappula.setOnMouseClicked(e -> {
                 // tarkasteleMokkia();                          //TODO  tarkasteleMokkia() - metodin luominen
             });
 
-            mokkiLaskuri++;
+            rivi++;
         }
     }
     
     public void luoPalvelunakyma() {
-
         ColumnConstraints kolumniLeveys = new ColumnConstraints();
         kolumniLeveys.setHalignment(HPos.CENTER);
         kolumniLeveys.setPrefWidth(200);
@@ -392,8 +377,7 @@ public class Main extends Application {
         lyhyt.setPrefWidth(80);
 
         BorderPane palvelupaneeli = new BorderPane();
-        //paneeli.setCenter(palvelupaneeli);
-        palvelunappula.setOnMouseClicked(e -> {
+        palvelunappula.setOnAction(e -> {
             paneeli.setCenter(palvelupaneeli);
             isoOtsikkoTeksti.setText("PALVELUT");
 //            for (Nappula n : nappulat) {
@@ -470,7 +454,7 @@ public class Main extends Application {
                 BigDecimal.valueOf(70), 24)); // TEMP
 
 
-        int palveluLaskuri = 2;
+        int rivi = 2;
         for (Palvelu obj : palvelulista) {
             Text palveluID = new Text(String.valueOf(obj.getPalveluID()));
             palveluID.setFont(fontti);
@@ -483,32 +467,32 @@ public class Main extends Application {
 
 
             palveluID.setTextAlignment(TextAlignment.CENTER);
-            palveluTaulukko.add(palveluID, 0, palveluLaskuri);
-            palveluTaulukko.add(palveluNimi, 1, palveluLaskuri);
-            palveluTaulukko.add(palveluAlue, 2, palveluLaskuri);
-            palveluTaulukko.add(palveluHinta, 3, palveluLaskuri);
+            palveluTaulukko.add(palveluID, 0, rivi);
+            palveluTaulukko.add(palveluNimi, 1, rivi);
+            palveluTaulukko.add(palveluAlue, 2, rivi);
+            palveluTaulukko.add(palveluHinta, 3, rivi);
 
             //palveluNimi.setAlignment(Pos.CENTER);
             palveluNimi.setTextAlignment(TextAlignment.CENTER);
 
             Nappula poistoNappula = new Nappula("Poista palvelu", 150, 30);
-            palveluTaulukko.add(poistoNappula, 4, palveluLaskuri);
+            palveluTaulukko.add(poistoNappula, 4, rivi);
             poistoNappula.setOnMouseClicked(e -> {
                 // poistapalvelu();                          //TODO  poistapalvelu() - metodin luominen
             });
 
             Nappula muokkausNappula = new Nappula("Muokkaa", 120, 30);
-            palveluTaulukko.add(muokkausNappula, 5, palveluLaskuri);
+            palveluTaulukko.add(muokkausNappula, 5, rivi);
             muokkausNappula.setOnMouseClicked(e -> {
                 // muokkaaMokki();                          //TODO  muokkaamokki() - metodin luominen
             });
             Nappula tarkasteleNappula = new Nappula("Tarkastele tietoja", 170, 30);
-            palveluTaulukko.add(tarkasteleNappula, 6, palveluLaskuri);
+            palveluTaulukko.add(tarkasteleNappula, 6, rivi);
             tarkasteleNappula.setOnMouseClicked(e -> {
                 // tarkasteleMokkia();                          //TODO  tarkasteleMokkia() - metodin luominen
             });
 
-            palveluLaskuri++;
+            rivi++;
         }
     }
 
@@ -526,8 +510,7 @@ public class Main extends Application {
         lyhyt.setPrefWidth(80);
 
         BorderPane varauspaneeli = new BorderPane();
-        //paneeli.setCenter(varauspaneeli);
-        varausnappula.setOnMouseClicked(e -> {
+        varausnappula.setOnAction(e -> {
             paneeli.setCenter(varauspaneeli);
             isoOtsikkoTeksti.setText("VARAUKSET");
 //            for (Nappula n : nappulat) {
@@ -617,8 +600,8 @@ public class Main extends Application {
         }
 
 
-        int varausLaskuri = 2;
-        for (Varaus obj : varauslista) {
+        int rivi = 2;
+        for (Varaus obj : varauslista) { // TODO nyt kun SQL-haku saattaa epäonnistua, voi tulla NullPointerException
             Text varausID = new Text(String.valueOf(obj.getVarausID()));
             varausID.setFont(fontti);
             Text varausNimi = new Text(String.valueOf(obj.getAsiakasID()));
@@ -628,31 +611,31 @@ public class Main extends Application {
 
 
             varausID.setTextAlignment(TextAlignment.CENTER);
-            varausTaulukko.add(varausID, 0, varausLaskuri);
-            varausTaulukko.add(varausNimi, 1, varausLaskuri);
-            varausTaulukko.add(varausMokki, 2, varausLaskuri);
+            varausTaulukko.add(varausID, 0, rivi);
+            varausTaulukko.add(varausNimi, 1, rivi);
+            varausTaulukko.add(varausMokki, 2, rivi);
 
             //varausNimi.setAlignment(Pos.CENTER);
             varausNimi.setTextAlignment(TextAlignment.CENTER);
 
             Nappula poistoNappula = new Nappula("Poista varaus", 200, 30);
-            varausTaulukko.add(poistoNappula, 3, varausLaskuri);
+            varausTaulukko.add(poistoNappula, 3, rivi);
             poistoNappula.setOnMouseClicked(e -> {
                 // poistavaraus();                          //TODO  poistavaraus() - metodin luominen
             });
 
             Nappula muokkausNappula = new Nappula("Muokkaa", 120, 30);
-            varausTaulukko.add(muokkausNappula, 4, varausLaskuri);
+            varausTaulukko.add(muokkausNappula, 4, rivi);
             muokkausNappula.setOnMouseClicked(e -> {
                 // muokkaaMokki();                          //TODO  muokkaamokki() - metodin luominen
             });
             Nappula tarkasteleNappula = new Nappula("Tarkastele tietoja", 170, 30);
-            varausTaulukko.add(tarkasteleNappula, 5, varausLaskuri);
+            varausTaulukko.add(tarkasteleNappula, 5, rivi);
             tarkasteleNappula.setOnMouseClicked(e -> {
                 // tarkasteleMokkia();                          //TODO  tarkasteleMokkia() - metodin luominen
             });
 
-            varausLaskuri++;
+            rivi++;
         }
     }
 
@@ -670,8 +653,7 @@ public class Main extends Application {
         lyhyt.setPrefWidth(80);
 
         BorderPane asiakaspaneeli = new BorderPane();
-        //paneeli.setCenter(asiakaspaneeli);
-        asiakasnappula.setOnMouseClicked(e -> {
+        asiakasnappula.setOnAction(e -> {
             paneeli.setCenter(asiakaspaneeli);
             isoOtsikkoTeksti.setText("ASIAKKAAT");
 //            for (Nappula n : nappulat) {
@@ -746,7 +728,7 @@ public class Main extends Application {
                 "jukka.kukka@gmail.com", "Savontie 27", "0504643299"));       //TEMP
 
 
-        int asiakasLaskuri = 2;
+        int rivi = 2;
         for (Asiakas obj : asiakaslista) {
             Text asiakasID = new Text(String.valueOf(obj.getAsiakasID()));
             asiakasID.setFont(fontti);
@@ -758,30 +740,30 @@ public class Main extends Application {
             asiakasPuhNro.setFont(fontti);
 
 
-            asiakasTaulukko.add(asiakasID, 0, asiakasLaskuri);
-            asiakasTaulukko.add(asiakasNimi, 1, asiakasLaskuri);
-            asiakasTaulukko.add(asiakasEmail, 2, asiakasLaskuri);
-            asiakasTaulukko.add(asiakasPuhNro, 3, asiakasLaskuri);
+            asiakasTaulukko.add(asiakasID, 0, rivi);
+            asiakasTaulukko.add(asiakasNimi, 1, rivi);
+            asiakasTaulukko.add(asiakasEmail, 2, rivi);
+            asiakasTaulukko.add(asiakasPuhNro, 3, rivi);
 
 
             Nappula poistoNappula = new Nappula("Poista", 200, 30);
-            asiakasTaulukko.add(poistoNappula, 4, asiakasLaskuri);
+            asiakasTaulukko.add(poistoNappula, 4, rivi);
             poistoNappula.setOnMouseClicked(e -> {
                 // poistaasiakas();                          //TODO  poistaasiakas() - metodin luominen
             });
 
             Nappula muokkausNappula = new Nappula("Muokkaa", 120, 30);
-            asiakasTaulukko.add(muokkausNappula, 5, asiakasLaskuri);
+            asiakasTaulukko.add(muokkausNappula, 5, rivi);
             muokkausNappula.setOnMouseClicked(e -> {
                 // muokkaaMokki();                          //TODO  muokkaamokki() - metodin luominen
             });
             Nappula tarkasteleNappula = new Nappula("Tarkastele tietoja", 170, 30);
-            asiakasTaulukko.add(tarkasteleNappula, 6, asiakasLaskuri);
+            asiakasTaulukko.add(tarkasteleNappula, 6, rivi);
             tarkasteleNappula.setOnMouseClicked(e -> {
                 // tarkasteleMokkia();                          //TODO  tarkasteleMokkia() - metodin luominen
             });
 
-            asiakasLaskuri++;
+            rivi++;
         }
     }
 
@@ -799,8 +781,7 @@ public class Main extends Application {
         lyhyt.setPrefWidth(80);
 
         BorderPane laskupaneeli = new BorderPane();
-        //paneeli.setCenter(laskupaneeli);
-        laskunappula.setOnMouseClicked(e -> {
+        laskunappula.setOnAction(e -> {
             paneeli.setCenter(laskupaneeli);
             isoOtsikkoTeksti.setText("LASKUT");
 //            for (Nappula n : nappulat) {
@@ -851,8 +832,8 @@ public class Main extends Application {
         Nappula laskunLisays = new Nappula("Lisää uusi lasku", 200, 30);
         laskuTaulukko.add(laskunLisays, 1,0);
 
-        Text laskutunnusOtsikko = new Text("Laskunro.");
-        laskutunnusOtsikko.setFont(fontti);
+        Text laskuTunnusOtsikko = new Text("Laskunro.");
+        laskuTunnusOtsikko.setFont(fontti);
         Text laskuVarausOtsikko = new Text("Varaus");
         laskuVarausOtsikko.setFont(fontti);
         Text laskuSummaOtsikko = new Text("Summa");
@@ -861,7 +842,7 @@ public class Main extends Application {
         laskuStatusOtsikko.setFont(fontti);
 
 
-        laskuTaulukko.add(laskutunnusOtsikko, 0, 1);
+        laskuTaulukko.add(laskuTunnusOtsikko, 0, 1);
         laskuTaulukko.add(laskuVarausOtsikko, 1, 1);
         laskuTaulukko.add(laskuSummaOtsikko, 2, 1);
         laskuTaulukko.add(laskuStatusOtsikko, 3, 1);
@@ -875,7 +856,7 @@ public class Main extends Application {
                 "Maksamatta"));     //TEMP
 
 
-        int laskuLaskuri = 2;
+        int rivi = 2;
         for (Lasku obj : laskulista) {
             Text laskuID = new Text(String.valueOf(obj.getLaskuID()));
             laskuID.setFont(fontti);
@@ -887,37 +868,37 @@ public class Main extends Application {
             laskuStatus.setFont(fontti);
 
 
-            laskuTaulukko.add(laskuID, 0, laskuLaskuri);
-            laskuTaulukko.add(laskuVaraus, 1, laskuLaskuri);
-            laskuTaulukko.add(laskuSumma, 2, laskuLaskuri);
-            laskuTaulukko.add(laskuStatus, 3, laskuLaskuri);
+            laskuTaulukko.add(laskuID, 0, rivi);
+            laskuTaulukko.add(laskuVaraus, 1, rivi);
+            laskuTaulukko.add(laskuSumma, 2, rivi);
+            laskuTaulukko.add(laskuStatus, 3, rivi);
 
 
             Nappula poistoNappula = new Nappula("Poista", 200, 30);
-            laskuTaulukko.add(poistoNappula, 4, laskuLaskuri);
+            laskuTaulukko.add(poistoNappula, 4, rivi);
             poistoNappula.setOnMouseClicked(e -> {
                 // poistalasku();                          //TODO  poistalasku() - metodin luominen
             });
 
             Nappula muokkausNappula = new Nappula("Muokkaa", 100, 30);
-            laskuTaulukko.add(muokkausNappula, 5, laskuLaskuri);
+            laskuTaulukko.add(muokkausNappula, 5, rivi);
             muokkausNappula.setOnMouseClicked(e -> {
                 // muokkaaLasku();                          //TODO  muokkaamokki() - metodin luominen
             });
 
             Nappula tarkasteleNappula = new Nappula("Tarkastele tietoja", 160, 30);
-            laskuTaulukko.add(tarkasteleNappula, 6, laskuLaskuri);
+            laskuTaulukko.add(tarkasteleNappula, 6, rivi);
             tarkasteleNappula.setOnMouseClicked(e -> {
                 // tarkasteleLasku();                          //TODO  tarkasteleMokkia() - metodin luominen
             });
 
             Nappula luoLaskuNappula = new Nappula("Vie tiedostoksi", 170, 30);
-            laskuTaulukko.add(luoLaskuNappula, 7, laskuLaskuri);
+            laskuTaulukko.add(luoLaskuNappula, 7, rivi);
             luoLaskuNappula.setOnMouseClicked(e -> {
                 // luoLasku();                          //TODO  tarkasteleMokkia() - metodin luominen
             });
 
-            laskuLaskuri++;
+            rivi++;
         }
     }
 
@@ -925,6 +906,11 @@ public class Main extends Application {
         launch();
     }
 
+    /**
+     * Avaa resources-kansiossa sijaitsevan kuvan JavaFX:n {@link Image Image}-luokan oliona.
+     * @param kuva Kuvan nimi
+     * @return Image
+     */
     private Image imageKuvasta(String kuva) {
         try {
             return new Image(IMGPOLKU + kuva);
