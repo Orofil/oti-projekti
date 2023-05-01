@@ -74,7 +74,7 @@ INSERT INTO varaus(asiakas_id, mokki_id, varattu_pvm, vahvistus_pvm, varattu_alk
   (2, 10, '2023-03-19 18:30:11', '2023-03-19 18:32:11', '2023-03-31 16:00:00', '2023-04-04 12:00:00'),
   (4, 1, '2023-04-17 19:59:22', '2023-04-30 20:01:05', '2023-05-04 16:00:00', '2023-05-10 12:00:00');
 
--- TODO summa ja alvista sama juttu kuin palvelussa
+-- TODO summa ja alv
 INSERT INTO lasku(varaus_id, summa, alv) VALUES
   (1, 0, 14),
   (2, 0, 14),
