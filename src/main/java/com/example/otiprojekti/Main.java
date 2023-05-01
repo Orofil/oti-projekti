@@ -56,6 +56,9 @@ public class Main extends Application {
 
     Text isoOtsikkoTeksti = new Text("ALUEET");
 
+    // Tietokantayhteys
+    Tietokanta tietokanta = new Tietokanta();
+
     @Override
     public void start(Stage ikkuna) {
         // Vasen valikko
@@ -134,15 +137,6 @@ public class Main extends Application {
         ikkuna.setMaxWidth(MAX_LEVEYS);
         ikkuna.setMaxHeight(MAX_KORKEUS);
         ikkuna.show();
-
-        // Tietokantayhteys
-        Tietokanta tietokanta = new Tietokanta();
-        try {
-            // Tulostetaan tietokantaan erikseen syötetyt varaukset
-            System.out.println(tietokanta.haeVaraus()); // TEMP
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
     }
 
 
@@ -334,7 +328,7 @@ public class Main extends Application {
 
 
 
-        ArrayList<Mokki> mokkilista = new ArrayList<Mokki>();
+        ArrayList<Mokki> mokkilista = new ArrayList<>();
         mokkilista.add(new Mokki(1,1, 34110,"Sininen mökki", "Sinitie 2",
         200, "Valoisa hirsimökki koko perheelle tai pienelle kaveriporukalle saunalla ja porealtaalla.",
         6, "Sauna, poreallas"));       //TEMP
@@ -541,7 +535,7 @@ public class Main extends Application {
         });
 
         GridPane varausHaku = new GridPane();
-        varausHaku.setPadding(new Insets(50,50,50,0));
+        varausHaku.setPadding(new Insets(50, 50, 50, 0));
         varausHaku.setHgap(100);
         varausHaku.setVgap(15);
         varauspaneeli.setTop(varausHaku);
@@ -576,14 +570,14 @@ public class Main extends Application {
         ScrollPane varausScrollaus = new ScrollPane();
         varauspaneeli.setCenter(varausScrollaus);
         GridPane varausTaulukko = new GridPane();
-        varausTaulukko.setPadding(new Insets(20,20,20,20));
+        varausTaulukko.setPadding(new Insets(20, 20, 20, 20));
         varausTaulukko.getColumnConstraints().addAll(semi, kolumniLeveys, lyhyt, kolumniLeveys);
         varausTaulukko.setGridLinesVisible(true);
         varausScrollaus.setContent(varausTaulukko);
 
 
         Nappula varausnLisays = new Nappula("Lisää uusi varaus", 200, 30);
-        varausTaulukko.add(varausnLisays, 1,0);
+        varausTaulukko.add(varausnLisays, 1, 0);
 
         Text varaustunnusOtsikko = new Text("Varaustunnus");
         varaustunnusOtsikko.setFont(fontti);
@@ -602,17 +596,23 @@ public class Main extends Application {
         varausTaulukko.add(varausAsiakasOtsikko, 1, 1);
         varausTaulukko.add(varausMokkiOtsikko, 2, 1);
 
-        ArrayList<Varaus> varauslista = new ArrayList<Varaus>();
-        varauslista.add(new Varaus(123, 122, 234,
-                LocalDateTime.of(2022, 9, 30, 12, 50),
-                LocalDateTime.of(2022, 9, 30, 12, 52 ),
-                LocalDateTime.of(2022, 10, 8, 15, 30),
-                LocalDateTime.of(2022, 10, 10, 12, 0 )));
-        varauslista.add(new Varaus(13, 12, 24,
-                LocalDateTime.of(2023, 1, 15, 13, 50),
-                LocalDateTime.of(2023, 1, 15, 14, 52 ),
-                LocalDateTime.of(2023, 3, 6, 15, 30),
-                LocalDateTime.of(2023, 3, 12, 12, 0 )));        //TEMP
+//        ArrayList<Varaus> varauslista = new ArrayList<Varaus>();
+//        varauslista.add(new Varaus(123, 122, 234,
+//                LocalDateTime.of(2022, 9, 30, 12, 50),
+//                LocalDateTime.of(2022, 9, 30, 12, 52 ),
+//                LocalDateTime.of(2022, 10, 8, 15, 30),
+//                LocalDateTime.of(2022, 10, 10, 12, 0 )));
+//        varauslista.add(new Varaus(13, 12, 24,
+//                LocalDateTime.of(2023, 1, 15, 13, 50),
+//                LocalDateTime.of(2023, 1, 15, 14, 52 ),
+//                LocalDateTime.of(2023, 3, 6, 15, 30),
+//                LocalDateTime.of(2023, 3, 12, 12, 0 )));        //TEMP
+        ArrayList<Varaus> varauslista = null;
+        try {
+            varauslista = tietokanta.haeVaraus();
+        } catch (SQLException e) {
+            // TODO miten käsitellään SQL exceptionit? Tehdäänkö joku ilmoitus joka tulee ikkunan nurkkaan jos virhe tapahtuu?
+        }
 
 
         int varausLaskuri = 2;

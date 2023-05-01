@@ -303,12 +303,17 @@ public class Tietokanta {
     private ArrayList<Varaus> varausLuokaksi(ResultSet rs) throws SQLException {
         ArrayList<Varaus> varaukset = new ArrayList<>();
         while (rs.next()) {
+            LocalDateTime vahvistusPvm = null; // TODO miten käsitellään tällaiset jotka voi olla null, tässä vähän monimutkainen ratkaisu
+            try {
+                vahvistusPvm = LocalDateTime.parse(rs.getString("vahvistus_pvm"), dateTimeFormat);
+            } catch (NullPointerException ignored) {}
+
             varaukset.add(new Varaus(
                     rs.getInt("varaus_id"),
                     rs.getInt("asiakas_id"),
                     rs.getInt("mokki_id"),
                     LocalDateTime.parse(rs.getString("varattu_pvm"), dateTimeFormat),
-                    LocalDateTime.parse(rs.getString("vahvistus_pvm"), dateTimeFormat),
+                    vahvistusPvm,
                     LocalDateTime.parse(rs.getString("varattu_alkupvm"), dateTimeFormat),
                     LocalDateTime.parse(rs.getString("varattu_loppupvm"), dateTimeFormat)));
         }
