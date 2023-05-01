@@ -1,17 +1,20 @@
 package com.example.otiprojekti;
 
+import java.math.BigDecimal;
+import java.util.Objects;
+
 public class Palvelu {
     private int palveluID;
     private int alueID;
     private String palvelunNimi;
     private String palvelunTyyppi;
     private String palvelunKuvaus;
-    private double palvelunHinta;
-    private double palvelunAlv;
+    private BigDecimal palvelunHinta;
+    private int palvelunAlv;
 
     //Alustaja perustiedoille
-    public Palvelu(int palveluID, int alueID, String palvelunNimi,String palvelunTyyppi, String palvelunKuvaus,
-                   double palvelunHinta, double palvelunAlv){
+    public Palvelu(int palveluID, int alueID, String palvelunNimi, String palvelunTyyppi, String palvelunKuvaus,
+                   BigDecimal palvelunHinta, int palvelunAlv){
         this.palveluID=palveluID;
         this.alueID=alueID;
         this.palvelunNimi=palvelunNimi;
@@ -22,7 +25,7 @@ public class Palvelu {
     }
 
 
-    //Getterit palveluidlle ja alueidlle
+    // Getterit palveluille ja alueille
 
     public int getPalveluID() {
         return palveluID;
@@ -31,7 +34,7 @@ public class Palvelu {
     public int getAlueID() {
         return alueID;
     }
-    //Luodaan getterit ja setterit muille kentille
+    // Luodaan getterit ja setterit muille kentille
 
     public String getPalvelunNimi() {
         return palvelunNimi;
@@ -57,24 +60,23 @@ public class Palvelu {
         this.palvelunKuvaus = palvelunKuvaus;
     }
 
-    public double getPalvelunHinta() {
+    public BigDecimal getPalvelunHinta() {
         return palvelunHinta;
     }
 
-    public void setPalvelunHinta(double palvelunHinta) {
+    public void setPalvelunHinta(BigDecimal palvelunHinta) {
         this.palvelunHinta = palvelunHinta;
     }
 
-    public double getPalvelunAlv() {
+    public int getPalvelunAlv() {
         return palvelunAlv;
     }
 
-    public void setPalvelunAlv(double palvelunAlv) {
+    public void setPalvelunAlv(int palvelunAlv) {
         this.palvelunAlv = palvelunAlv;
     }
 
-    //Tostring metodi palvelun tiedoille
-    //Tostring metodi
+    @Override
     public String toString(){
         String str= "Palvelun ID on: " + palveluID + "\nAlueen ID: "+ alueID+ "\nPalvelun nimi: "+ palvelunNimi+
                 "\nPalvelun tyyppi: "+ palvelunTyyppi+"\nPalvelun kuvaus: "+ palvelunKuvaus+ "\nPalvelun hinta: "
@@ -82,15 +84,18 @@ public class Palvelu {
         return str;
 
     }
-    //Equals metodi luokalle mökkien vertailemista varten
-    public boolean equals(Palvelu palvelu1){
-        if ((palveluID==palvelu1.palveluID)&&(alueID==palvelu1.alueID)&&(palvelunNimi==palvelu1.palvelunNimi)&&
-                (palvelunTyyppi==palvelu1.palvelunTyyppi)&&(palvelunKuvaus==palvelu1.palvelunKuvaus)&&
-                (palvelunHinta==palvelu1.palvelunHinta) &&(palvelunAlv==palvelu1.palvelunAlv)){
-            return true;
-        }
-        else {
-            return false;
-        }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Palvelu palvelu = (Palvelu) o;
+        return palveluID == palvelu.palveluID &&
+                alueID == palvelu.alueID &&
+                Objects.equals(palvelunHinta, palvelu.palvelunHinta) &&
+                Double.compare(palvelu.palvelunAlv, palvelunAlv) == 0 &&
+                Objects.equals(palvelunNimi, palvelu.palvelunNimi) &&
+                Objects.equals(palvelunTyyppi, palvelu.palvelunTyyppi) &&
+                Objects.equals(palvelunKuvaus, palvelu.palvelunKuvaus);
     }
 }

@@ -19,6 +19,7 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.text.Font;
 
+import java.math.BigDecimal;
 import java.sql.SQLException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -460,12 +461,13 @@ public class Main extends Application {
         palveluTaulukko.add(palveluAlueOtsikko, 2, 1);
         palveluTaulukko.add(palvelunHintaOtsikko, 3, 1);
 
-        ArrayList<Palvelu> palvelulista = new ArrayList<Palvelu>();
+        ArrayList<Palvelu> palvelulista = new ArrayList<>();
         palvelulista.add(new Palvelu(1, 1, "Moottorikelkkavuokra",
-                "Välinevuokraus", "Moottorikelkan vuokraus 1 hlö 3h", 60, 24));       //TEMP
+                "Välinevuokraus", "Moottorikelkan vuokraus 1 hlö 3h",
+                BigDecimal.valueOf(60), 24)); // TEMP
         palvelulista.add(new Palvelu(2, 1, "Kuumakivihieronta 60 min",
                 "Hieronta", "Kuumakivihieronta 60 min koulutetulla hierojalla Levin elämyshoitolassa",
-                70, 24));        //TEMP
+                BigDecimal.valueOf(70), 24)); // TEMP
 
 
         int palveluLaskuri = 2;
