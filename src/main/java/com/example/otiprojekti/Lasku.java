@@ -1,18 +1,19 @@
 package com.example.otiprojekti;
 
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.util.Objects;
 import java.io.FileWriter;
 
 public class Lasku {
     private int laskuID;
     private int varausID;
-    private double laskunSumma;
-    private double laskuAlv;
+    private BigDecimal laskunSumma;
+    private int laskuAlv;
     private String laskunStatus;
 
     //alustaja
-    public Lasku(int laskuID, int varausID, double laskunSumma, double laskuAlv, String laskunStatus) {
+    public Lasku(int laskuID, int varausID, BigDecimal laskunSumma, int laskuAlv, String laskunStatus) {
         this.laskuID = laskuID;
         this.varausID = varausID;
         this.laskunSumma = laskunSumma;
@@ -36,19 +37,19 @@ public class Lasku {
         this.varausID = varausID;
     }
 
-    public double getLaskunSumma() {
+    public BigDecimal getLaskunSumma() {
         return laskunSumma;
     }
 
-    public void setLaskunSumma(double laskunSumma) {
+    public void setLaskunSumma(BigDecimal laskunSumma) {
         this.laskunSumma = laskunSumma;
     }
 
-    public double getLaskuAlv() {
+    public int getLaskuAlv() {
         return laskuAlv;
     }
 
-    public void setLaskuAlv(double laskuAlv) {
+    public void setLaskuAlv(int laskuAlv) {
         this.laskuAlv = laskuAlv;
     }
 
@@ -75,13 +76,13 @@ public class Lasku {
         Lasku lasku = (Lasku) o;
         return getLaskuID() == lasku.getLaskuID() &&
                 getVarausID() == lasku.getVarausID() &&
-                Double.compare(lasku.getLaskunSumma(), getLaskunSumma()) == 0 &&
+                Objects.equals(getLaskunSumma(), lasku.getLaskunSumma()) &&
                 Double.compare(lasku.getLaskuAlv(), getLaskuAlv()) == 0 &&
                 Objects.equals(getLaskunStatus(), lasku.getLaskunStatus());
     }
 
 
-    public void vieDokumentiksi() {
+    public void vieDokumentiksi() { // TODO
         try {
             FileWriter writer = new FileWriter("tiedostonimi.txt");
             writer.write("Laskun tunnus: " + getLaskuID() + "\n");

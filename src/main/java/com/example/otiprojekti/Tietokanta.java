@@ -287,7 +287,7 @@ public class Tietokanta {
                     rs.getInt("postinro"), // TODO toimiiko getInt vai pitääkö käyttää Integer.valueOf koska tietokannassa postinro on tyyppiä char
                     rs.getString("mokkinimi"),
                     rs.getString("katuosoite"),
-                    rs.getDouble("hinta"), // TODO käytetäänkö bigdecimal vai muutetaanko vaan kokonaisluvuksi kaikki hinnat
+                    rs.getBigDecimal("hinta"),
                     rs.getString("kuvaus"),
                     rs.getInt("henkilomaara"),
                     rs.getString("varustelu")));

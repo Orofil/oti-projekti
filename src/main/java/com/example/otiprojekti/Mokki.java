@@ -1,18 +1,21 @@
 package com.example.otiprojekti;
 
+import java.math.BigDecimal;
+import java.util.Objects;
+
 public class Mokki {
     private int mokkiID;
     private int alueID;
     private int postiNro;
     private String mokkiNimi;
     private String katuosoite;
-    private double hinta;
+    private BigDecimal hinta;
     private String kuvaus;
     private int hloMaara;
     private String varustelu;
 
     //Alustaja tiedoille
-    public Mokki(int mokkiID,int alueID, int postiNro,String mokkiNimi, String katuosoite, double hinta, String kuvaus,
+    public Mokki(int mokkiID,int alueID, int postiNro,String mokkiNimi, String katuosoite, BigDecimal hinta, String kuvaus,
                  int hloMaara, String varustelu){
         this.mokkiID=mokkiID;
         this.alueID=alueID;
@@ -62,11 +65,11 @@ public class Mokki {
         this.katuosoite = katuosoite;
     }
 
-    public double getHinta() {
+    public BigDecimal getHinta() {
         return hinta;
     }
 
-    public void setHinta(double hinta) {
+    public void setHinta(BigDecimal hinta) {
         this.hinta = hinta;
     }
 
@@ -94,23 +97,28 @@ public class Mokki {
         this.varustelu = varustelu;
     }
 
-    //Tostring metodi
-    public String toString(){
+    @Override
+    public String toString() {
         String str= "Mökin ID on: " + mokkiID + "\nAlueen ID: "+ alueID+ "\nPostinro: "+ postiNro+"\nMökin nimi: "+
                 mokkiNimi+"\nKatuosoite: "+ katuosoite+ "\nHinta: "+ hinta + "\nKuvaus: "+ kuvaus+ "\nHenkilömäärä: "+
                 hloMaara+"\nVarustelu: "+ varustelu;
         return str;
 
     }
-    //Equals metodi luokalle mökkien vertailemista varten
-    public boolean equals(Mokki mokki1){
-        if ((mokkiID==mokki1.mokkiID)&&(alueID==mokki1.alueID)&&(postiNro==mokki1.postiNro)&&
-                (mokkiNimi==mokki1.mokkiNimi)&&(katuosoite==mokki1.katuosoite)&&(hinta==mokki1.hinta)
-                &&(kuvaus==mokki1.kuvaus)&&(hloMaara==mokki1.hloMaara)&&(varustelu==mokki1.varustelu)){
-            return true;
-        }
-        else {
-            return false;
-        }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Mokki mokki = (Mokki) o;
+        return mokkiID == mokki.mokkiID &&
+                alueID == mokki.alueID &&
+                postiNro == mokki.postiNro &&
+                hloMaara == mokki.hloMaara &&
+                Objects.equals(mokkiNimi, mokki.mokkiNimi) &&
+                Objects.equals(katuosoite, mokki.katuosoite) &&
+                Objects.equals(hinta, mokki.hinta) &&
+                Objects.equals(kuvaus, mokki.kuvaus) &&
+                Objects.equals(varustelu, mokki.varustelu);
     }
 }
