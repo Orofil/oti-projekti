@@ -24,10 +24,10 @@ INSERT INTO posti(postinro, toimipaikka) VALUES
   ('89920', 'RUHTINANSALMI'); -- Hossa
 
 INSERT INTO asiakas(postinro, etunimi, sukunimi, lahiosoite, email, puhelinnro) VALUES
-  ('95980', 'Jaakko', 'Saano', 'Lataajanpolku 2 A', 'saano.jaakko@gmail.com', '+3584946856'), -- TODO Meidän nimet voi poistaa näistä jos nämä tulee lopulliseen ohjelmaan
-  ('83960', 'Veikka', 'Kukko', 'Hallikatu 44', 'kukko.veikka@gmail.com', '+3585009442955'),
-  ('89920', 'Veeti', 'Rajatammi', 'Urheilukatu 10', 'rajatammi.veeti@gmail.com', '+3585034837179'),
-  ('34130', 'Oliver', 'Lehto', 'Ruotsinkatu 7 B 6', 'lehto.oliver@gmail.com', '+46722728452'),
+  ('95980', 'Jarkko', 'Nieminen', 'Lataajanpolku 2 A', 'nieminen.jarkko@gmail.com', '+3584946856'),
+  ('83960', 'Saana', 'Kuisma', 'Hallikatu 44', 'kuisma.saana@gmail.com', '+3585009442955'),
+  ('89920', 'Ismo', 'Laanila', 'Urheilukatu 10', 'laanila.ismo@gmail.com', '+3585034837179'),
+  ('34130', 'Paavo', 'Turunen', 'Ruotsinkatu 7 B 6', 'paavo.turunen@gmail.com', '+46722728452'),
   ('83960', 'Maria', 'Nieminen', 'Tehdaskatu 56', 'marianieminen@outlook.com', '+79243510915'),
   ('19700', 'Helmi', 'Koskinen', 'Nurmitie 1 D', 'koskhelmi@hotmail.com', '+358508737755'),
   ('98530', 'Matias', 'Mäkinen', 'Poikkikatu 18', 'matias.makinen@gmail.com', '+5577984265222'),
@@ -60,7 +60,7 @@ INSERT INTO mokki(alue_id, postinro, mokkinimi, katuosoite, hinta, kuvaus, henki
   (6, '88610', 'Veetintupa', 'Kalastajantie 16', 170, 'Autenttinen ja tunnelmallinen mökki', 2, 'Pihasauna, poreallas'),
   (2, '73310', 'Talvipirtti', 'Järvenrantatie 22D', 219, 'Hyvin varusteltu talviharrastukseen', 2, 'Pulkka, sukset, lauta');
 
--- TODO voi tehdä enemmänkin tyhjiä vahvistuspäivämääriä maksumuistutuksen testausta varten
+
 INSERT INTO varaus(asiakas_id, mokki_id, varattu_pvm, vahvistus_pvm, varattu_alkupvm, varattu_loppupvm) VALUES
   (1, 4, '2023-04-30 17:20:01', '2023-04-30 17:20:50', '2023-05-01 16:00:00', '2023-05-16 12:00:00'),
   (2, 7, '2023-04-15 20:20:20', '2023-04-26 16:32:56', '2023-04-28 16:00:00', '2023-05-02 12:00:00'),
@@ -71,20 +71,20 @@ INSERT INTO varaus(asiakas_id, mokki_id, varattu_pvm, vahvistus_pvm, varattu_alk
   (3, 3, '2023-04-28 19:00:05', null, '2023-05-24 16:00:00', '2023-05-26 12:00:00'),
   (8, 5, '2023-04-10 12:24:36', null, '2023-04-11 16:00:00', '2023-04-18 12:00:00'),
   (2, 10, '2023-03-19 18:30:11', '2023-03-19 18:32:11', '2023-03-31 16:00:00', '2023-04-04 12:00:00'),
-  (4, 1, '2023-04-17 19:59:22', '2023-04-30 20:01:05', '2023-05-04 16:00:00', '2023-05-10 12:00:00');
+  (4, 1, '2023-04-17 19:59:22', null, '2023-05-04 16:00:00', '2023-05-10 12:00:00');
 
--- TODO summa ja alv
+
 INSERT INTO lasku(varaus_id, summa, alv) VALUES
-  (1, 0, 14),
-  (2, 0, 14),
-  (3, 0, 14),
-  (4, 0, 14),
-  (5, 0, 14),
-  (6, 0, 14),
-  (7, 0, 14),
-  (8, 0, 14),
-  (9, 0, 14),
-  (10, 0, 14);
+  (1, 1000, 14),
+  (2, 1990, 14),
+  (3, 750, 14),
+  (4, 998, 14),
+  (5, 1210, 14),
+  (6, 2450, 14),
+  (7, 579, 14),
+  (8, 799, 14),
+  (9, 1199, 14),
+  (10, 1660, 14);
 
 INSERT INTO varauksen_palvelut(varaus_id, palvelu_id, lkm) VALUES
   (1,6,2),
