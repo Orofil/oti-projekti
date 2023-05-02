@@ -253,6 +253,19 @@ public class Tietokanta {
         return tulokset;
     }
 
+    /**
+     * Hakee tietokannasta kaikki palvelut
+     * @return Lista {@link Palvelu Palveluista}
+     * @throws SQLException
+     */
+    public ArrayList<Palvelu> haePalvelu() throws SQLException {
+        stm = con.prepareStatement("SELECT * FROM palvelu");
+        ResultSet rs = stm.executeQuery();
+        ArrayList<Palvelu> tulokset = palveluLuokaksi(rs);
+        stm.close();
+        return tulokset;
+    }
+
 
 
     ///// Muuttamiset tietokannan tiedoista olioihin
@@ -318,5 +331,28 @@ public class Tietokanta {
                     LocalDateTime.parse(rs.getString("varattu_loppupvm"), dateTimeFormat)));
         }
         return varaukset;
+    }
+
+    /**
+     * Muuttaa tietokannasta saadun ResultSetin {@link Palvelu Palvelu}-olioiksi.
+     * @param rs Tietokannasta saatuja ResultSet palveluja
+     * @return lista palveluista
+     * @throws SQLException
+     */
+
+    private ArrayList<Palvelu> palveluLuokaksi(ResultSet rs) throws SQLException {
+        ArrayList<Palvelu> palvelut = new ArrayList<>();
+        while (rs.next()) {
+            palvelut.add(new Palvelu(
+                    rs.getInt("palvelu_id"),
+                    rs.getInt("alue_id"),
+                    rs.getString("nimi"),
+                    rs.getString("tyyppi"),
+                    rs.getString("kuvaus"),
+                    rs.getBigDecimal("hinta"),
+                    rs.getInt("alv")
+            ));
+        }
+        return palvelut;
     }
 }
