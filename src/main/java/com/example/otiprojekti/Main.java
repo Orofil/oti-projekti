@@ -65,8 +65,18 @@ public class Main extends Application {
     // Tietokantayhteys
     private final Tietokanta tietokanta = new Tietokanta(); // TODO jos tehdään nappi uudelleen yhdistämiseen niin sitten final pitää poistaa koska olio luodaan uudelleen
 
+    ArrayList<Varaus> varauslista = null;
+
+
     @Override
     public void start(Stage ikkuna) {
+
+        try {
+            varauslista = tietokanta.haeVaraus();
+        } catch (SQLException e) {
+            // TODO miten käsitellään SQL exceptionit? Tehdäänkö joku ilmoitus joka tulee ikkunan nurkkaan jos virhe tapahtuu?
+        }
+
         // Vasen valikko
         for (ToggleNappula n : nappulat) {
             n.setToggleGroup(tgSivuvalikko);
@@ -614,7 +624,7 @@ public class Main extends Application {
 
 
             GridPane asiakasLisaysPaneeli = new GridPane();
-            asiakasLisaysPaneeli.setVgap(10);
+            asiakasLisaysPaneeli.setVgap(5);
             asiakasLisaysPaneeli.add(new Text("Syötä asiakkaan tiedot."), 0, 0);
             TextField enimi = new TextField();
             TextField snimi = new TextField();
@@ -645,32 +655,36 @@ public class Main extends Application {
 
 
             GridPane varausLisaysPaneeli = new GridPane();
+            varausLisaysPaneeli.setVgap(5);
             varausLisaysPaneeli.add(new Text("Jos kyseessä on vanha asiakas, syötä asiakasID."), 0, 0);
             TextField asiakasID = new TextField();
             TextField mokkiID = new TextField();
+            DatePicker aloitusPvm = new DatePicker();
+            TextField aloitusAika = new TextField("16:00");
+            DatePicker lopetusPvm = new DatePicker();
+            TextField lopetusAika = new TextField("12:00");
             
 
-            Text asiakasIDText = new Text("Etunimi");
-            Text mokkiIDText = new Text("Sukunimi");
+            Text asiakasIDText = new Text("AsiakasID");
+            Text mokkiIDText = new Text("MökkiID");
             Text aloitusPvmText = new Text("Aloituspäivämäärä");
             Text aloitusAikaText = new Text("ja kellonaika");
             Text lopetusPvmText = new Text("Lopetuspäivämäärä");
             Text lopetusAikaText = new Text("ja kellonaika");
-/*
-            varausLisaysPaneeli.add(asiakasIDText, 0,1);
-            varausLisaysPaneeli.add(asiakasID, 1,1);
-            varausLisaysPaneeli.add(mokkiIDText, 0,2);
-            varausLisaysPaneeli.add(mokkiID, 1,2);
-            varausLisaysPaneeli.add(aloitusPvmText, 0,3);
-            varausLisaysPaneeli.add(, 1,3);
-            varausLisaysPaneeli.add(aloitusAikaText, 0,4);
-            varausLisaysPaneeli.add(, 1,4);
-            varausLisaysPaneeli.add(lopetusPvmText, 0,5);
-            varausLisaysPaneeli.add(, 1,5);
-            varausLisaysPaneeli.add(lopetusAikaText, 0,6);
-            varausLisaysPaneeli.add(, 1,6);
 
- */
+            varausLisaysPaneeli.add(asiakasIDText, 0, 1);
+            varausLisaysPaneeli.add(asiakasID, 1, 1);
+            varausLisaysPaneeli.add(mokkiIDText, 0, 2);
+            varausLisaysPaneeli.add(mokkiID, 1, 2);
+            varausLisaysPaneeli.add(aloitusPvmText, 0, 3);
+            varausLisaysPaneeli.add(aloitusPvm, 1, 3);
+            varausLisaysPaneeli.add(aloitusAikaText, 0, 4);
+            varausLisaysPaneeli.add(aloitusAika, 1, 4);
+            varausLisaysPaneeli.add(lopetusPvmText, 0, 5);
+            varausLisaysPaneeli.add(lopetusPvm, 1, 5);
+            varausLisaysPaneeli.add(lopetusAikaText, 0, 6);
+            varausLisaysPaneeli.add(lopetusAika, 1, 6);
+
 
 
             uusiAsiakas.setOnAction( event -> {
@@ -680,7 +694,15 @@ public class Main extends Application {
                 asiakasLisaysPaneeli.setVisible(false);
             });
 
-            varausLisaysVBoxPaneeli.getChildren().addAll(uusiAsiakas, vanhaAsiakas, asiakasLisaysPaneeli);
+            Nappula lisaaVaraus = new Nappula("Aseta varaus");
+            lisaaVaraus.setOnAction( event -> {
+                if (uusiAsiakas.isSelected()) {
+                    //tietokanta.insertAsiakas(Integer.parseInt(postinro.getText()), enimi);
+                }
+            });
+
+            varausLisaysVBoxPaneeli.getChildren().addAll
+                    (uusiAsiakas, vanhaAsiakas, asiakasLisaysPaneeli, varausLisaysPaneeli);
 
             //varausLisaysStage.initModality(Modality.WINDOW_MODAL);
             //varausLisaysStage.initOwner(ikkuna);
@@ -703,7 +725,7 @@ public class Main extends Application {
 
              */
             // Luodaan uusi scene
-            Scene scene2 = new Scene(varausLisaysVBoxPaneeli, 400, 600);
+            Scene scene2 = new Scene(varausLisaysVBoxPaneeli, 400, 650);
             varausLisaysStage.setScene(scene2);
             varausLisaysStage.setTitle("Lisää varaus");
             varausLisaysStage.show();
@@ -737,12 +759,7 @@ public class Main extends Application {
 //                LocalDateTime.of(2023, 1, 15, 14, 52 ),
 //                LocalDateTime.of(2023, 3, 6, 15, 30),
 //                LocalDateTime.of(2023, 3, 12, 12, 0 )));        //TEMP
-        ArrayList<Varaus> varauslista = null;
-        try {
-            varauslista = tietokanta.haeVaraus();
-        } catch (SQLException e) {
-            // TODO miten käsitellään SQL exceptionit? Tehdäänkö joku ilmoitus joka tulee ikkunan nurkkaan jos virhe tapahtuu?
-        }
+
 
 
         int rivi = 2;
@@ -858,8 +875,8 @@ public class Main extends Application {
         asiakasScrollaus.setContent(asiakasTaulukko);
 
 
-        Nappula asiakasnLisays = new Nappula("Lisää uusi asiakas", 200, 30);
-        asiakasTaulukko.add(asiakasnLisays, 1,0);
+        Nappula asiakasLisays = new Nappula("Lisää uusi asiakas", 200, 30);
+        asiakasTaulukko.add(asiakasLisays, 1,0);
 
         Text asiakastunnusOtsikko = new Text("AsiakasID");
         asiakastunnusOtsikko.setFont(fontti);
