@@ -352,10 +352,10 @@ public class Main extends Application {
 
 
 
-        mokkilista.add(new Mokki(1,1, 34110,"Sininen mökki", "Sinitie 2",
+        mokkilista.add(new Mokki(1,1, "34110","Sininen mökki", "Sinitie 2",
         BigDecimal.valueOf(200), "Valoisa hirsimökki koko perheelle tai pienelle kaveriporukalle saunalla ja porealtaalla.",
         6, "Sauna, poreallas"));       //TEMP
-        mokkilista.add(new Mokki(2,1, 34100,"Punainen mökki", "Sinitie 3",
+        mokkilista.add(new Mokki(2,1, "34100","Punainen mökki", "Sinitie 3",
                 BigDecimal.valueOf(250), "Viihtyisä ja tilava hirsimökki koko perheelle tai kaveriporukalle saunalla ja porealtaalla.",
                 8, "Sauna, poreallas"));       //TEMP
 
@@ -911,10 +911,10 @@ public class Main extends Application {
 
 
         asiakaslista.add(new Asiakas(
-                24, 34560, "Kukko", "Veikka",
+                24, "34560", "Kukko", "Veikka",
                 "veikka.kukko@gmail.com", "Savontie 26", "0440153888"));
         asiakaslista.add(new Asiakas(
-                25, 34572, "Kukka", "Jukka",
+                25, "34572", "Kukka", "Jukka",
                 "jukka.kukka@gmail.com", "Savontie 27", "0504643299"));       //TEMP
 
 
