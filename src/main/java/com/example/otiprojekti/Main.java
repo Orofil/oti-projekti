@@ -46,7 +46,14 @@ public class Main extends Application {
     private final int MAX_LEVEYS = 1600; // TODO Näiden suhde ei ole sama kuin tuo oletussuhde mikä on vähän outoa
     private final int MAX_KORKEUS = 800;
 
-    // TODO tehdäänkö näistä private?
+    /**
+     * Fontti, jota käytetään tavalliseen tekstiin.
+     */
+    private static final Font fontti = Font.font(16);
+    private static final int HAKU_PADDING = 20;
+    private static final int HAKU_HGAP = 20;
+    private static final int HAKU_VGAP = 15;
+
     private final ToggleNappula aluenappula = new ToggleNappula("Alueet");
     private final ToggleNappula mokkinappula = new ToggleNappula("Mökit");
     private final ToggleNappula palvelunappula = new ToggleNappula("Palvelut");
@@ -60,10 +67,7 @@ public class Main extends Application {
     private final BorderPane paneeli = new BorderPane();
     private final Text isoOtsikkoTeksti = new Text();
 
-    /**
-     * Fontti, jota käytetään tavalliseen tekstiin.
-     */
-    private static final Font fontti = Font.font(16);
+
 
 
     // Tietokantayhteys
@@ -167,9 +171,9 @@ public class Main extends Application {
         });
 
         GridPane alueHaku = new GridPane();
-        alueHaku.setPadding(new Insets(50,50,50,0));
-        alueHaku.setHgap(100);
-        alueHaku.setVgap(15);
+        alueHaku.setPadding(new Insets(HAKU_PADDING));
+        alueHaku.setHgap(HAKU_HGAP);
+        alueHaku.setVgap(HAKU_VGAP);
         aluepaneeli.setTop(alueHaku);
 
         TextField alueHakuKentta = new TextField();
@@ -193,7 +197,7 @@ public class Main extends Application {
         ScrollPane alueScrollaus = new ScrollPane();
         aluepaneeli.setCenter(alueScrollaus);
         GridPane alueTaulukko = new GridPane();
-        alueTaulukko.setPadding(new Insets(20,20,20,20));
+        alueTaulukko.setPadding(new Insets(20));
         alueTaulukko.getColumnConstraints().addAll(kolumniLeveys, kolumniLeveys, lyhyt);
         alueTaulukko.setGridLinesVisible(true);
         alueScrollaus.setContent(alueTaulukko);
@@ -266,9 +270,9 @@ public class Main extends Application {
         });
 
         GridPane mokkiHaku = new GridPane();
-        mokkiHaku.setPadding(new Insets(50,50,50,0));
-        mokkiHaku.setHgap(100);
-        mokkiHaku.setVgap(15);
+        mokkiHaku.setPadding(new Insets(HAKU_PADDING));
+        mokkiHaku.setHgap(HAKU_HGAP);
+        mokkiHaku.setVgap(HAKU_VGAP);
         mokkipaneeli.setTop(mokkiHaku);
 
         TextField mokkiHakuKentta = new TextField();
@@ -294,7 +298,7 @@ public class Main extends Application {
         ScrollPane mokkiScrollaus = new ScrollPane();
         mokkipaneeli.setCenter(mokkiScrollaus);
         GridPane mokkiTaulukko = new GridPane();
-        mokkiTaulukko.setPadding(new Insets(20,20,20,20));
+        mokkiTaulukko.setPadding(new Insets(20));
         mokkiTaulukko.getColumnConstraints().addAll(
                 lyhyt, kolumniLeveys, lyhyt, lyhyt, lyhyt, lyhyt, lyhyt, lyhyt);
         mokkiTaulukko.setGridLinesVisible(true);
@@ -406,9 +410,9 @@ public class Main extends Application {
         });
 
         GridPane palveluHaku = new GridPane();
-        palveluHaku.setPadding(new Insets(50,50,50,0));
-        palveluHaku.setHgap(100);
-        palveluHaku.setVgap(15);
+        palveluHaku.setPadding(new Insets(HAKU_PADDING));
+        palveluHaku.setHgap(HAKU_HGAP);
+        palveluHaku.setVgap(HAKU_VGAP);
         palvelupaneeli.setTop(palveluHaku);
 
         TextField palveluHakuKentta = new TextField();
@@ -433,7 +437,7 @@ public class Main extends Application {
         ScrollPane palveluScrollaus = new ScrollPane();
         palvelupaneeli.setCenter(palveluScrollaus);
         GridPane palveluTaulukko = new GridPane();
-        palveluTaulukko.setPadding(new Insets(20,20,20,20));
+        palveluTaulukko.setPadding(new Insets(20));
         palveluTaulukko.getColumnConstraints().addAll(semi, kolumniLeveys, lyhyt, lyhyt, lyhyt, lyhyt, lyhyt);
         palveluTaulukko.setGridLinesVisible(true);
         palveluScrollaus.setContent(palveluTaulukko);
@@ -543,9 +547,9 @@ public class Main extends Application {
         });
 
         GridPane varausHaku = new GridPane();
-        varausHaku.setPadding(new Insets(20));
-        varausHaku.setHgap(20);
-        varausHaku.setVgap(15);
+        varausHaku.setPadding(new Insets(HAKU_PADDING));
+        varausHaku.setHgap(HAKU_HGAP);
+        varausHaku.setVgap(HAKU_VGAP);
         varauspaneeli.setTop(varausHaku);
 
         TextField varausHakuKentta = new TextField();
@@ -585,7 +589,7 @@ public class Main extends Application {
         ScrollPane varausScrollaus = new ScrollPane();
         varauspaneeli.setCenter(varausScrollaus);
         GridPane varausTaulukko = new GridPane();
-        varausTaulukko.setPadding(new Insets(20, 20, 20, 20));
+        varausTaulukko.setPadding(new Insets(20));
         varausTaulukko.getColumnConstraints().addAll(semi, kolumniLeveys, lyhyt, lyhyt, lyhyt, lyhyt);
         varausTaulukko.setGridLinesVisible(true);
         varausScrollaus.setContent(varausTaulukko);
@@ -597,7 +601,7 @@ public class Main extends Application {
             Stage varausLisaysStage = new Stage();
 
             VBox varausLisaysVBoxPaneeli = new VBox();
-            varausLisaysVBoxPaneeli.setPadding(new Insets(30,30,30,30));
+            varausLisaysVBoxPaneeli.setPadding(new Insets(30));
             varausLisaysVBoxPaneeli.setSpacing(10);
 
             varausLisaysVBoxPaneeli.getChildren().add(new Text("Onko kyseessä uusi asiakas?"));
@@ -823,9 +827,9 @@ public class Main extends Application {
         });
 
         GridPane asiakasHaku = new GridPane();
-        asiakasHaku.setPadding(new Insets(50,50,50,0));
-        asiakasHaku.setHgap(100);
-        asiakasHaku.setVgap(15);
+        asiakasHaku.setPadding(new Insets(HAKU_PADDING));
+        asiakasHaku.setHgap(HAKU_HGAP);
+        asiakasHaku.setVgap(HAKU_VGAP);
         asiakaspaneeli.setTop(asiakasHaku);
 
         TextField asiakasHakuKentta = new TextField();
@@ -864,7 +868,7 @@ public class Main extends Application {
         ScrollPane asiakasScrollaus = new ScrollPane();
         asiakaspaneeli.setCenter(asiakasScrollaus);
         GridPane asiakasTaulukko = new GridPane();
-        asiakasTaulukko.setPadding(new Insets(20,20,20,20));
+        asiakasTaulukko.setPadding(new Insets(20));
         asiakasTaulukko.getColumnConstraints().addAll(lyhyt, kolumniLeveys, kolumniLeveys, semi, lyhyt, lyhyt, lyhyt);
         asiakasTaulukko.setGridLinesVisible(true);
         asiakasScrollaus.setContent(asiakasTaulukko);
@@ -888,7 +892,7 @@ public class Main extends Application {
         asiakasTaulukko.add(asiakasEmailOtsikko, 2, 1);
         asiakasTaulukko.add(asiakasPuhNroOtsikko, 3, 1);
 
-        ArrayList<Asiakas> asiakaslista = new ArrayList<Asiakas>();
+        ArrayList<Asiakas> asiakaslista = new ArrayList<>();
         asiakaslista.add(new Asiakas(
                 24, 34560, "Kukko", "Veikka",
                 "veikka.kukko@gmail.com", "Savontie 26", "0440153888"));
@@ -972,9 +976,9 @@ public class Main extends Application {
         });
 
         GridPane laskuHaku = new GridPane();
-        laskuHaku.setPadding(new Insets(50,50,50,0));
-        laskuHaku.setHgap(100);
-        laskuHaku.setVgap(15);
+        laskuHaku.setPadding(new Insets(HAKU_PADDING));
+        laskuHaku.setHgap(HAKU_HGAP);
+        laskuHaku.setVgap(HAKU_VGAP);
         laskupaneeli.setTop(laskuHaku);
 
         TextField laskuHakuKentta = new TextField();
@@ -998,7 +1002,7 @@ public class Main extends Application {
         ScrollPane laskuScrollaus = new ScrollPane();
         laskupaneeli.setCenter(laskuScrollaus);
         GridPane laskuTaulukko = new GridPane();
-        laskuTaulukko.setPadding(new Insets(20,20,20,20));
+        laskuTaulukko.setPadding(new Insets(20));
         laskuTaulukko.getColumnConstraints().addAll(lyhyt, kolumniLeveys, lyhyt, semi, lyhyt, lyhyt, lyhyt, lyhyt);
         laskuTaulukko.setGridLinesVisible(true);
         laskuScrollaus.setContent(laskuTaulukko);
