@@ -84,9 +84,20 @@ public class Main extends Application {
     @Override
     public void start(Stage ikkuna) {
 
+
+
         try {
+            /*tietokanta.insertVaraus(1, 2,
+                    "2001-09-30 12:00:00",
+                    "2001-09-30 12:00:00",
+                    "2001-09-30 12:00:00",
+                    "2001-09-30 12:00:00");
+                    TESTI
+             */
+
             varauslista = tietokanta.haeVaraus();
         } catch (SQLException e) {
+            throw new RuntimeException(e);
             // TODO miten käsitellään SQL exceptionit? Tehdäänkö joku ilmoitus joka tulee ikkunan nurkkaan jos virhe tapahtuu?
         }
 
@@ -209,8 +220,12 @@ public class Main extends Application {
         alueScrollaus.setContent(alueTaulukko);
 
 
-        Nappula alueenLisays = new Nappula("Lisää uusi alue", 200, 30);
-        alueTaulukko.add(alueenLisays, 1,0);
+        Nappula alueenLisaysNappula = new Nappula("", 200, 30);
+        ImageView alueenLisays = new ImageView(imageKuvasta("lisays.png"));
+        alueenLisays.setFitWidth(23);
+        alueenLisays.setFitHeight(22);
+        alueenLisaysNappula.setGraphic(alueenLisays);
+        alueTaulukko.add(alueenLisaysNappula, 1,0);
 
         Text aluetunnusOtsikko = new Text("Aluetunnus");
         aluetunnusOtsikko.setFont(fontti);
@@ -311,8 +326,12 @@ public class Main extends Application {
         mokkiScrollaus.setContent(mokkiTaulukko);
 
 
-        Nappula mokkienLisays = new Nappula("Lisää uusi mökki", 200, 30);
-        mokkiTaulukko.add(mokkienLisays, 1,0);
+        Nappula mokkienLisaysNappula = new Nappula("", 200, 30);
+        ImageView mokkienLisays = new ImageView(imageKuvasta("lisays.png"));
+        mokkienLisays.setFitWidth(23);
+        mokkienLisays.setFitHeight(22);
+        mokkienLisaysNappula.setGraphic(mokkienLisays);
+        mokkiTaulukko.add(mokkienLisaysNappula, 1,0);
 
         Text mokkitunnusOtsikko = new Text("Tunnus");
         mokkitunnusOtsikko.setFont(fontti);
@@ -449,8 +468,13 @@ public class Main extends Application {
         palveluScrollaus.setContent(palveluTaulukko);
 
 
-        Nappula palvelunLisays = new Nappula("Lisää uusi palvelu", 200, 30);
-        palveluTaulukko.add(palvelunLisays, 1,0);
+        
+        Nappula palvelunLisaysNappula = new Nappula("", 200, 30);
+        ImageView palvelunLisays = new ImageView(imageKuvasta("lisays.png"));
+        palvelunLisays.setFitWidth(23);
+        palvelunLisays.setFitHeight(22);
+        palvelunLisaysNappula.setGraphic(palvelunLisays);
+        palveluTaulukko.add(palvelunLisaysNappula, 1,0);
 
         Text palvelutunnusOtsikko = new Text("Tunnus");
         palvelutunnusOtsikko.setFont(fontti);
@@ -601,9 +625,13 @@ public class Main extends Application {
         varausScrollaus.setContent(varausTaulukko);
 
 
-        Nappula varausLisays = new Nappula("Lisää uusi varaus", 200, 30);
-        varausTaulukko.add(varausLisays, 1, 0);
-        varausLisays.setOnAction(e -> {
+        Nappula varausLisaysNappula = new Nappula("", 200, 30);
+        ImageView varausLisays = new ImageView(imageKuvasta("lisays.png"));
+        varausLisays.setFitWidth(23);
+        varausLisays.setFitHeight(22);
+        varausLisaysNappula.setGraphic(varausLisays);
+        varausTaulukko.add(varausLisaysNappula, 1, 0);
+        varausLisaysNappula.setOnAction(e -> {
             Stage varausLisaysStage = new Stage();
 
             VBox varausLisaysVBoxPaneeli = new VBox();
@@ -714,26 +742,6 @@ public class Main extends Application {
             varausLisaysVBoxPaneeli.getChildren().addAll
                     (uusiAsiakas, vanhaAsiakas, asiakasLisaysPaneeli, varausLisaysPaneeli);
 
-            //varausLisaysStage.initModality(Modality.WINDOW_MODAL);
-            //varausLisaysStage.initOwner(ikkuna);
-            /*
-            Text text2 = new Text("Tämä on pienempi ikkuna!");
-            Button button2 = new Button("Sulje ikkuna");
-            VBox vb2 = new VBox(text2, button2);
-            vb2.setSpacing(15);
-            vb2.setAlignment(Pos.CENTER);
-
-            // Muokataan alempaa ikkunaa
-            text1.setText("Pienempi ikkuna on nyt auki");
-
-            // Suljetaan ikkuna
-            button2.setOnAction(e1 -> {
-                stage2.close();
-                text1.setText("Tämä on iso ikkuna!");
-            });
-
-
-             */
             // Luodaan uusi scene
             Scene scene2 = new Scene(varausLisaysVBoxPaneeli, 400, 650);
             varausLisaysStage.setScene(scene2);
@@ -859,21 +867,6 @@ public class Main extends Application {
         asiakasHaku.add(asiakasHakuKenttaLabel, 1, 1);
         Nappula asiakasHakuNappula = new Nappula("Suorita haku", 190, 30);
         asiakasHaku.add(asiakasHakuNappula, 1, 2);
-        asiakasHaku.add(new Text("Näytä tulokset järjestyksessä"), 2, 0);
-
-        ToggleGroup toggleasiakas = new ToggleGroup();
-
-        RadioButton uusinasiakas = new RadioButton("uusin - vanhin");
-        asiakasHaku.add(uusinasiakas, 2, 1);
-        uusinasiakas.setToggleGroup(toggleasiakas);
-
-        RadioButton vanhinasiakas = new RadioButton("vanhin - uusin");
-        asiakasHaku.add(vanhinasiakas, 2, 2);
-        vanhinasiakas.setToggleGroup(toggleasiakas);
-
-        RadioButton aakkosasiakas = new RadioButton("A - Ö");
-        asiakasHaku.add(aakkosasiakas, 2, 3);
-        aakkosasiakas.setToggleGroup(toggleasiakas);
 
         asiakasHaku.add(new Text("Lajittelu:"), 2, 0);
         ComboBox<String> asiakasLajittelu = new ComboBox<>(FXCollections.observableList(Arrays.asList(
@@ -894,8 +887,12 @@ public class Main extends Application {
         asiakasScrollaus.setContent(asiakasTaulukko);
 
 
-        Nappula asiakasLisays = new Nappula("Lisää uusi asiakas", 200, 30);
-        asiakasTaulukko.add(asiakasLisays, 1,0);
+        Nappula asiakasLisaysNappula = new Nappula("", 200, 30);
+        ImageView asiakasLisays = new ImageView(imageKuvasta("lisays.png"));
+        asiakasLisays.setFitWidth(23);
+        asiakasLisays.setFitHeight(22);
+        asiakasLisaysNappula.setGraphic(asiakasLisays);
+        asiakasTaulukko.add(asiakasLisaysNappula, 1,0);
 
         Text asiakastunnusOtsikko = new Text("AsiakasID");
         asiakastunnusOtsikko.setFont(fontti);
@@ -1028,8 +1025,12 @@ public class Main extends Application {
         laskuScrollaus.setContent(laskuTaulukko);
 
 
-        Nappula laskunLisays = new Nappula("Lisää uusi lasku", 200, 30);
-        laskuTaulukko.add(laskunLisays, 1,0);
+        Nappula laskunLisaysNappula = new Nappula("", 200, 30);
+        ImageView laskunLisays = new ImageView(imageKuvasta("lisays.png"));
+        laskunLisays.setFitWidth(23);
+        laskunLisays.setFitHeight(22);
+        laskunLisaysNappula.setGraphic(laskunLisays);
+        laskuTaulukko.add(laskunLisaysNappula, 1,0);
 
         Text laskuTunnusOtsikko = new Text("Laskunro.");
         laskuTunnusOtsikko.setFont(fontti);
@@ -1129,7 +1130,7 @@ public class Main extends Application {
     private Image imageKuvasta(String kuva) {
         try {
             return new Image(IMGPOLKU + kuva);
-        } catch (Exception e) { // TODO tarkenna vain siihen tiettyyn Exceptioniin mikä tulee
+        } catch (IllegalArgumentException e) {
             return new Image(kuva);
         }
     }
