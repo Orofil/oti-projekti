@@ -19,6 +19,10 @@ public class Nappula extends Button {
         setOnMouseExited(e -> setStyle("-fx-background-radius: 0; -fx-background-color: black; -fx-border-color: black"));
     }
 
+    public Nappula(double leveys, double korkeus) {
+        this("", leveys, korkeus);
+    }
+
     public Nappula(String teksti) {
         this(teksti, 219, 40);
     }

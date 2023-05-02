@@ -220,7 +220,7 @@ public class Main extends Application {
         alueScrollaus.setContent(alueTaulukko);
 
 
-        Nappula alueenLisaysNappula = new Nappula("", 200, 30);
+        Nappula alueenLisaysNappula = new Nappula(200, 30);
         ImageView alueenLisays = new ImageView(imageKuvasta("lisays.png"));
         alueenLisays.setFitWidth(23);
         alueenLisays.setFitHeight(22);
@@ -252,7 +252,7 @@ public class Main extends Application {
             //alueNimi.setAlignment(Pos.CENTER);
             alueNimi.setTextAlignment(TextAlignment.CENTER);
 
-            Nappula poistoNappula = new Nappula("", 150, 30);
+            Nappula poistoNappula = new Nappula(150, 30);
             ImageView roskis = new ImageView(imageKuvasta("roskis.png"));
             roskis.setFitWidth(22);
             roskis.setFitHeight(22);
@@ -326,7 +326,7 @@ public class Main extends Application {
         mokkiScrollaus.setContent(mokkiTaulukko);
 
 
-        Nappula mokkienLisaysNappula = new Nappula("", 200, 30);
+        Nappula mokkienLisaysNappula = new Nappula(200, 30);
         ImageView mokkienLisays = new ImageView(imageKuvasta("lisays.png"));
         mokkienLisays.setFitWidth(23);
         mokkienLisays.setFitHeight(22);
@@ -379,7 +379,7 @@ public class Main extends Application {
             mokkiTaulukko.add(mokkiHinta, 3, rivi);
             mokkiTaulukko.add(mokkiHloMaara, 4, rivi);
 
-            Nappula poistoNappula = new Nappula("", 150, 30);
+            Nappula poistoNappula = new Nappula(150, 30);
             ImageView roskis = new ImageView(imageKuvasta("roskis.png"));
             roskis.setFitWidth(22);
             roskis.setFitHeight(22);
@@ -388,7 +388,7 @@ public class Main extends Application {
             poistoNappula.setOnMouseClicked(e -> {
                 // poistamokki();                          //TODO  poistamokki() - metodin luominen
             });
-            Nappula muokkausNappula = new Nappula("", 100, 30);
+            Nappula muokkausNappula = new Nappula(100, 30);
             ImageView muokkaus = new ImageView(imageKuvasta("muokkaus.png"));
             muokkaus.setFitWidth(23);
             muokkaus.setFitHeight(22);
@@ -397,7 +397,7 @@ public class Main extends Application {
             muokkausNappula.setOnMouseClicked(e -> {
                 // muokkaaMokki();                          //TODO  muokkaamokki() - metodin luominen
             });
-            Nappula tarkasteleNappula = new Nappula("", 170, 30);
+            Nappula tarkasteleNappula = new Nappula(170, 30);
             ImageView tarkastelu = new ImageView(imageKuvasta("tarkastelu.png"));
             tarkastelu.setFitWidth(23);
             tarkastelu.setFitHeight(22);
@@ -469,7 +469,7 @@ public class Main extends Application {
 
 
         
-        Nappula palvelunLisaysNappula = new Nappula("", 200, 30);
+        Nappula palvelunLisaysNappula = new Nappula(200, 30);
         ImageView palvelunLisays = new ImageView(imageKuvasta("lisays.png"));
         palvelunLisays.setFitWidth(23);
         palvelunLisays.setFitHeight(22);
@@ -520,7 +520,7 @@ public class Main extends Application {
             //palveluNimi.setAlignment(Pos.CENTER);
             palveluNimi.setTextAlignment(TextAlignment.CENTER);
 
-            Nappula poistoNappula = new Nappula("", 150, 30);
+            Nappula poistoNappula = new Nappula(150, 30);
             ImageView roskis = new ImageView(imageKuvasta("roskis.png"));
             roskis.setFitWidth(22);
             roskis.setFitHeight(22);
@@ -530,7 +530,7 @@ public class Main extends Application {
                 // poistapalvelu();                          //TODO  poistapalvelu() - metodin luominen
             });
 
-            Nappula muokkausNappula = new Nappula("", 100, 30);
+            Nappula muokkausNappula = new Nappula(100, 30);
             ImageView muokkaus = new ImageView(imageKuvasta("muokkaus.png"));
             muokkaus.setFitWidth(23);
             muokkaus.setFitHeight(22);
@@ -539,7 +539,7 @@ public class Main extends Application {
             muokkausNappula.setOnMouseClicked(e -> {
                 // muokkaaMokki();                          //TODO  muokkaamokki() - metodin luominen
             });
-            Nappula tarkasteleNappula = new Nappula("", 170, 30);
+            Nappula tarkasteleNappula = new Nappula(170, 30);
             ImageView tarkastelu = new ImageView(imageKuvasta("tarkastelu.png"));
             tarkastelu.setFitWidth(23);
             tarkastelu.setFitHeight(22);
@@ -625,7 +625,7 @@ public class Main extends Application {
         varausScrollaus.setContent(varausTaulukko);
 
 
-        Nappula varausLisaysNappula = new Nappula("", 200, 30);
+        Nappula varausLisaysNappula = new Nappula(200, 30);
         ImageView varausLisays = new ImageView(imageKuvasta("lisays.png"));
         varausLisays.setFitWidth(23);
         varausLisays.setFitHeight(22);
@@ -798,7 +798,7 @@ public class Main extends Application {
             //varausNimi.setAlignment(Pos.CENTER);
             varausNimi.setTextAlignment(TextAlignment.CENTER);
 
-            Nappula poistoNappula = new Nappula("", 150, 30);
+            Nappula poistoNappula = new Nappula(150, 30);
             ImageView roskis = new ImageView(imageKuvasta("roskis.png"));
             roskis.setFitWidth(22);
             roskis.setFitHeight(22);
@@ -808,7 +808,7 @@ public class Main extends Application {
                 // poistavaraus();                          //TODO  poistavaraus() - metodin luominen
             });
 
-            Nappula muokkausNappula = new Nappula("", 100, 30);
+            Nappula muokkausNappula = new Nappula(100, 30);
             ImageView muokkaus = new ImageView(imageKuvasta("muokkaus.png"));
             muokkaus.setFitWidth(23);
             muokkaus.setFitHeight(22);
@@ -817,7 +817,7 @@ public class Main extends Application {
             muokkausNappula.setOnMouseClicked(e -> {
                 // muokkaaMokki();                          //TODO  muokkaamokki() - metodin luominen
             });
-            Nappula tarkasteleNappula = new Nappula("", 170, 30);
+            Nappula tarkasteleNappula = new Nappula(170, 30);
             ImageView tarkastelu = new ImageView(imageKuvasta("tarkastelu.png"));
             tarkastelu.setFitWidth(23);
             tarkastelu.setFitHeight(22);
@@ -887,7 +887,7 @@ public class Main extends Application {
         asiakasScrollaus.setContent(asiakasTaulukko);
 
 
-        Nappula asiakasLisaysNappula = new Nappula("", 200, 30);
+        Nappula asiakasLisaysNappula = new Nappula(200, 30);
         ImageView asiakasLisays = new ImageView(imageKuvasta("lisays.png"));
         asiakasLisays.setFitWidth(23);
         asiakasLisays.setFitHeight(22);
@@ -936,7 +936,7 @@ public class Main extends Application {
             asiakasTaulukko.add(asiakasPuhNro, 3, rivi);
 
 
-            Nappula poistoNappula = new Nappula("", 150, 30);
+            Nappula poistoNappula = new Nappula(150, 30);
             ImageView roskis = new ImageView(imageKuvasta("roskis.png"));
             roskis.setFitWidth(22);
             roskis.setFitHeight(22);
@@ -946,7 +946,7 @@ public class Main extends Application {
                 // poistaasiakas();                          //TODO  poistaasiakas() - metodin luominen
             });
 
-            Nappula muokkausNappula = new Nappula("", 100, 30);
+            Nappula muokkausNappula = new Nappula(100, 30);
             ImageView muokkaus = new ImageView(imageKuvasta("muokkaus.png"));
             muokkaus.setFitWidth(23);
             muokkaus.setFitHeight(22);
@@ -955,7 +955,7 @@ public class Main extends Application {
             muokkausNappula.setOnMouseClicked(e -> {
                 // muokkaaMokki();                          //TODO  muokkaamokki() - metodin luominen
             });
-            Nappula tarkasteleNappula = new Nappula("", 170, 30);
+            Nappula tarkasteleNappula = new Nappula(170, 30);
             ImageView tarkastelu = new ImageView(imageKuvasta("tarkastelu.png"));
             tarkastelu.setFitWidth(23);
             tarkastelu.setFitHeight(22);
@@ -1025,7 +1025,7 @@ public class Main extends Application {
         laskuScrollaus.setContent(laskuTaulukko);
 
 
-        Nappula laskunLisaysNappula = new Nappula("", 200, 30);
+        Nappula laskunLisaysNappula = new Nappula(200, 30);
         ImageView laskunLisays = new ImageView(imageKuvasta("lisays.png"));
         laskunLisays.setFitWidth(23);
         laskunLisays.setFitHeight(22);
@@ -1074,7 +1074,7 @@ public class Main extends Application {
             laskuTaulukko.add(laskuStatus, 3, rivi);
 
 
-            Nappula poistoNappula = new Nappula("", 150, 30);
+            Nappula poistoNappula = new Nappula(150, 30);
             ImageView roskis = new ImageView(imageKuvasta("roskis.png"));
             roskis.setFitWidth(22);
             roskis.setFitHeight(22);
@@ -1084,7 +1084,7 @@ public class Main extends Application {
                 // poistalasku();                          //TODO  poistalasku() - metodin luominen
             });
 
-            Nappula muokkausNappula = new Nappula("", 100, 30);
+            Nappula muokkausNappula = new Nappula(100, 30);
             ImageView muokkaus = new ImageView(imageKuvasta("muokkaus.png"));
             muokkaus.setFitWidth(23);
             muokkaus.setFitHeight(22);
@@ -1094,7 +1094,7 @@ public class Main extends Application {
                 // muokkaaLasku();                          //TODO  muokkaamokki() - metodin luominen
             });
 
-            Nappula tarkasteleNappula = new Nappula("", 170, 30);
+            Nappula tarkasteleNappula = new Nappula(170, 30);
             ImageView tarkastelu = new ImageView(imageKuvasta("tarkastelu.png"));
             tarkastelu.setFitWidth(23);
             tarkastelu.setFitHeight(22);
@@ -1104,7 +1104,7 @@ public class Main extends Application {
                 // tarkasteleLasku();                          //TODO  tarkasteleMokkia() - metodin luominen
             });
 
-            Nappula luoLaskuNappula = new Nappula("", 150, 30);
+            Nappula luoLaskuNappula = new Nappula(150, 30);
             ImageView tiedostoksi = new ImageView(imageKuvasta("tiedostoksi.png"));
             tiedostoksi.setFitWidth(33);
             tiedostoksi.setFitHeight(22);
