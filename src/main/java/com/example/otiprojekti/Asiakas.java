@@ -4,7 +4,7 @@ import java.util.Objects;
 
 public class Asiakas {
     private int asiakasID;
-    private int postinro;
+    private String postinro;
 
     private String sukunimi;
     private String etunimi;
@@ -13,7 +13,7 @@ public class Asiakas {
     private String puhnro;
 
     public Asiakas(int asiakasID,
-                   int postinro,
+                   String postinro,
                    String sukunimi,
                    String etunimi,
                    String email,
@@ -33,11 +33,11 @@ public class Asiakas {
         return asiakasID;
     }
 
-    public int getPostinro() {
+    public String getPostinro() {
         return postinro;
     }
 
-    public void setPostinro(int postinro) {
+    public void setPostinro(String postinro) {
         this.postinro = postinro;
     }
 

@@ -268,7 +268,7 @@ public class Tietokanta {
         while (rs.next()) {
             asiakkaat.add(new Asiakas(
                     rs.getInt("asiakas_id"),
-                    rs.getInt("postinro"), // TODO toimiiko getInt vai pitääkö käyttää Integer.valueOf koska tietokannassa postinro on tyyppiä char
+                    rs.getString("postinro"),
                     rs.getString("etunimi"),
                     rs.getString("sukunimi"),
                     rs.getString("lahiosoite"),
@@ -284,7 +284,7 @@ public class Tietokanta {
             mokit.add(new Mokki(
                     rs.getInt("mokki_id"),
                     rs.getInt("alue_id"),
-                    rs.getInt("postinro"), // TODO toimiiko getInt vai pitääkö käyttää Integer.valueOf koska tietokannassa postinro on tyyppiä char
+                    rs.getString("postinro"), // TODO toimiiko getInt vai pitääkö käyttää Integer.valueOf koska tietokannassa postinro on tyyppiä char
                     rs.getString("mokkinimi"),
                     rs.getString("katuosoite"),
                     rs.getBigDecimal("hinta"),

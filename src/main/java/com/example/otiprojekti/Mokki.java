@@ -6,7 +6,7 @@ import java.util.Objects;
 public class Mokki {
     private int mokkiID;
     private int alueID;
-    private int postiNro;
+    private String postiNro;
     private String mokkiNimi;
     private String katuosoite;
     private BigDecimal hinta;
@@ -14,38 +14,32 @@ public class Mokki {
     private int hloMaara;
     private String varustelu;
 
-    //Alustaja tiedoille
-    public Mokki(int mokkiID,int alueID, int postiNro,String mokkiNimi, String katuosoite, BigDecimal hinta, String kuvaus,
-                 int hloMaara, String varustelu){
-        this.mokkiID=mokkiID;
-        this.alueID=alueID;
-        this.postiNro=postiNro;
-        this.mokkiNimi=mokkiNimi;
-        this.katuosoite=katuosoite;
-        this.hinta=hinta;
-        this.kuvaus=kuvaus;
-        this.hloMaara=hloMaara;
-        this.varustelu=varustelu;
+    public Mokki(int mokkiID, int alueID, String postiNro, String mokkiNimi, String katuosoite,
+                 BigDecimal hinta, String kuvaus, int hloMaara, String varustelu){
+        this.mokkiID = mokkiID;
+        this.alueID = alueID;
+        this.postiNro = postiNro;
+        this.mokkiNimi = mokkiNimi;
+        this.katuosoite = katuosoite;
+        this.hinta = hinta;
+        this.kuvaus = kuvaus;
+        this.hloMaara = hloMaara;
+        this.varustelu = varustelu;
     }
 
-
-    //Palauttaa mökin ID:n
     public int getMokkiID() {
         return mokkiID;
     }
 
-    //Palauttaa alueen ID:n
     public int getAlueID() {
         return alueID;
     }
 
-    //Luodaan getterit ja setterit muille kentille
-    public int getPostiNro() {
+    public String getPostiNro() {
         return postiNro;
     }
 
-
-    public void setPostiNro(int postiNro) {
+    public void setPostiNro(String postiNro) {
         this.postiNro = postiNro;
     }
 
@@ -113,8 +107,8 @@ public class Mokki {
         Mokki mokki = (Mokki) o;
         return mokkiID == mokki.mokkiID &&
                 alueID == mokki.alueID &&
-                postiNro == mokki.postiNro &&
                 hloMaara == mokki.hloMaara &&
+                Objects.equals(postiNro, mokki.postiNro) &&
                 Objects.equals(mokkiNimi, mokki.mokkiNimi) &&
                 Objects.equals(katuosoite, mokki.katuosoite) &&
                 Objects.equals(hinta, mokki.hinta) &&
