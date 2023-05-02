@@ -102,7 +102,7 @@ public class Tietokanta {
      * @param nimi Tyyppiä varchar(40).
      */
     public void insertAlue(String nimi) throws SQLException {
-        stm = con.prepareStatement( // TODO missä exceptionit käsitellään
+        stm = con.prepareStatement(
                 "INSERT INTO alue(nimi) " +
                         "VALUES (?)");
         stm.setString(1, nimi);
@@ -121,7 +121,7 @@ public class Tietokanta {
      */
     public void insertAsiakas(String postinro, String etunimi, String sukunimi,
                                      String lahiosoite, String email, String puhelinnro) throws SQLException {
-        stm = con.prepareStatement( // TODO missä exceptionit käsitellään
+        stm = con.prepareStatement(
                 "INSERT INTO asiakas(postinro,etunimi,sukunimi,lahiosoite,email,puhelinnro)" +
                 "VALUES (?,?,?,?,?,?)");
         stm.setString(1, postinro);
@@ -147,7 +147,7 @@ public class Tietokanta {
      */
     public void insertMokki(int alue_id, String postinro, String mokkinimi, String katuosoite,
                                    BigDecimal hinta, String kuvaus, int henkilomaara, String varustelu) throws SQLException {
-        stm = con.prepareStatement( // TODO missä exceptionit käsitellään
+        stm = con.prepareStatement(
                 "INSERT INTO mokki(alue_id,postinro,mokkinimi,katuosoite,hinta,kuvaus,henkilomaara,varustelu)" +
                 "VALUES (?,?,?,?,?,?,?,?)");
         stm.setInt(1, alue_id);
@@ -173,7 +173,7 @@ public class Tietokanta {
      */
     public void insertPalvelu(int alue_id, String nimi, int tyyppi, String kuvaus,
                               BigDecimal hinta, BigDecimal alv) throws SQLException {
-        stm = con.prepareStatement( // TODO missä exceptionit käsitellään
+        stm = con.prepareStatement(
                 "INSERT INTO palvelu(palvelu_id,alue_id,nimi,tyyppi,kuvaus,hinta,alv)" +
                         "VALUES (?,?,?,?,?,?,?)");
         stm.setInt(1, alue_id);
@@ -192,7 +192,7 @@ public class Tietokanta {
      * @param toimipaikka Tyyppiä varchar(45).
      */
     public void insertPosti(String postinro, String toimipaikka) throws SQLException {
-        stm = con.prepareStatement( // TODO missä exceptionit käsitellään
+        stm = con.prepareStatement(
                 "INSERT INTO posti(postinro, toimipaikka) " +
                         "VALUES (?,?)");
         stm.setString(1, postinro);
@@ -211,7 +211,7 @@ public class Tietokanta {
      */
     public void insertVaraus(int asiakas_id, int mokki_id, String varattu_pvm,
                                     String vahvistus_pvm, String varattu_alkupvm, String varattu_loppupvm) throws SQLException {
-        stm = con.prepareStatement( // TODO missä exceptionit käsitellään
+        stm = con.prepareStatement(
                 "INSERT INTO varaus(asiakas_id,mokki_id,varattu_pvm,vahvistus_pvm,varattu_alkupvm,varattu_loppupvm) " +
                 "VALUES (?,?,?,?,?,?)");
         stm.setInt(1, asiakas_id);
@@ -234,7 +234,7 @@ public class Tietokanta {
      * @return Lista {@link Mokki Mokeista}
      */
     public ArrayList<Mokki> haeMokki() throws SQLException {
-        stm = con.prepareStatement("SELECT * FROM mokki"); // TODO missä exceptionit käsitellään, sama muihinkin metodeihin
+        stm = con.prepareStatement("SELECT * FROM mokki");
         ResultSet rs = stm.executeQuery();
         ArrayList<Mokki> tulokset = mokkiLuokaksi(rs);
         stm.close();
