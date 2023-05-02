@@ -74,6 +74,11 @@ public class Main extends Application {
     private final Tietokanta tietokanta = new Tietokanta(); // TODO jos tehdään nappi uudelleen yhdistämiseen niin sitten final pitää poistaa koska olio luodaan uudelleen
 
     ArrayList<Varaus> varauslista = null;
+    ArrayList<Alue> aluelista = new ArrayList<>();
+    ArrayList<Mokki> mokkilista = new ArrayList<>();
+    ArrayList<Palvelu> palvelulista = new ArrayList<>();
+    ArrayList<Asiakas> asiakaslista = new ArrayList<>();
+    ArrayList<Lasku> laskulista = new ArrayList<>();
 
 
     @Override
@@ -84,6 +89,7 @@ public class Main extends Application {
         } catch (SQLException e) {
             // TODO miten käsitellään SQL exceptionit? Tehdäänkö joku ilmoitus joka tulee ikkunan nurkkaan jos virhe tapahtuu?
         }
+
 
         // Vasen valikko
         for (ToggleNappula n : nappulat) {
@@ -213,7 +219,7 @@ public class Main extends Application {
         alueTaulukko.add(aluetunnusOtsikko, 0, 1);
         alueTaulukko.add(alueennimiOtsikko, 1, 1);
 
-        ArrayList<Alue> aluelista = new ArrayList<>();
+
         aluelista.add(new Alue(1, "Ylläs"));       //TEMP
         aluelista.add(new Alue(2, "Levi"));        //TEMP
 
@@ -326,7 +332,7 @@ public class Main extends Application {
         mokkiTaulukko.add(mokinHloMaaraOtsikko, 4, 1);
 
 
-        ArrayList<Mokki> mokkilista = new ArrayList<>();
+
         mokkilista.add(new Mokki(1,1, 34110,"Sininen mökki", "Sinitie 2",
         BigDecimal.valueOf(200), "Valoisa hirsimökki koko perheelle tai pienelle kaveriporukalle saunalla ja porealtaalla.",
         6, "Sauna, poreallas"));       //TEMP
@@ -460,7 +466,7 @@ public class Main extends Application {
         palveluTaulukko.add(palveluAlueOtsikko, 2, 1);
         palveluTaulukko.add(palvelunHintaOtsikko, 3, 1);
 
-        ArrayList<Palvelu> palvelulista = new ArrayList<>();
+
         palvelulista.add(new Palvelu(1, 1, "Moottorikelkkavuokra",
                 "Välinevuokraus", "Moottorikelkan vuokraus 1 hlö 3h",
                 BigDecimal.valueOf(60), 24)); // TEMP
@@ -906,7 +912,7 @@ public class Main extends Application {
         asiakasTaulukko.add(asiakasEmailOtsikko, 2, 1);
         asiakasTaulukko.add(asiakasPuhNroOtsikko, 3, 1);
 
-        ArrayList<Asiakas> asiakaslista = new ArrayList<>();
+
         asiakaslista.add(new Asiakas(
                 24, 34560, "Kukko", "Veikka",
                 "veikka.kukko@gmail.com", "Savontie 26", "0440153888"));
@@ -1040,7 +1046,7 @@ public class Main extends Application {
         laskuTaulukko.add(laskuSummaOtsikko, 2, 1);
         laskuTaulukko.add(laskuStatusOtsikko, 3, 1);
 
-        ArrayList<Lasku> laskulista = new ArrayList<>();
+
         laskulista.add(new Lasku(
                 24, 345, BigDecimal.valueOf(240), 14,
                 "Maksettu"));
