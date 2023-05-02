@@ -25,10 +25,6 @@ public class Lasku {
         return laskuID;
     }
 
-    public void setLaskuID(int laskuID) {
-        this.laskuID = laskuID;
-    }
-
     public int getVarausID() {
         return varausID;
     }
