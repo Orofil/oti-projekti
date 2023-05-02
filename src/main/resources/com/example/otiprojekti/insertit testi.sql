@@ -48,7 +48,6 @@ INSERT INTO palvelu(alue_id, nimi, tyyppi, kuvaus, hinta, alv) VALUES
   (7, 'Hierontapalvelu', 4, 'Voit valita vapaamuotoisen hieronnan', 34.20, 10),
   (5, 'Kylpyläpalvelu', 2, 'Varaa rentouttava hetki mukavassa kylpylässä', 50, 10);
 
--- TODO pitäisiköhän varustelussa kuitenkin lukea, mitä mökkiin kuuluu, kuten sauna, jotain keittiöjuttuja yms. Esimerkkiä voi ottaa mainista luoMokkiNakyma-metodista
 INSERT INTO mokki(alue_id, postinro, mokkinimi, katuosoite, hinta, kuvaus, henkilomaara, varustelu) VALUES
   (1, '83960', 'Kultaloma', 'Kultahietikko-katu 2', 215, 'Viihtyisä, juuri valmistunut mökki upealla paikalla', 6, 'Poreallas, pihasauna'),
   (3, '93830', 'Villa Valkea', 'Lomaharjuntie 10', 400, 'Luksustason mökki kaikilla varusteilla', 10, 'Iso keittiö, palju, sauna'),
