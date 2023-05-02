@@ -687,8 +687,22 @@ public class Main extends Application {
             Nappula lisaaVaraus = new Nappula("Aseta varaus");
             lisaaVaraus.setOnAction( event -> {
                 if (uusiAsiakas.isSelected()) {
-                    //tietokanta.insertAsiakas(Integer.parseInt(postinro.getText()), enimi);
+                    try {
+                        tietokanta.insertAsiakas
+                                (postinro.getText(),
+                                enimi.getText(),
+                                snimi.getText(),
+                                lahiosoite.getText(),
+                                email.getText(),
+                                puhnro.getText());
+                    } catch (SQLException ex) {
+                        throw new RuntimeException(ex);
+                    }
                 }
+                // TODO tässä pitäisi tallentaa asiakkaan tiedot tietokannasta myös asiakaslistaan
+                // ja lisätä asiakasID varaustietoihin
+                // ja insertata varaus!!!
+                //tietokanta.insertVaraus();
             });
 
             varausLisaysVBoxPaneeli.getChildren().addAll
