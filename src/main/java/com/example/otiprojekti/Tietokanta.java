@@ -231,6 +231,18 @@ public class Tietokanta {
 
     /**
      * Hakee tietokannasta kaikki mökit.
+     * @return Lista {@link Asiakas Asiakkaista}
+     */
+    public ArrayList<Asiakas> haeAsiakas() throws SQLException {
+        stm = con.prepareStatement("SELECT * FROM asiakas");
+        ResultSet rs = stm.executeQuery();
+        ArrayList<Asiakas> tulokset = asiakasLuokaksi(rs);
+        stm.close();
+        return tulokset;
+    }
+
+    /**
+     * Hakee tietokannasta kaikki mökit.
      * @return Lista {@link Mokki Mokeista}
      */
     public ArrayList<Mokki> haeMokki() throws SQLException {

@@ -21,8 +21,11 @@ import javafx.scene.text.Font;
 
 import java.math.BigDecimal;
 import java.sql.SQLException;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Objects;
 
 
 public class Main extends Application {
@@ -68,6 +71,12 @@ public class Main extends Application {
 
     // Tietokantayhteys
     private final Tietokanta tietokanta = new Tietokanta(); // TODO jos tehdään nappi uudelleen yhdistämiseen niin sitten final pitää poistaa koska olio luodaan uudelleen
+
+    /**
+     * SQL:n käyttämä muotoilu DateTime-tietotyypeissä
+     */
+    // TODO sama on Tietokanta.javassa, kannattaisi olla vain toisessa ehkä
+    private final DateTimeFormatter dateTimeFormat = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 
     ArrayList<Varaus> varauslista = null;
     ArrayList<Alue> aluelista = new ArrayList<>();
@@ -721,23 +730,36 @@ public class Main extends Application {
 
             Nappula lisaaVaraus = new Nappula("Aseta varaus");
             lisaaVaraus.setOnAction( event -> {
-                if (uusiAsiakas.isSelected()) {
-                    try {
-                        tietokanta.insertAsiakas
-                                (postinro.getText(),
+                String varausAlkuAika = aloitusPvm.getValue() + " " + aloitusAika.getText(); // TODO muotoilun tarkistus, aka virheiden käsittely
+                String varausLoppuAika = lopetusPvm.getValue() + " " + lopetusAika.getText();
+                try {
+                    int asiakasIDInsert;
+                    if (uusiAsiakas.isSelected()) {
+                        tietokanta.insertAsiakas(
+                                postinro.getText(),
                                 enimi.getText(),
                                 snimi.getText(),
                                 lahiosoite.getText(),
                                 email.getText(),
                                 puhnro.getText());
-                    } catch (SQLException ex) {
-                        throw new RuntimeException(ex);
+                        asiakaslista.clear();
+                        asiakaslista.addAll(tietokanta.haeAsiakas()); // TODO tehdäänkö tämä lisääminen insert-metodissa, eli se voisi palauttaa sen yhden lisätyn asiakkaan
+                        asiakasIDInsert = asiakaslista.get(asiakaslista.size()-1).getAsiakasID();
+                    } else {
+                        asiakasIDInsert = Integer.parseInt(asiakasID.getText()); // TODO virheiden käsittely, näytetään virheteksti ikkunassa
                     }
+                    tietokanta.insertVaraus( // TODO tuleeko kenttään varattu_pvm tämänhetkinen aika?
+                            asiakasIDInsert,
+                            Integer.parseInt(mokkiID.getText()),
+                            LocalDateTime.now().format(dateTimeFormat),
+                            null,
+                            varausAlkuAika,
+                            varausLoppuAika);
+                    varauslista.clear();
+                    varauslista.addAll(tietokanta.haeVaraus()); // TODO sama kuin ylempänä
+                } catch (SQLException ex) {
+                    throw new RuntimeException(ex); // TODO ilmoitukset virheistä
                 }
-                // TODO tässä pitäisi tallentaa asiakkaan tiedot tietokannasta myös asiakaslistaan
-                // ja lisätä asiakasID varaustietoihin
-                // ja insertata varaus!!!
-                //tietokanta.insertVaraus();
             });
 
             varausLisaysVBoxPaneeli.getChildren().addAll
@@ -819,20 +841,21 @@ public class Main extends Application {
                 // muokkaaVaraus();                          //TODO  muokkaavaraus() - metodin luominen
                 Stage varausMuokkausIkkuna = new Stage();
 
-                VBox varausMuokkausPaneeli = new VBox();
+                VBox varausMuokkausPaneeli = new VBox(10);
                 varausMuokkausPaneeli.setPadding(new Insets(25));
-
-                varausMuokkausPaneeli.setSpacing(10);
 
                 GridPane varausMuokkausGridPaneeli = new GridPane();
                 varausMuokkausGridPaneeli.setVgap(5);
                 varausMuokkausGridPaneeli.add(new Text("Muokkaa varauksen tietoja:"), 0, 0);
                 TextField asiakasID = new TextField(String.valueOf(obj.getAsiakasID()));
                 TextField mokkiID = new TextField(String.valueOf(obj.getMokkiID()));
-                DatePicker aloitusPvm = new DatePicker();
-                TextField aloitusAika = new TextField("16:00");
-                DatePicker lopetusPvm = new DatePicker();
-                TextField lopetusAika = new TextField("12:00");
+                DatePicker aloitusPvm = new DatePicker(obj.getVarausAlkuPvm().toLocalDate());
+                // Laittaa tekstiksi varausAlkuPvm:n ajan jos se ei ole null, muuten 16:00, TODO tuleeko sekunnit mukaan varausAlkuPvm:stä
+                TextField aloitusAika = new TextField(String.valueOf(Objects.requireNonNullElse(
+                        obj.getVarausAlkuPvm().toLocalTime(), "16:00")));
+                DatePicker lopetusPvm = new DatePicker(obj.getVarausLoppuPvm().toLocalDate());
+                TextField lopetusAika = new TextField(String.valueOf(Objects.requireNonNullElse(
+                        obj.getVarausLoppuPvm().toLocalTime(), "12:00")));
 
 
                 Text asiakasIDText = new Text("AsiakasID");
