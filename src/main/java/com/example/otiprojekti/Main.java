@@ -2,6 +2,8 @@ package com.example.otiprojekti;
 
 import com.example.otiprojekti.nakymat.*;
 import javafx.application.Application;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.geometry.HPos;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -25,6 +27,8 @@ import java.math.BigDecimal;
 import java.sql.SQLException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Date;
 
 
 public class Main extends Application {
@@ -165,21 +169,16 @@ public class Main extends Application {
         alueHaku.add(alueHakuKenttaLabel, 1, 1);
         Nappula alueHakuNappula = new Nappula("Suorita haku", 190, 30);
         alueHaku.add(alueHakuNappula, 1, 2);
-        alueHaku.add(new Text("Näytä tulokset järjestyksessä"), 2, 0);
 
-        ToggleGroup toggleAlue = new ToggleGroup();
-
-        RadioButton uusinAlue = new RadioButton("uusin - vanhin");
-        alueHaku.add(uusinAlue, 2, 1);
-        uusinAlue.setToggleGroup(toggleAlue);
-
-        RadioButton vanhinAlue = new RadioButton("vanhin - uusin");
-        alueHaku.add(vanhinAlue, 2, 2);
-        vanhinAlue.setToggleGroup(toggleAlue);
-
-        RadioButton aakkosAlue = new RadioButton("A - Ö");
-        alueHaku.add(aakkosAlue, 2, 3);
-        aakkosAlue.setToggleGroup(toggleAlue);
+        alueHaku.add(new Text("Lajittelu:"), 2, 0);
+        ComboBox<String> alueLajittelu = new ComboBox<>(FXCollections.observableList(Arrays.asList(
+                "Tunnuksen mukaan",
+                "Uusin > Vanhin",
+                "Vanhin > Uusin",
+                "A > Ö"
+        )));
+        alueLajittelu.setValue("Uusin > Vanhin"); // Oletuksena valittu vaihtoehto, TODO mitkään näistä ei vielä tee mitään
+        alueHaku.add(alueLajittelu, 2, 1);
 
         ScrollPane alueScrollaus = new ScrollPane();
         aluepaneeli.setCenter(alueScrollaus);
@@ -269,30 +268,18 @@ public class Main extends Application {
         mokkiHaku.add(mokkiHakuKenttaLabel, 1, 1);
         Nappula mokkiHakuNappula = new Nappula("Suorita haku", 190, 30);
         mokkiHaku.add(mokkiHakuNappula, 1, 2);
-        mokkiHaku.add(new Text("Näytä tulokset järjestyksessä"), 2, 0);
 
-        ToggleGroup toggleMokki = new ToggleGroup();
-
-        // TODO näille ehkä mieluummin VBox että niillä on samat etäisyydet
-        RadioButton hintaNousevaMokki = new RadioButton("edullisin - kallein");
-        mokkiHaku.add(hintaNousevaMokki, 2, 1);
-        hintaNousevaMokki.setToggleGroup(toggleMokki);
-
-        RadioButton hintaLaskevaMokki = new RadioButton("kallein - edullisin");
-        mokkiHaku.add(hintaLaskevaMokki, 2, 2);
-        hintaLaskevaMokki.setToggleGroup(toggleMokki);
-
-        RadioButton aakkosMokki = new RadioButton("A - Ö");
-        mokkiHaku.add(aakkosMokki, 3, 1);
-        aakkosMokki.setToggleGroup(toggleMokki);
-
-        RadioButton hloMaaraMokki = new RadioButton("hlömäärän mukaan");
-        mokkiHaku.add(hloMaaraMokki, 3, 2);
-        hloMaaraMokki.setToggleGroup(toggleMokki);
-
-        RadioButton alueittainMokki = new RadioButton("alueittain");
-        mokkiHaku.add(alueittainMokki, 3, 3);
-        alueittainMokki.setToggleGroup(toggleMokki);
+        mokkiHaku.add(new Text("Lajittelu:"), 2, 0);
+        ComboBox<String> mokkiLajittelu = new ComboBox<>(FXCollections.observableList(Arrays.asList(
+                "Tunnuksen mukaan",
+                "Edullisin > Kallein",
+                "Kallein > Edullisin",
+                "A > Ö",
+                "Henkilömäärän mukaan",
+                "Alueittain"
+        )));
+        mokkiLajittelu.setValue("Tunnuksen mukaan"); // Oletuksena valittu vaihtoehto
+        mokkiHaku.add(mokkiLajittelu, 2, 1);
 
         ScrollPane mokkiScrollaus = new ScrollPane();
         mokkipaneeli.setCenter(mokkiScrollaus);
@@ -421,25 +408,17 @@ public class Main extends Application {
         palveluHaku.add(palveluHakuKenttaLabel, 1, 1);
         Nappula palveluHakuNappula = new Nappula("Suorita haku", 190, 30);
         palveluHaku.add(palveluHakuNappula, 1, 2);
-        palveluHaku.add(new Text("Näytä tulokset järjestyksessä"), 2, 0);
 
-        ToggleGroup togglepalvelu = new ToggleGroup();
-
-        RadioButton uusinpalvelu = new RadioButton("uusin - vanhin");
-        palveluHaku.add(uusinpalvelu, 2, 1);
-        uusinpalvelu.setToggleGroup(togglepalvelu);
-
-        RadioButton vanhinpalvelu = new RadioButton("vanhin - uusin");
-        palveluHaku.add(vanhinpalvelu, 2, 2);
-        vanhinpalvelu.setToggleGroup(togglepalvelu);
-
-        RadioButton aakkospalvelu = new RadioButton("A - Ö");
-        palveluHaku.add(aakkospalvelu, 3, 1);
-        aakkospalvelu.setToggleGroup(togglepalvelu);
-
-        RadioButton alueittainpalvelu = new RadioButton("alueittain");
-        palveluHaku.add(alueittainpalvelu, 3, 2);
-        aakkospalvelu.setToggleGroup(togglepalvelu);
+        palveluHaku.add(new Text("Lajittelu:"), 2, 0);
+        ComboBox<String> palveluLajittelu = new ComboBox<>(FXCollections.observableList(Arrays.asList(
+                "Tunnuksen mukaan",
+                "Uusin > Vanhin",
+                "Vanhin > Uusin",
+                "A > Ö",
+                "Alueittain"
+        )));
+        palveluLajittelu.setValue("Uusin > Vanhin"); // Oletuksena valittu vaihtoehto
+        palveluHaku.add(palveluLajittelu, 2, 1);
 
         ScrollPane palveluScrollaus = new ScrollPane();
         palvelupaneeli.setCenter(palveluScrollaus);
@@ -554,8 +533,8 @@ public class Main extends Application {
         });
 
         GridPane varausHaku = new GridPane();
-        varausHaku.setPadding(new Insets(50, 50, 50, 0));
-        varausHaku.setHgap(100);
+        varausHaku.setPadding(new Insets(20));
+        varausHaku.setHgap(20);
         varausHaku.setVgap(15);
         varauspaneeli.setTop(varausHaku);
 
@@ -566,25 +545,32 @@ public class Main extends Application {
         varausHaku.add(varausHakuKenttaLabel, 1, 1);
         Nappula varausHakuNappula = new Nappula("Suorita haku", 190, 30);
         varausHaku.add(varausHakuNappula, 1, 2);
-        varausHaku.add(new Text("Näytä tulokset järjestyksessä"), 2, 0);
 
-        ToggleGroup togglevaraus = new ToggleGroup();
+        varausHaku.add(new Text("Lajittelu:"), 2, 0);
+        ComboBox<String> varausLajittelu = new ComboBox<>(FXCollections.observableList(Arrays.asList(
+                "Tunnuksen mukaan",
+                "Uusin > Vanhin",
+                "Vanhin > Uusin",
+                "A > Ö",
+                "Alueittain"
+        )));
+        varausLajittelu.setValue("Uusin > Vanhin"); // Oletuksena valittu vaihtoehto
+        varausHaku.add(varausLajittelu, 2, 1);
 
-        RadioButton uusinvaraus = new RadioButton("uusin - vanhin");
-        varausHaku.add(uusinvaraus, 2, 1);
-        uusinvaraus.setToggleGroup(togglevaraus);
+        varausHaku.add(new Text("Suodata päivämäärän mukaan:"), 3, 0);
+        varausHaku.add(new Text("Alkupäivä:"), 3, 1);
+        varausHaku.add(new Text("Loppupäivä:"), 3, 2);
+        DatePicker varausPvmAlku = new DatePicker();
+        varausHaku.add(varausPvmAlku, 4, 1);
+        DatePicker varausPvmLoppu = new DatePicker();
+        varausHaku.add(varausPvmLoppu, 4, 2);
 
-        RadioButton vanhinvaraus = new RadioButton("vanhin - uusin");
-        varausHaku.add(vanhinvaraus, 2, 2);
-        vanhinvaraus.setToggleGroup(togglevaraus);
-
-        RadioButton aakkosvaraus = new RadioButton("A - Ö");
-        varausHaku.add(aakkosvaraus, 3, 1);
-        aakkosvaraus.setToggleGroup(togglevaraus);
-
-        RadioButton alueittainvaraus = new RadioButton("alueittain");
-        varausHaku.add(alueittainvaraus, 3, 2);
-        aakkosvaraus.setToggleGroup(togglevaraus);
+        varausPvmAlku.setOnAction(e -> { // TEMP
+            System.out.println(varausPvmAlku.getValue()); // Palauttaa LocalDate-olion
+        });
+        varausPvmLoppu.setOnAction(e -> { // TEMP
+            System.out.println(varausPvmLoppu.getValue());
+        });
 
         ScrollPane varausScrollaus = new ScrollPane();
         varauspaneeli.setCenter(varausScrollaus);
@@ -848,6 +834,15 @@ public class Main extends Application {
         asiakasHaku.add(aakkosasiakas, 2, 3);
         aakkosasiakas.setToggleGroup(toggleasiakas);
 
+        asiakasHaku.add(new Text("Lajittelu:"), 2, 0);
+        ComboBox<String> asiakasLajittelu = new ComboBox<>(FXCollections.observableList(Arrays.asList(
+                "Tunnuksen mukaan",
+                "Uusin > Vanhin",
+                "Vanhin > Uusin",
+                "A > Ö"
+        )));
+        asiakasLajittelu.setValue("Uusin > Vanhin"); // Oletuksena valittu vaihtoehto
+        asiakasHaku.add(asiakasLajittelu, 2, 1);
 
         ScrollPane asiakasScrollaus = new ScrollPane();
         asiakaspaneeli.setCenter(asiakasScrollaus);
@@ -972,22 +967,16 @@ public class Main extends Application {
         laskuHaku.add(laskuHakuKenttaLabel, 1, 1);
         Nappula laskuHakuNappula = new Nappula("Suorita haku", 190, 30);
         laskuHaku.add(laskuHakuNappula, 1, 2);
-        laskuHaku.add(new Text("Näytä tulokset järjestyksessä"), 2, 0);
 
-        ToggleGroup togglelasku = new ToggleGroup();
-
-        RadioButton uusinlasku = new RadioButton("uusin - vanhin");
-        laskuHaku.add(uusinlasku, 2, 1);
-        uusinlasku.setToggleGroup(togglelasku);
-
-        RadioButton vanhinlasku = new RadioButton("vanhin - uusin");
-        laskuHaku.add(vanhinlasku, 2, 2);
-        vanhinlasku.setToggleGroup(togglelasku);
-
-        RadioButton aakkoslasku = new RadioButton("varaustunnuksen mukaan");
-        laskuHaku.add(aakkoslasku, 2, 3);
-        aakkoslasku.setToggleGroup(togglelasku);
-
+        laskuHaku.add(new Text("Lajittelu:"), 2, 0);
+        ComboBox<String> laskuLajittelu = new ComboBox<>(FXCollections.observableList(Arrays.asList(
+                "Tunnuksen mukaan",
+                "Uusin > Vanhin",
+                "Vanhin > Uusin",
+                "Varaustunnuksen mukaan"
+        )));
+        laskuLajittelu.setValue("Uusin > Vanhin"); // Oletuksena valittu vaihtoehto
+        laskuHaku.add(laskuLajittelu, 2, 1);
 
         ScrollPane laskuScrollaus = new ScrollPane();
         laskupaneeli.setCenter(laskuScrollaus);
