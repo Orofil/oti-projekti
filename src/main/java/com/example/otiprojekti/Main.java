@@ -740,7 +740,7 @@ public class Main extends Application {
             });
 
             varausLisaysVBoxPaneeli.getChildren().addAll
-                    (uusiAsiakas, vanhaAsiakas, asiakasLisaysPaneeli, varausLisaysPaneeli);
+                    (uusiAsiakas, vanhaAsiakas, asiakasLisaysPaneeli, varausLisaysPaneeli, lisaaVaraus);
 
             // Luodaan uusi scene
             Scene scene2 = new Scene(varausLisaysVBoxPaneeli, 400, 650);
@@ -815,8 +815,62 @@ public class Main extends Application {
             muokkausNappula.setGraphic(muokkaus);
             varausTaulukko.add(muokkausNappula, 4, rivi);
             muokkausNappula.setOnMouseClicked(e -> {
-                // muokkaaMokki();                          //TODO  muokkaamokki() - metodin luominen
+                // muokkaaVaraus();                          //TODO  muokkaavaraus() - metodin luominen
+                Stage varausMuokkausIkkuna = new Stage();
+
+                VBox varausMuokkausPaneeli = new VBox();
+                varausMuokkausPaneeli.setPadding(new Insets(25));
+
+                varausMuokkausPaneeli.setSpacing(10);
+
+                GridPane varausMuokkausGridPaneeli = new GridPane();
+                varausMuokkausGridPaneeli.setVgap(5);
+                varausMuokkausGridPaneeli.add(new Text("Muokkaa varauksen tietoja:"), 0, 0);
+                TextField asiakasID = new TextField(String.valueOf(obj.getAsiakasID()));
+                TextField mokkiID = new TextField(String.valueOf(obj.getMokkiID()));
+                DatePicker aloitusPvm = new DatePicker();
+                TextField aloitusAika = new TextField("16:00");
+                DatePicker lopetusPvm = new DatePicker();
+                TextField lopetusAika = new TextField("12:00");
+
+
+                Text asiakasIDText = new Text("AsiakasID");
+                Text mokkiIDText = new Text("MökkiID");
+                Text aloitusPvmText = new Text("Aloituspäivämäärä");
+                Text aloitusAikaText = new Text("ja kellonaika");
+                Text lopetusPvmText = new Text("Lopetuspäivämäärä");
+                Text lopetusAikaText = new Text("ja kellonaika");
+
+                varausMuokkausGridPaneeli.add(asiakasIDText, 0, 1);
+                varausMuokkausGridPaneeli.add(asiakasID, 1, 1);
+                varausMuokkausGridPaneeli.add(mokkiIDText, 0, 2);
+                varausMuokkausGridPaneeli.add(mokkiID, 1, 2);
+                varausMuokkausGridPaneeli.add(aloitusPvmText, 0, 3);
+                varausMuokkausGridPaneeli.add(aloitusPvm, 1, 3);
+                varausMuokkausGridPaneeli.add(aloitusAikaText, 0, 4);
+                varausMuokkausGridPaneeli.add(aloitusAika, 1, 4);
+                varausMuokkausGridPaneeli.add(lopetusPvmText, 0, 5);
+                varausMuokkausGridPaneeli.add(lopetusPvm, 1, 5);
+                varausMuokkausGridPaneeli.add(lopetusAikaText, 0, 6);
+                varausMuokkausGridPaneeli.add(lopetusAika, 1, 6);
+
+
+                Nappula tallennaVarausMuutokset = new Nappula("Tallenna muutokset");
+                tallennaVarausMuutokset.setOnAction( event -> {
+                    //TÄHÄN DROP IF EXISTS tai UPDATE
+                    //(tietokanta.insertVaraus();)
+                });
+
+                varausMuokkausPaneeli.getChildren().addAll
+                        (varausMuokkausGridPaneeli, tallennaVarausMuutokset);
+
+                Scene varausMuokkausKehys = new Scene(varausMuokkausPaneeli, 400, 350);
+                varausMuokkausIkkuna.setScene(varausMuokkausKehys);
+                varausMuokkausIkkuna.setTitle("Muokkaa varausta");
+                varausMuokkausIkkuna.show();
             });
+
+
             Nappula tarkasteleNappula = new Nappula(170, 30);
             ImageView tarkastelu = new ImageView(imageKuvasta("tarkastelu.png"));
             tarkastelu.setFitWidth(23);
