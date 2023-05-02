@@ -922,7 +922,7 @@ public class Main extends Application {
         for (Asiakas obj : asiakaslista) {
             Text asiakasID = new Text(String.valueOf(obj.getAsiakasID()));
             asiakasID.setFont(fontti);
-            Text asiakasNimi = new Text(obj.getEtunimi() +" "+ obj.getSukunimi());
+            Text asiakasNimi = new Text(obj.getNimi(false));
             asiakasNimi.setFont(fontti);
             Text asiakasEmail = new Text(String.valueOf(obj.getEmail()));
             asiakasEmail.setFont(fontti);
