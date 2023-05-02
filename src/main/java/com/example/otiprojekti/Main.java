@@ -1,9 +1,7 @@
 package com.example.otiprojekti;
 
-import com.example.otiprojekti.nakymat.*;
 import javafx.application.Application;
 import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import javafx.geometry.HPos;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -12,11 +10,9 @@ import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
-import javafx.scene.shape.Rectangle;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextAlignment;
-import javafx.stage.Modality;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
 import javafx.scene.image.Image;
@@ -25,10 +21,8 @@ import javafx.scene.text.Font;
 
 import java.math.BigDecimal;
 import java.sql.SQLException;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Date;
 
 
 public class Main extends Application {
@@ -65,6 +59,8 @@ public class Main extends Application {
     private final ToggleGroup tgSivuvalikko = new ToggleGroup();
 
     private final BorderPane paneeli = new BorderPane();
+    private final IlmoitusPaneeli ilmoitusPaneeli = new IlmoitusPaneeli();
+    private final StackPane paneeliYlin = new StackPane(paneeli, ilmoitusPaneeli);
     private final Text isoOtsikkoTeksti = new Text();
 
 
@@ -138,6 +134,10 @@ public class Main extends Application {
         isoOtsikkoTeksti.setX(318);
         isoOtsikkoTeksti.setY(85);
 
+        // Ilmoituspaneeli
+        StackPane.setAlignment(ilmoitusPaneeli, Pos.TOP_RIGHT); // TODO pitäisi saada oikeaan kulmaan ja niin etteivät Ilmoitukset ole koko ikkunan levyisiä (niiden keston Timeline pysähtyy koko ikkunan leveydeltä)
+        ilmoitusPaneeli.lisaaIlmoitus("Tämä on testi!"); // TEMP
+
 
         //aluepaneeli.setTop(new Nappula("Paina tästä!")); // TEMP
 
@@ -161,7 +161,7 @@ public class Main extends Application {
         double W = Math.min(boundsSuhdeMin * MAX_OSUUS * SUHDE_W, MAX_LEVEYS);
         double H = Math.min(boundsSuhdeMin * MAX_OSUUS * SUHDE_H, MAX_KORKEUS); // TODO tämä ei ihan toimi, ikkuna voi mennä yhä vähän liian isoksi
 
-        Scene kehys = new Scene(paneeli, W, H);
+        Scene kehys = new Scene(paneeliYlin, W, H);
         ikkuna.setScene(kehys);
         ikkuna.setMaxWidth(MAX_LEVEYS);
         ikkuna.setMaxHeight(MAX_KORKEUS);
@@ -181,6 +181,7 @@ public class Main extends Application {
         aluenappula.setOnAction(e -> {
             paneeli.setCenter(aluepaneeli);
             isoOtsikkoTeksti.setText("ALUEET");
+            ilmoitusPaneeli.lisaaIlmoitus("Alueet valittu! Vähän lisää tekstiä tähän vielä ihan testiksi."); // TEMP
 //            for (Nappula2 n : nappulat) {
 //                n.deselect();
 //            }
