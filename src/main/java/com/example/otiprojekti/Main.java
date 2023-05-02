@@ -4,6 +4,7 @@ import com.example.otiprojekti.nakymat.*;
 import javafx.application.Application;
 import javafx.geometry.HPos;
 import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
@@ -13,6 +14,7 @@ import javafx.scene.shape.Rectangle;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextAlignment;
+import javafx.stage.Modality;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
 import javafx.scene.image.Image;
@@ -593,8 +595,119 @@ public class Main extends Application {
         varausScrollaus.setContent(varausTaulukko);
 
 
-        Nappula varausnLisays = new Nappula("Lisää uusi varaus", 200, 30);
-        varausTaulukko.add(varausnLisays, 1, 0);
+        Nappula varausLisays = new Nappula("Lisää uusi varaus", 200, 30);
+        varausTaulukko.add(varausLisays, 1, 0);
+        varausLisays.setOnAction(e -> {
+            Stage varausLisaysStage = new Stage();
+
+            VBox varausLisaysVBoxPaneeli = new VBox();
+            varausLisaysVBoxPaneeli.setPadding(new Insets(30,30,30,30));
+            varausLisaysVBoxPaneeli.setSpacing(10);
+
+            varausLisaysVBoxPaneeli.getChildren().add(new Text("Onko kyseessä uusi asiakas?"));
+            RadioButton uusiAsiakas = new RadioButton("Kyllä");
+            RadioButton vanhaAsiakas = new RadioButton("Ei");
+            ToggleGroup asiakas = new ToggleGroup();
+            uusiAsiakas.setToggleGroup(asiakas);
+            vanhaAsiakas.setToggleGroup(asiakas);
+
+
+
+            GridPane asiakasLisaysPaneeli = new GridPane();
+            asiakasLisaysPaneeli.setVgap(10);
+            asiakasLisaysPaneeli.add(new Text("Syötä asiakkaan tiedot."), 0, 0);
+            TextField enimi = new TextField();
+            TextField snimi = new TextField();
+            TextField email = new TextField();
+            TextField puhnro = new TextField();
+            TextField lahiosoite = new TextField();
+            TextField postinro = new TextField();
+
+            Text enimiText = new Text("Etunimi");
+            Text snimiText = new Text("Sukunimi");
+            Text emailText = new Text("Sähköpostiosoite");
+            Text puhnroText = new Text("Puhelinnumero");
+            Text lahiosoiteText = new Text("Lähiosoite");
+            Text postinroText = new Text("Postinumero");
+
+            asiakasLisaysPaneeli.add(enimiText, 0,1);
+            asiakasLisaysPaneeli.add(enimi, 1,1);
+            asiakasLisaysPaneeli.add(snimiText, 0,2);
+            asiakasLisaysPaneeli.add(snimi, 1,2);
+            asiakasLisaysPaneeli.add(emailText, 0,3);
+            asiakasLisaysPaneeli.add(email, 1,3);
+            asiakasLisaysPaneeli.add(puhnroText, 0,4);
+            asiakasLisaysPaneeli.add(puhnro, 1,4);
+            asiakasLisaysPaneeli.add(lahiosoiteText, 0,5);
+            asiakasLisaysPaneeli.add(lahiosoite, 1,5);
+            asiakasLisaysPaneeli.add(postinroText, 0,6);
+            asiakasLisaysPaneeli.add(postinro, 1,6);
+
+
+            GridPane varausLisaysPaneeli = new GridPane();
+            varausLisaysPaneeli.add(new Text("Jos kyseessä on vanha asiakas, syötä asiakasID."), 0, 0);
+            TextField asiakasID = new TextField();
+            TextField mokkiID = new TextField();
+            
+
+            Text asiakasIDText = new Text("Etunimi");
+            Text mokkiIDText = new Text("Sukunimi");
+            Text aloitusPvmText = new Text("Aloituspäivämäärä");
+            Text aloitusAikaText = new Text("ja kellonaika");
+            Text lopetusPvmText = new Text("Lopetuspäivämäärä");
+            Text lopetusAikaText = new Text("ja kellonaika");
+/*
+            varausLisaysPaneeli.add(asiakasIDText, 0,1);
+            varausLisaysPaneeli.add(asiakasID, 1,1);
+            varausLisaysPaneeli.add(mokkiIDText, 0,2);
+            varausLisaysPaneeli.add(mokkiID, 1,2);
+            varausLisaysPaneeli.add(aloitusPvmText, 0,3);
+            varausLisaysPaneeli.add(, 1,3);
+            varausLisaysPaneeli.add(aloitusAikaText, 0,4);
+            varausLisaysPaneeli.add(, 1,4);
+            varausLisaysPaneeli.add(lopetusPvmText, 0,5);
+            varausLisaysPaneeli.add(, 1,5);
+            varausLisaysPaneeli.add(lopetusAikaText, 0,6);
+            varausLisaysPaneeli.add(, 1,6);
+
+ */
+
+
+            uusiAsiakas.setOnAction( event -> {
+                asiakasLisaysPaneeli.setVisible(true);
+            });
+            vanhaAsiakas.setOnAction( event -> {
+                asiakasLisaysPaneeli.setVisible(false);
+            });
+
+            varausLisaysVBoxPaneeli.getChildren().addAll(uusiAsiakas, vanhaAsiakas, asiakasLisaysPaneeli);
+
+            //varausLisaysStage.initModality(Modality.WINDOW_MODAL);
+            //varausLisaysStage.initOwner(ikkuna);
+            /*
+            Text text2 = new Text("Tämä on pienempi ikkuna!");
+            Button button2 = new Button("Sulje ikkuna");
+            VBox vb2 = new VBox(text2, button2);
+            vb2.setSpacing(15);
+            vb2.setAlignment(Pos.CENTER);
+
+            // Muokataan alempaa ikkunaa
+            text1.setText("Pienempi ikkuna on nyt auki");
+
+            // Suljetaan ikkuna
+            button2.setOnAction(e1 -> {
+                stage2.close();
+                text1.setText("Tämä on iso ikkuna!");
+            });
+
+
+             */
+            // Luodaan uusi scene
+            Scene scene2 = new Scene(varausLisaysVBoxPaneeli, 400, 600);
+            varausLisaysStage.setScene(scene2);
+            varausLisaysStage.setTitle("Lisää varaus");
+            varausLisaysStage.show();
+        });
 
         Text varaustunnusOtsikko = new Text("Varaustunnus");
         varaustunnusOtsikko.setFont(fontti);
