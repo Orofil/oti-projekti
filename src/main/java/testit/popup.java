@@ -68,11 +68,11 @@ public class popup extends Application {
             stage2.setY(ThreadLocalRandom.current().nextDouble(0, SCRHEIGHT - 200));
 
             // Testaa myös tätä
-  //        button2.setFocusTraversable(false);
+    //      button2.setFocusTraversable(false);
     //      button2.setOnMouseEntered(e1 -> {
-  //            stage2.setX(ThreadLocalRandom.current().nextDouble(0, SCRWIDTH - 200));
-   //           stage2.setY(ThreadLocalRandom.current().nextDouble(0, SCRHEIGHT - 200));
-   //       });
+    //            stage2.setX(ThreadLocalRandom.current().nextDouble(0, SCRWIDTH - 200));
+    //           stage2.setY(ThreadLocalRandom.current().nextDouble(0, SCRHEIGHT - 200));
+    //       });
         });
 
         Scene scene1 = new Scene(vb1, 500, 500);

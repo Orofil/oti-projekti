@@ -136,6 +136,10 @@ public class Main extends Application {
         kolumniLeveys.setHalignment(HPos.CENTER);
         kolumniLeveys.setPrefWidth(200);
 
+        ColumnConstraints lyhyt = new ColumnConstraints();
+        lyhyt.setHalignment(HPos.CENTER);
+        lyhyt.setPrefWidth(80);
+
         BorderPane aluepaneeli = new BorderPane();
         aluenappula.setOnAction(e -> {
             paneeli.setCenter(aluepaneeli);
@@ -179,7 +183,7 @@ public class Main extends Application {
         aluepaneeli.setCenter(alueScrollaus);
         GridPane alueTaulukko = new GridPane();
         alueTaulukko.setPadding(new Insets(20,20,20,20));
-        alueTaulukko.getColumnConstraints().addAll(kolumniLeveys, kolumniLeveys);
+        alueTaulukko.getColumnConstraints().addAll(kolumniLeveys, kolumniLeveys, lyhyt);
         alueTaulukko.setGridLinesVisible(true);
         alueScrollaus.setContent(alueTaulukko);
 
@@ -293,7 +297,7 @@ public class Main extends Application {
         GridPane mokkiTaulukko = new GridPane();
         mokkiTaulukko.setPadding(new Insets(20,20,20,20));
         mokkiTaulukko.getColumnConstraints().addAll(
-                lyhyt, kolumniLeveys, lyhyt, lyhyt, lyhyt, lyhyt, lyhyt, kolumniLeveys);
+                lyhyt, kolumniLeveys, lyhyt, lyhyt, lyhyt, lyhyt, lyhyt, lyhyt);
         mokkiTaulukko.setGridLinesVisible(true);
         mokkiScrollaus.setContent(mokkiTaulukko);
 
@@ -365,7 +369,11 @@ public class Main extends Application {
             muokkausNappula.setOnMouseClicked(e -> {
                 // muokkaaMokki();                          //TODO  muokkaamokki() - metodin luominen
             });
-            Nappula tarkasteleNappula = new Nappula("Tarkastele tietoja", 170, 30);
+            Nappula tarkasteleNappula = new Nappula("", 170, 30);
+            ImageView tarkastelu = new ImageView(imageKuvasta("tarkastelu.png"));
+            tarkastelu.setFitWidth(23);
+            tarkastelu.setFitHeight(22);
+            tarkasteleNappula.setGraphic(tarkastelu);
             mokkiTaulukko.add(tarkasteleNappula, 7, rivi);
             tarkasteleNappula.setOnMouseClicked(e -> {
                 // tarkasteleMokkia();                          //TODO  tarkasteleMokkia() - metodin luominen
@@ -435,7 +443,7 @@ public class Main extends Application {
         palvelupaneeli.setCenter(palveluScrollaus);
         GridPane palveluTaulukko = new GridPane();
         palveluTaulukko.setPadding(new Insets(20,20,20,20));
-        palveluTaulukko.getColumnConstraints().addAll(semi, kolumniLeveys, lyhyt, lyhyt, lyhyt, lyhyt);
+        palveluTaulukko.getColumnConstraints().addAll(semi, kolumniLeveys, lyhyt, lyhyt, lyhyt, lyhyt, lyhyt);
         palveluTaulukko.setGridLinesVisible(true);
         palveluScrollaus.setContent(palveluTaulukko);
 
@@ -506,7 +514,11 @@ public class Main extends Application {
             muokkausNappula.setOnMouseClicked(e -> {
                 // muokkaaMokki();                          //TODO  muokkaamokki() - metodin luominen
             });
-            Nappula tarkasteleNappula = new Nappula("Tarkastele tietoja", 170, 30);
+            Nappula tarkasteleNappula = new Nappula("", 170, 30);
+            ImageView tarkastelu = new ImageView(imageKuvasta("tarkastelu.png"));
+            tarkastelu.setFitWidth(23);
+            tarkastelu.setFitHeight(22);
+            tarkasteleNappula.setGraphic(tarkastelu);
             palveluTaulukko.add(tarkasteleNappula, 6, rivi);
             tarkasteleNappula.setOnMouseClicked(e -> {
                 // tarkasteleMokkia();                          //TODO  tarkasteleMokkia() - metodin luominen
@@ -576,7 +588,7 @@ public class Main extends Application {
         varauspaneeli.setCenter(varausScrollaus);
         GridPane varausTaulukko = new GridPane();
         varausTaulukko.setPadding(new Insets(20, 20, 20, 20));
-        varausTaulukko.getColumnConstraints().addAll(semi, kolumniLeveys, lyhyt, kolumniLeveys);
+        varausTaulukko.getColumnConstraints().addAll(semi, kolumniLeveys, lyhyt, lyhyt, lyhyt, lyhyt);
         varausTaulukko.setGridLinesVisible(true);
         varausScrollaus.setContent(varausTaulukko);
 
@@ -657,7 +669,11 @@ public class Main extends Application {
             muokkausNappula.setOnMouseClicked(e -> {
                 // muokkaaMokki();                          //TODO  muokkaamokki() - metodin luominen
             });
-            Nappula tarkasteleNappula = new Nappula("Tarkastele tietoja", 170, 30);
+            Nappula tarkasteleNappula = new Nappula("", 170, 30);
+            ImageView tarkastelu = new ImageView(imageKuvasta("tarkastelu.png"));
+            tarkastelu.setFitWidth(23);
+            tarkastelu.setFitHeight(22);
+            tarkasteleNappula.setGraphic(tarkastelu);
             varausTaulukko.add(tarkasteleNappula, 5, rivi);
             tarkasteleNappula.setOnMouseClicked(e -> {
                 // tarkasteleMokkia();                          //TODO  tarkasteleMokkia() - metodin luominen
@@ -724,7 +740,7 @@ public class Main extends Application {
         asiakaspaneeli.setCenter(asiakasScrollaus);
         GridPane asiakasTaulukko = new GridPane();
         asiakasTaulukko.setPadding(new Insets(20,20,20,20));
-        asiakasTaulukko.getColumnConstraints().addAll(lyhyt, kolumniLeveys, kolumniLeveys, semi, lyhyt);
+        asiakasTaulukko.getColumnConstraints().addAll(lyhyt, kolumniLeveys, kolumniLeveys, semi, lyhyt, lyhyt, lyhyt);
         asiakasTaulukko.setGridLinesVisible(true);
         asiakasScrollaus.setContent(asiakasTaulukko);
 
@@ -793,7 +809,11 @@ public class Main extends Application {
             muokkausNappula.setOnMouseClicked(e -> {
                 // muokkaaMokki();                          //TODO  muokkaamokki() - metodin luominen
             });
-            Nappula tarkasteleNappula = new Nappula("Tarkastele tietoja", 170, 30);
+            Nappula tarkasteleNappula = new Nappula("", 170, 30);
+            ImageView tarkastelu = new ImageView(imageKuvasta("tarkastelu.png"));
+            tarkastelu.setFitWidth(23);
+            tarkastelu.setFitHeight(22);
+            tarkasteleNappula.setGraphic(tarkastelu);
             asiakasTaulukko.add(tarkasteleNappula, 6, rivi);
             tarkasteleNappula.setOnMouseClicked(e -> {
                 // tarkasteleMokkia();                          //TODO  tarkasteleMokkia() - metodin luominen
@@ -860,7 +880,7 @@ public class Main extends Application {
         laskupaneeli.setCenter(laskuScrollaus);
         GridPane laskuTaulukko = new GridPane();
         laskuTaulukko.setPadding(new Insets(20,20,20,20));
-        laskuTaulukko.getColumnConstraints().addAll(lyhyt, kolumniLeveys, lyhyt, semi, lyhyt);
+        laskuTaulukko.getColumnConstraints().addAll(lyhyt, kolumniLeveys, lyhyt, semi, lyhyt, lyhyt, lyhyt, lyhyt);
         laskuTaulukko.setGridLinesVisible(true);
         laskuScrollaus.setContent(laskuTaulukko);
 
@@ -930,7 +950,11 @@ public class Main extends Application {
                 // muokkaaLasku();                          //TODO  muokkaamokki() - metodin luominen
             });
 
-            Nappula tarkasteleNappula = new Nappula("Tarkastele tietoja", 160, 30);
+            Nappula tarkasteleNappula = new Nappula("", 170, 30);
+            ImageView tarkastelu = new ImageView(imageKuvasta("tarkastelu.png"));
+            tarkastelu.setFitWidth(23);
+            tarkastelu.setFitHeight(22);
+            tarkasteleNappula.setGraphic(tarkastelu);
             laskuTaulukko.add(tarkasteleNappula, 6, rivi);
             tarkasteleNappula.setOnMouseClicked(e -> {
                 // tarkasteleLasku();                          //TODO  tarkasteleMokkia() - metodin luominen
