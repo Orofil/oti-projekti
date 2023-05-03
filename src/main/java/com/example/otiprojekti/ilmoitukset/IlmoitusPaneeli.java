@@ -1,5 +1,6 @@
-package com.example.otiprojekti;
+package com.example.otiprojekti.ilmoitukset;
 
+import com.example.otiprojekti.ilmoitukset.Ilmoitus;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.geometry.Insets;
@@ -19,11 +20,10 @@ public class IlmoitusPaneeli extends VBox {
         super(15);
         setPadding(new Insets(15));
         setWidth(150);
-        setMouseTransparent(true); // TODO tämä pitää tehdä jos haluaa käyttää ilmoitusten alla olevaa ohjelmaa, mutta nyt ilmoitukset eivät jää pidemmäksi aikaa jos kursoria pitää päällä
     }
 
-    public void lisaaIlmoitus(String teksti) {
-        Ilmoitus i = new Ilmoitus(teksti, kesto);
+    public void lisaaIlmoitus(IlmoitusTyyppi tyyppi, String teksti) {
+        Ilmoitus i = new Ilmoitus(tyyppi, teksti, kesto);
         getChildren().add(i);
         ilmoitukset.add(i);
 

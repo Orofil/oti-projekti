@@ -12,4 +12,6 @@ module com.example.otiprojekti {
     exports testit;
     exports com.example.otiprojekti.nakymat;
     opens com.example.otiprojekti.nakymat to javafx.fxml;
+    exports com.example.otiprojekti.ilmoitukset;
+    opens com.example.otiprojekti.ilmoitukset to javafx.fxml;
 }

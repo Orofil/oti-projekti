@@ -1,11 +1,10 @@
 package com.example.otiprojekti;
 
+import com.example.otiprojekti.ilmoitukset.IlmoitusPaneeli;
+import com.example.otiprojekti.ilmoitukset.IlmoitusTyyppi;
 import javafx.application.Application;
 import javafx.collections.FXCollections;
-import javafx.geometry.HPos;
-import javafx.geometry.Insets;
-import javafx.geometry.Pos;
-import javafx.geometry.Rectangle2D;
+import javafx.geometry.*;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.*;
@@ -63,7 +62,8 @@ public class Main extends Application {
 
     private final BorderPane paneeli = new BorderPane();
     private final IlmoitusPaneeli ilmoitusPaneeli = new IlmoitusPaneeli();
-    private final StackPane paneeliYlin = new StackPane(paneeli, ilmoitusPaneeli);
+    private final Pane ilmoitusPaneeliPaneeli = new Pane(ilmoitusPaneeli);
+    private final StackPane paneeliYlin = new StackPane(paneeli, ilmoitusPaneeliPaneeli);
     private final Text isoOtsikkoTeksti = new Text();
 
 
@@ -144,8 +144,9 @@ public class Main extends Application {
         isoOtsikkoTeksti.setY(85);
 
         // Ilmoituspaneeli
-        StackPane.setAlignment(ilmoitusPaneeli, Pos.TOP_RIGHT); // TODO pitäisi saada oikeaan kulmaan ja niin etteivät Ilmoitukset ole koko ikkunan levyisiä (niiden keston Timeline pysähtyy koko ikkunan leveydeltä)
-        ilmoitusPaneeli.lisaaIlmoitus("Tämä on testi!"); // TEMP
+        ilmoitusPaneeliPaneeli.setMouseTransparent(true); // TODO tämä pitää tehdä jos haluaa käyttää ilmoitusten alla olevaa ohjelmaa, mutta nyt ilmoitukset eivät jää pidemmäksi aikaa jos kursoria pitää päällä
+        // TODO ilmoituspaneeli pitäisi saada oikeaan yläkulmaan
+        ilmoitusPaneeli.lisaaIlmoitus(IlmoitusTyyppi.ILMOITUS, "Tämä on testi!"); // TEMP
 
 
         //aluepaneeli.setTop(new Nappula("Paina tästä!")); // TEMP
@@ -190,7 +191,8 @@ public class Main extends Application {
         aluenappula.setOnAction(e -> {
             paneeli.setCenter(aluepaneeli);
             isoOtsikkoTeksti.setText("ALUEET");
-            ilmoitusPaneeli.lisaaIlmoitus("Alueet valittu! Vähän lisää tekstiä tähän vielä ihan testiksi."); // TEMP
+            ilmoitusPaneeli.lisaaIlmoitus(IlmoitusTyyppi.ILMOITUS,
+                    "Alueet valittu! Vähän lisää tekstiä tähän vielä ihan testiksi."); // TEMP
 //            for (Nappula2 n : nappulat) {
 //                n.deselect();
 //            }
