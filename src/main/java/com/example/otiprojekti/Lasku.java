@@ -1,9 +1,13 @@
 package com.example.otiprojekti;
 
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.Objects;
 import java.io.FileWriter;
+import com.itextpdf.text.Document;
+import com.itextpdf.text.Paragraph;
+import com.itextpdf.text.pdf.PdfWriter;
 
 public class Lasku {
     private int laskuID;
@@ -79,16 +83,14 @@ public class Lasku {
 
 
     public void vieDokumentiksi() { // TODO
+        Document lasku = new Document();
         try {
-            FileWriter writer = new FileWriter("tiedostonimi.txt");
-            writer.write("Laskun tunnus: " + getLaskuID() + "\n");
-            writer.write("Varauksen tunnus: " + getVarausID() + "\n");
-            writer.write("Laskun summa: " + getLaskunSumma() + "\n");
-            writer.write("Laskun alv: " + getLaskuAlv() + "\n");
-            writer.write("Laskun tila: " + getLaskunStatus() + "\n");
-            writer.close();
+            PdfWriter.getInstance(lasku, new FileOutputStream("lasku.pdf"));
+            lasku.open();
+            lasku.add(new Paragraph("Laskun tiedot"));
+            lasku.close();
         }
-        catch (IOException e) {
+        catch (Exception e) {
             System.out.println("Laskutietojen tallennuksessa tapahtui virhe.");
         }
     }
