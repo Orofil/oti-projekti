@@ -297,7 +297,7 @@ public class Tietokanta {
 
     /**
      * muokkaa asiakasta tietokannassa
-     * @param asiakasID
+     * @param asiakas_id
      * @param postinro
      * @param sukunimi
      * @param etunimi
