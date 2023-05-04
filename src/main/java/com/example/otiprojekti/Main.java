@@ -66,7 +66,10 @@ public class Main extends Application {
     private final StackPane paneeliYlin = new StackPane(paneeli, ilmoitusPaneeliPaneeli);
     private final Text isoOtsikkoTeksti = new Text();
 
-
+    // Taulukon sarakkeet
+    ColumnConstraints sarakeLevea = new ColumnConstraints();
+    ColumnConstraints sarakeSemi = new ColumnConstraints();
+    ColumnConstraints sarakeLyhyt = new ColumnConstraints();
 
 
     // Tietokantayhteys
@@ -151,6 +154,14 @@ public class Main extends Application {
 
         //aluepaneeli.setTop(new Nappula("Paina tästä!")); // TEMP
 
+        // Sarakkeet taulukkoihin
+        sarakeLevea.setHalignment(HPos.CENTER);
+        sarakeLevea.setPrefWidth(200);
+        sarakeSemi.setHalignment(HPos.CENTER);
+        sarakeSemi.setPrefWidth(120);
+        sarakeLyhyt.setHalignment(HPos.CENTER);
+        sarakeLyhyt.setPrefWidth(80);
+
         // Luodaan eri paneelit
         luoAluenakyma();
         luoMokkinakyma();
@@ -179,14 +190,6 @@ public class Main extends Application {
     }
 
     public void luoAluenakyma() {
-        ColumnConstraints kolumniLeveys = new ColumnConstraints();
-        kolumniLeveys.setHalignment(HPos.CENTER);
-        kolumniLeveys.setPrefWidth(200);
-
-        ColumnConstraints lyhyt = new ColumnConstraints();
-        lyhyt.setHalignment(HPos.CENTER);
-        lyhyt.setPrefWidth(80);
-
         BorderPane aluepaneeli = new BorderPane();
         aluenappula.setOnAction(e -> {
             paneeli.setCenter(aluepaneeli);
@@ -227,7 +230,7 @@ public class Main extends Application {
         aluepaneeli.setCenter(alueScrollaus);
         GridPane alueTaulukko = new GridPane();
         alueTaulukko.setPadding(new Insets(20));
-        alueTaulukko.getColumnConstraints().addAll(kolumniLeveys, kolumniLeveys, lyhyt);
+        alueTaulukko.getColumnConstraints().addAll(sarakeLevea, sarakeLevea, sarakeLyhyt);
         alueTaulukko.setGridLinesVisible(true);
         alueScrollaus.setContent(alueTaulukko);
 
@@ -279,19 +282,6 @@ public class Main extends Application {
     }
     
     public void luoMokkinakyma() {
-        // TODO voisiko kolumnileveyden määritellä Main-luokan alussa jos sitä käytetään joka näkymässä, leveyden voisi sitten asettaa täällä erikseen
-        ColumnConstraints kolumniLeveys = new ColumnConstraints();
-        kolumniLeveys.setHalignment(HPos.CENTER);
-        kolumniLeveys.setPrefWidth(170);
-
-        ColumnConstraints semi = new ColumnConstraints();
-        semi.setHalignment(HPos.CENTER);
-        semi.setPrefWidth(120);
-
-        ColumnConstraints lyhyt = new ColumnConstraints();
-        lyhyt.setHalignment(HPos.CENTER);
-        lyhyt.setPrefWidth(80);
-
         BorderPane mokkipaneeli = new BorderPane();
         mokkinappula.setOnAction(e -> {
             paneeli.setCenter(mokkipaneeli);
@@ -333,7 +323,7 @@ public class Main extends Application {
         GridPane mokkiTaulukko = new GridPane();
         mokkiTaulukko.setPadding(new Insets(20));
         mokkiTaulukko.getColumnConstraints().addAll(
-                lyhyt, kolumniLeveys, lyhyt, lyhyt, lyhyt, lyhyt, lyhyt, lyhyt);
+                sarakeLyhyt, sarakeLevea, sarakeLyhyt, sarakeLyhyt, sarakeLyhyt, sarakeLyhyt, sarakeLyhyt, sarakeLyhyt);
         mokkiTaulukko.setGridLinesVisible(true);
         mokkiScrollaus.setContent(mokkiTaulukko);
 
@@ -424,18 +414,6 @@ public class Main extends Application {
     }
     
     public void luoPalvelunakyma() {
-        ColumnConstraints kolumniLeveys = new ColumnConstraints();
-        kolumniLeveys.setHalignment(HPos.CENTER);
-        kolumniLeveys.setPrefWidth(200);
-
-        ColumnConstraints semi = new ColumnConstraints();
-        semi.setHalignment(HPos.CENTER);
-        semi.setPrefWidth(120);
-
-        ColumnConstraints lyhyt = new ColumnConstraints();
-        lyhyt.setHalignment(HPos.CENTER);
-        lyhyt.setPrefWidth(80);
-
         BorderPane palvelupaneeli = new BorderPane();
         palvelunappula.setOnAction(e -> {
             paneeli.setCenter(palvelupaneeli);
@@ -475,7 +453,7 @@ public class Main extends Application {
         palvelupaneeli.setCenter(palveluScrollaus);
         GridPane palveluTaulukko = new GridPane();
         palveluTaulukko.setPadding(new Insets(20));
-        palveluTaulukko.getColumnConstraints().addAll(semi, kolumniLeveys, lyhyt, lyhyt, lyhyt, lyhyt, lyhyt);
+        palveluTaulukko.getColumnConstraints().addAll(sarakeSemi, sarakeLevea, sarakeLyhyt, sarakeLyhyt, sarakeLyhyt, sarakeLyhyt, sarakeLyhyt);
         palveluTaulukko.setGridLinesVisible(true);
         palveluScrollaus.setContent(palveluTaulukko);
 
@@ -566,18 +544,6 @@ public class Main extends Application {
     }
 
     public void luoVarausnakyma() {
-        ColumnConstraints kolumniLeveys = new ColumnConstraints();
-        kolumniLeveys.setHalignment(HPos.CENTER);
-        kolumniLeveys.setPrefWidth(200);
-
-        ColumnConstraints semi = new ColumnConstraints();
-        semi.setHalignment(HPos.CENTER);
-        semi.setPrefWidth(120);
-
-        ColumnConstraints lyhyt = new ColumnConstraints();
-        lyhyt.setHalignment(HPos.CENTER);
-        lyhyt.setPrefWidth(80);
-
         BorderPane varauspaneeli = new BorderPane();
         varausnappula.setOnAction(e -> {
             paneeli.setCenter(varauspaneeli);
@@ -632,7 +598,7 @@ public class Main extends Application {
         varauspaneeli.setCenter(varausScrollaus);
         GridPane varausTaulukko = new GridPane();
         varausTaulukko.setPadding(new Insets(20));
-        varausTaulukko.getColumnConstraints().addAll(semi, kolumniLeveys, lyhyt, lyhyt, lyhyt, lyhyt);
+        varausTaulukko.getColumnConstraints().addAll(sarakeSemi, sarakeLevea, sarakeLyhyt, sarakeLyhyt, sarakeLyhyt, sarakeLyhyt);
         varausTaulukko.setGridLinesVisible(true);
         varausScrollaus.setContent(varausTaulukko);
 
@@ -656,6 +622,7 @@ public class Main extends Application {
             ToggleGroup asiakas = new ToggleGroup();
             uusiAsiakas.setToggleGroup(asiakas);
             vanhaAsiakas.setToggleGroup(asiakas);
+            uusiAsiakas.fire();
 
 
 
@@ -903,8 +870,34 @@ public class Main extends Application {
             tarkastelu.setFitHeight(22);
             tarkasteleNappula.setGraphic(tarkastelu);
             varausTaulukko.add(tarkasteleNappula, 5, rivi);
-            tarkasteleNappula.setOnMouseClicked(e -> {
+            tarkasteleNappula.setOnMouseClicked( e -> {
                 // tarkasteleMokkia();                          //TODO  tarkasteleMokkia() - metodin luominen
+                Stage tarkasteleVarausIkkuna = new Stage();
+                tarkasteleVarausIkkuna.show();
+                GridPane tarkasteleVarausPaneeli = new GridPane();
+                tarkasteleVarausPaneeli.setPadding(new Insets(25));
+                tarkasteleVarausPaneeli.setVgap(15);
+                tarkasteleVarausPaneeli.setHgap(15);
+                Scene tarkasteleVarausKehys = new Scene(tarkasteleVarausPaneeli, 400, 300);
+                tarkasteleVarausIkkuna.setScene(tarkasteleVarausKehys);
+
+                tarkasteleVarausPaneeli.add(new Text("Varauksen tiedot"),0,0);
+                tarkasteleVarausPaneeli.add(new Text("VarausID: "),0,1);
+                tarkasteleVarausPaneeli.add(new Text("AsiakasID: "),0,2);
+                tarkasteleVarausPaneeli.add(new Text("MökkiID: "),0,3);
+                tarkasteleVarausPaneeli.add(new Text("Varattu: "),0,4);
+                tarkasteleVarausPaneeli.add(new Text("Vahvistettu: "),0,5);
+                tarkasteleVarausPaneeli.add(new Text("Varauksen alkupvm: "),0,6);
+                tarkasteleVarausPaneeli.add(new Text("Varauksen loppupvm: "),0,7);
+
+                tarkasteleVarausPaneeli.add(new Text(String.valueOf(obj.getVarausID())),1,1);
+                tarkasteleVarausPaneeli.add(new Text(String.valueOf(obj.getAsiakasID())),1,2);
+                tarkasteleVarausPaneeli.add(new Text(String.valueOf(obj.getMokkiID())),1,3);
+                tarkasteleVarausPaneeli.add(new Text(dateTimeFormat.format(obj.getVarattuPvm())),1,4);
+                tarkasteleVarausPaneeli.add(new Text(dateTimeFormat.format(obj.getVahvistusPvm())),1,5);
+                tarkasteleVarausPaneeli.add(new Text(dateTimeFormat.format(obj.getVarausAlkuPvm())),1,6);
+                tarkasteleVarausPaneeli.add(new Text(dateTimeFormat.format(obj.getVarausLoppuPvm())),1,7);
+
             });
 
             rivi++;
@@ -912,18 +905,6 @@ public class Main extends Application {
     }
 
     public void luoAsiakasnakyma() {
-        ColumnConstraints kolumniLeveys = new ColumnConstraints();
-        kolumniLeveys.setHalignment(HPos.CENTER);
-        kolumniLeveys.setPrefWidth(200);
-
-        ColumnConstraints semi = new ColumnConstraints();
-        semi.setHalignment(HPos.CENTER);
-        semi.setPrefWidth(140);
-
-        ColumnConstraints lyhyt = new ColumnConstraints();
-        lyhyt.setHalignment(HPos.CENTER);
-        lyhyt.setPrefWidth(80);
-
         BorderPane asiakaspaneeli = new BorderPane();
         asiakasnappula.setOnAction(e -> {
             paneeli.setCenter(asiakaspaneeli);
@@ -962,7 +943,7 @@ public class Main extends Application {
         asiakaspaneeli.setCenter(asiakasScrollaus);
         GridPane asiakasTaulukko = new GridPane();
         asiakasTaulukko.setPadding(new Insets(20));
-        asiakasTaulukko.getColumnConstraints().addAll(lyhyt, kolumniLeveys, kolumniLeveys, semi, lyhyt, lyhyt, lyhyt);
+        asiakasTaulukko.getColumnConstraints().addAll(sarakeLyhyt, sarakeLevea, sarakeLevea, sarakeSemi, sarakeLyhyt, sarakeLyhyt, sarakeLyhyt);
         asiakasTaulukko.setGridLinesVisible(true);
         asiakasScrollaus.setContent(asiakasTaulukko);
 
@@ -1050,18 +1031,6 @@ public class Main extends Application {
     }
 
     public void luoLaskunakyma() {
-        ColumnConstraints kolumniLeveys = new ColumnConstraints();
-        kolumniLeveys.setHalignment(HPos.CENTER);
-        kolumniLeveys.setPrefWidth(200);
-
-        ColumnConstraints semi = new ColumnConstraints();
-        semi.setHalignment(HPos.CENTER);
-        semi.setPrefWidth(140);
-
-        ColumnConstraints lyhyt = new ColumnConstraints();
-        lyhyt.setHalignment(HPos.CENTER);
-        lyhyt.setPrefWidth(80);
-
         BorderPane laskupaneeli = new BorderPane();
         laskunappula.setOnAction(e -> {
             paneeli.setCenter(laskupaneeli);
@@ -1100,7 +1069,7 @@ public class Main extends Application {
         laskupaneeli.setCenter(laskuScrollaus);
         GridPane laskuTaulukko = new GridPane();
         laskuTaulukko.setPadding(new Insets(20));
-        laskuTaulukko.getColumnConstraints().addAll(lyhyt, kolumniLeveys, lyhyt, semi, lyhyt, lyhyt, lyhyt, lyhyt);
+        laskuTaulukko.getColumnConstraints().addAll(sarakeLyhyt, sarakeLevea, sarakeLyhyt, sarakeSemi, sarakeLyhyt, sarakeLyhyt, sarakeLyhyt, sarakeLyhyt);
         laskuTaulukko.setGridLinesVisible(true);
         laskuScrollaus.setContent(laskuTaulukko);
 

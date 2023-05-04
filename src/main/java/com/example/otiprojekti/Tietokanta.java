@@ -48,54 +48,9 @@ public class Tietokanta {
         }
     }
 
-    // TEMP testaustarkoitukseen
-    public static void main(String[] args) throws SQLException, IOException {
-        Tietokanta tietokanta = new Tietokanta();
-
-        // Tehdään testi-insertit
-        tietokanta.testiInsertit();
-    }
-
-    // TEMP tämä on tilapäinen metodi testi-inserttien suorittamiseen, joka on aika sekavasti kirjoitettu
-    private void testiInsertit() throws IOException, SQLException {
-        String insertitTeksti = Files.readString(Path.of(POLKU, "insertit testi.sql"));
-        String[] insertit = insertitTeksti.split("\n");
-
-        String komento = null;
-        ArrayList<String[]> params = new ArrayList<>();
-        for (int i = 0; i < insertit.length; i++) {
-            String s = insertit[i].strip();
-            if (!s.isEmpty() && !(s.charAt(0) == '(') && !(s.charAt(0) == '-')) {
-                String sN = insertit[i+1].strip();
-                int paramsN = sN.length() - sN.replace(",", "").length() - 1;
-                if (komento != null) {
-                    for (String[] ins : params) {
-                        stm = con.prepareStatement(komento);
-                        for (int j = 0; j < ins.length; j++) {
-                            stm.setString(j+1, ins[j]); // TODO kaikki parametrit käsitellään nyt merkkijonoina vaikka niin ei saa aina olla
-                        }
-                        System.out.println(stm.toString());
-                        stm.executeUpdate();
-                    }
-                    params = new ArrayList<>();
-                }
-                komento = s + "(?" + new String(new char[paramsN]).replace("\0", ",?") + ")";
-            }
-            else if (!s.isEmpty() && !(s.charAt(0) == '-')) {
-                s = s.substring(1, s.lastIndexOf(")"));
-                params.add(s.split(",")); // TODO kaikki parametrit ovat nyt merkkijonoja vaikka niin ei saa aina olla
-                for (int j = 0; j < params.get(params.size()-1).length; j++) { // TODO ylimääräinen ' jää loppuun kun on monta argumenttia
-                    params.get(params.size()-1)[j] = params.get(params.size()-1)[j].strip()
-                            .substring(1, params.get(params.size()-1)[j].length() - 1);
-                }
-            }
-        }
-    }
-
 
 
     ///// Tietojen syöttö tietokantaan
-    // TODO lasku
 
     /**
      * Syöttää tietokantaan alueen.
@@ -130,6 +85,23 @@ public class Tietokanta {
         stm.setString(4, lahiosoite);
         stm.setString(5, email);
         stm.setString(6, puhelinnro);
+        stm.executeUpdate();
+        stm.close();
+    }
+
+    /**
+     * Syöttää tietokantaan laskun.
+     * @param varaus_id Tyyppiä int. Oltava taulussa varaus.
+     * @param summa Tyyppiä double(8,2).
+     * @param alv Tyyppiä int.
+     */
+    public void insertLasku(int varaus_id, BigDecimal summa, int alv) throws SQLException {
+        stm = con.prepareStatement(
+                "INSERT INTO lasku(varaus_id,summa,alv)" +
+                "VALUES (?,?,?)");
+        stm.setInt(1, varaus_id);
+        stm.setBigDecimal(2, summa);
+        stm.setInt(3, alv);
         stm.executeUpdate();
         stm.close();
     }
@@ -197,6 +169,25 @@ public class Tietokanta {
                         "VALUES (?,?)");
         stm.setString(1, postinro);
         stm.setString(2, toimipaikka);
+        stm.executeUpdate();
+        stm.close();
+    }
+
+    /**
+     * Syöttää tietokantaan varaukseen liittyvän palvelun.
+     * @param varaus_id Tyyppiä int. OLtava taulussa varaus.
+     * @param palvelu_id Tyyppiä int. Oltava taulussa palvelu.
+     * @param lkm Tyyppiä int.
+     */
+    // TODO tehdäänkö tämä näin vähän oudosti erillään
+    public void insertVarauksenPalvelut(int varaus_id, int palvelu_id, int lkm) throws SQLException {
+        stm = con.prepareStatement(
+                "INSERT INTO varauksen_palvelut(varaus_id,palvelu_id,lkm)" +
+                "(?,?,?)");
+        stm.setInt(1, varaus_id);
+        stm.setInt(2, palvelu_id);
+        stm.setInt(3, lkm);
+        stm.executeUpdate();
         stm.close();
     }
 
@@ -254,6 +245,18 @@ public class Tietokanta {
     }
 
     /**
+     * Hakee tietokannasta kaikki palvelut
+     * @return Lista {@link Palvelu Palveluista}
+     */
+    public ArrayList<Palvelu> haePalvelu() throws SQLException {
+        stm = con.prepareStatement("SELECT * FROM palvelu");
+        ResultSet rs = stm.executeQuery();
+        ArrayList<Palvelu> tulokset = palveluLuokaksi(rs);
+        stm.close();
+        return tulokset;
+    }
+
+    /**
      * Hakee tietokannasta kaikki varaukset.
      * @return Lista {@link Varaus Varauksista}
      */
@@ -265,23 +268,10 @@ public class Tietokanta {
         return tulokset;
     }
 
-    /**
-     * Hakee tietokannasta kaikki palvelut
-     * @return Lista {@link Palvelu Palveluista}
-     * @throws SQLException
-     */
-    public ArrayList<Palvelu> haePalvelu() throws SQLException {
-        stm = con.prepareStatement("SELECT * FROM palvelu");
-        ResultSet rs = stm.executeQuery();
-        ArrayList<Palvelu> tulokset = palveluLuokaksi(rs);
-        stm.close();
-        return tulokset;
-    }
-
 
 
     ///// Muuttamiset tietokannan tiedoista olioihin
-    // TODO alue, lasku, mokki, palvelu (postia ei ilmeisesti tehdä erillisenä olioluokkana, mutta en tiedä miksi sitten esim. alue tehdään)
+    // TODO alue, lasku (postia ei ilmeisesti tehdä erillisenä olioluokkana, mutta en tiedä miksi sitten esim. alue tehdään)
 
     /**
      * Muuttaa tietokannasta saadun ResultSetin {@link Asiakas Asiakas}-olioiksi.
@@ -321,6 +311,27 @@ public class Tietokanta {
     }
 
     /**
+     * Muuttaa tietokannasta saadun ResultSetin {@link Palvelu Palvelu}-olioiksi.
+     * @param rs Tietokannasta saatu ResultSet palveluja
+     * @return Lista palveluista
+     */
+    private ArrayList<Palvelu> palveluLuokaksi(ResultSet rs) throws SQLException {
+        ArrayList<Palvelu> palvelut = new ArrayList<>();
+        while (rs.next()) {
+            palvelut.add(new Palvelu(
+                    rs.getInt("palvelu_id"),
+                    rs.getInt("alue_id"),
+                    rs.getString("nimi"),
+                    rs.getString("tyyppi"),
+                    rs.getString("kuvaus"),
+                    rs.getBigDecimal("hinta"),
+                    rs.getInt("alv")
+            ));
+        }
+        return palvelut;
+    }
+
+    /**
      * Muuttaa tietokannasta saadun ResultSetin {@link Varaus Varaus}-olioiksi.
      * @param rs Tietokannasta saatu ResultSet varauksia
      * @return Lista varauksista
@@ -343,28 +354,5 @@ public class Tietokanta {
                     LocalDateTime.parse(rs.getString("varattu_loppupvm"), dateTimeFormat)));
         }
         return varaukset;
-    }
-
-    /**
-     * Muuttaa tietokannasta saadun ResultSetin {@link Palvelu Palvelu}-olioiksi.
-     * @param rs Tietokannasta saatuja ResultSet palveluja
-     * @return lista palveluista
-     * @throws SQLException
-     */
-
-    private ArrayList<Palvelu> palveluLuokaksi(ResultSet rs) throws SQLException {
-        ArrayList<Palvelu> palvelut = new ArrayList<>();
-        while (rs.next()) {
-            palvelut.add(new Palvelu(
-                    rs.getInt("palvelu_id"),
-                    rs.getInt("alue_id"),
-                    rs.getString("nimi"),
-                    rs.getString("tyyppi"),
-                    rs.getString("kuvaus"),
-                    rs.getBigDecimal("hinta"),
-                    rs.getInt("alv")
-            ));
-        }
-        return palvelut;
     }
 }
