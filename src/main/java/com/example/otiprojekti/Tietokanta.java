@@ -217,6 +217,60 @@ public class Tietokanta {
 
 
 
+    ///// Tietokannan tietojen muokkaamiset
+    // TODO muokkausmetodit
+
+    /**
+     * Muokkaa varausta tietokannassa.
+     * @param varaus_id Tyyppiä int. Oltava taulussa varaus.
+     * @param asiakas_id Tyyppiä int. Oltava taulussa asiakas.
+     * @param mokki_id Tyyppiä int. Oltava taulussa mokki.
+     * @param varattu_pvm Tyyppiä datetime (muotoa YYYY-MM-DD hh:mm:ss).
+     * @param vahvistus_pvm Tyyppiä datetime (muotoa YYYY-MM-DD hh:mm:ss).
+     * @param varattu_alkupvm Tyyppiä datetime (muotoa YYYY-MM-DD hh:mm:ss).
+     * @param varattu_loppupvm Tyyppiä datetime (muotoa YYYY-MM-DD hh:mm:ss).
+     */
+    public void muokkaaVaraus(int varaus_id, int asiakas_id, int mokki_id, String varattu_pvm,
+                             String vahvistus_pvm, String varattu_alkupvm, String varattu_loppupvm) throws SQLException {
+        stm = con.prepareStatement(
+            "UPDATE varaus" +
+                "SET asiakas_id = ?," +
+                    "mokki_id = ?," +
+                    "varattu_pvm = ?," +
+                    "vahvistus_pvm = ?," +
+                    "varattu_alkupvm = ?," +
+                    "varattu_loppupvm = ?" +
+                "WHERE varaus_id = ?");
+        stm.setInt(1, asiakas_id);
+        stm.setInt(2, mokki_id);
+        stm.setString(3, varattu_pvm);
+        stm.setString(4, vahvistus_pvm);
+        stm.setString(5, varattu_alkupvm);
+        stm.setString(6, varattu_loppupvm);
+        stm.setInt(7, varaus_id);
+        stm.executeUpdate();
+        stm.close();
+    }
+
+
+
+    ///// Tietokannan tietojen poistamiset
+    // TODO poistamismetodit
+
+    /**
+     * Poistaa tietokannasta varauksen.
+     * @param varaus_id Tyyppiä int. Oltava taulussa varaus.
+     */
+    public void poistaVaraus(int varaus_id) throws SQLException {
+        stm = con.prepareStatement(
+                "DELETE FROM varaus WHERE varaus_id = ?");
+        stm.setInt(1, varaus_id);
+        stm.executeUpdate();
+        stm.close();
+    }
+
+
+
     ///// Tietokannasta hakemiset
     // TODO vaikka mitä tarvittavia hakuja
 
