@@ -67,15 +67,16 @@ public class Tietokanta {
     }
 
     /**
-     * Syöttää tietokantaan asiakkaan.
+     * Syöttää tietokantaan asiakkaan ja palauttaa sen oliona.
      * @param postinro Tyyppiä char(5). Oltava taulussa posti.
      * @param etunimi Tyyppiä varchar(20).
      * @param sukunimi Tyyppiä varchar(40).
      * @param lahiosoite Tyyppiä varchar(40).
      * @param email Tyyppiä varchar(50).
      * @param puhelinnro Tyyppiä varchar(15).
+     * @return {@link Asiakas}
      */
-    public void insertAsiakas(String postinro, String etunimi, String sukunimi,
+    public Asiakas insertAsiakas(String postinro, String etunimi, String sukunimi,
                                      String lahiosoite, String email, String puhelinnro) throws SQLException {
         stm = con.prepareStatement(
                 "INSERT INTO asiakas(postinro,etunimi,sukunimi,lahiosoite,email,puhelinnro)" +
@@ -88,6 +89,7 @@ public class Tietokanta {
         stm.setString(6, puhelinnro);
         stm.executeUpdate();
         stm.close();
+        return haeAsiakasUusi();
     }
 
     /**
@@ -193,7 +195,7 @@ public class Tietokanta {
     }
 
     /**
-     * Syöttää tietokantaan varauksen ja palauttaa sen.
+     * Syöttää tietokantaan varauksen ja palauttaa sen oliona.
      * @param asiakas_id Tyyppiä int. Oltava taulussa asiakas.
      * @param mokki_id Tyyppiä int. Oltava taulussa mokki.
      * @param varattu_pvm Tyyppiä datetime (muotoa YYYY-MM-DD hh:mm:ss).
@@ -258,7 +260,6 @@ public class Tietokanta {
 
 
     ///// Tietokannan tietojen poistamiset
-    // TODO poistamismetodit
 
     /**
      * Poistaa tietokannasta alueen.
@@ -366,7 +367,20 @@ public class Tietokanta {
     // TODO yksittäisten olioiden hakeminen
 
     /**
-     * Hakee tietokannasta kaikki mökit.
+     * Hakee tietokannasta uusimman asiakkaan.
+     * @return {@link Asiakas}
+     */
+    public Asiakas haeAsiakasUusi() throws SQLException {
+        stm = con.prepareStatement(
+                "SELECT * FROM asiakas WHERE asiakas_id = (SELECT MAX(asiakas_id) FROM asiakas)");
+        ResultSet rs = stm.executeQuery();
+        ArrayList<Asiakas> tulokset = asiakasLuokaksi(rs);
+        stm.close();
+        return tulokset.get(0);
+    }
+
+    /**
+     * Hakee tietokannasta kaikki asiakkaat.
      * @return Lista {@link Asiakas Asiakkaista}
      */
     public ArrayList<Asiakas> haeAsiakas() throws SQLException {
@@ -390,7 +404,7 @@ public class Tietokanta {
     }
 
     /**
-     * Hakee tietokannasta kaikki palvelut
+     * Hakee tietokannasta kaikki palvelut.
      * @return Lista {@link Palvelu Palveluista}
      */
     public ArrayList<Palvelu> haePalvelu() throws SQLException {

@@ -714,30 +714,28 @@ public class Main extends Application {
                 try {
                     int asiakasIDInsert;
                     if (uusiAsiakas.isSelected()) {
-                        tietokanta.insertAsiakas(
+                        asiakaslista.add(tietokanta.insertAsiakas(
                                 postinro.getText(),
                                 enimi.getText(),
                                 snimi.getText(),
                                 lahiosoite.getText(),
                                 email.getText(),
-                                puhnro.getText());
-                        asiakaslista.clear();
-                        asiakaslista.addAll(tietokanta.haeAsiakas()); // TODO tehdäänkö tämä lisääminen insert-metodissa, eli se voisi palauttaa sen yhden lisätyn asiakkaan
+                                puhnro.getText()));
                         asiakasIDInsert = asiakaslista.get(asiakaslista.size()-1).getAsiakasID();
                     } else {
                         asiakasIDInsert = Integer.parseInt(asiakasID.getText()); // TODO virheiden käsittely, näytetään virheteksti ikkunassa
                     }
-                    tietokanta.insertVaraus( // TODO tuleeko kenttään varattu_pvm tämänhetkinen aika?
+                    varauslista.add(tietokanta.insertVaraus( // TODO tuleeko kenttään varattu_pvm tämänhetkinen aika?
                             asiakasIDInsert,
                             Integer.parseInt(mokkiID.getText()),
                             LocalDateTime.now().format(dateTimeFormat),
                             null,
                             varausAlkuAika,
-                            varausLoppuAika);
-                    varauslista.clear();
-                    varauslista.addAll(tietokanta.haeVaraus()); // TODO sama kuin ylempänä
+                            varausLoppuAika));
+                    varausLisaysStage.close();
                 } catch (SQLException ex) {
-                    throw new RuntimeException(ex); // TODO ilmoitukset virheistä
+                    ilmoitusPaneeli.lisaaIlmoitus(IlmoitusTyyppi.VAROITUS, String.valueOf(ex));
+                    throw new RuntimeException(ex); // TEMP
                 }
             });
 
