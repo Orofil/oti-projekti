@@ -1043,6 +1043,44 @@ public class Main extends Application {
             asiakasTaulukko.add(poistoNappula, 4, rivi);
             poistoNappula.setOnMouseClicked(e -> {
                 // poistaasiakas();                          //TODO  poistaasiakas() - metodin luominen
+                Stage poistaAsiakasIkkuna = new Stage();
+                poistaAsiakasIkkuna.show();
+                BorderPane poistaAsiakasPaneeli = new BorderPane();
+                poistaAsiakasPaneeli.setPadding(new Insets(50));
+
+                Scene poistaAsiakasKehys = new Scene(poistaAsiakasPaneeli, 600, 200);
+                poistaAsiakasIkkuna.setScene(poistaAsiakasKehys);
+                poistaAsiakasIkkuna.setTitle("Poista asiakas");
+
+                HBox poistaAsiakasNappulaPaneeli = new HBox();
+                poistaAsiakasNappulaPaneeli.setSpacing(30);
+                poistaAsiakasNappulaPaneeli.setPadding(new Insets(30));
+                Nappula poistaAsiakasNappula = new Nappula("Poista asiakas");
+                Nappula peruutaAsiakasPoistoNappula = new Nappula("Peruuta");
+                poistaAsiakasNappulaPaneeli.getChildren().addAll(poistaAsiakasNappula, peruutaAsiakasPoistoNappula);
+
+                StackPane tekstiPaneeli = new StackPane();
+                Text haluatkoPoistaaasiakasTeksti = new Text("Haluatko varmasti poistaa asiakkaan?\n" +
+                        "Kaikki asiakkaan varaukset ja laskut poistuvat samalla järjestelmästä.");
+                haluatkoPoistaaasiakasTeksti.setTextAlignment(TextAlignment.CENTER);
+                haluatkoPoistaaasiakasTeksti.setFont(Font.font(16));
+                tekstiPaneeli.getChildren().add(haluatkoPoistaaasiakasTeksti);
+                poistaAsiakasPaneeli.setTop(tekstiPaneeli);
+                poistaAsiakasPaneeli.setCenter(poistaAsiakasNappulaPaneeli);
+
+                poistaAsiakasNappula.setOnAction( event -> {
+                    try {
+                        tietokanta.poistaAsiakas(obj.getAsiakasID());
+                    } catch (SQLException ex) {
+                        throw new RuntimeException(ex);
+                    }
+                    poistaAsiakasIkkuna.close();
+                    //TODO listan päivitys!!!
+                });
+
+                peruutaAsiakasPoistoNappula.setOnAction( event -> {
+                    poistaAsiakasIkkuna.close();
+                });
             });
 
             Nappula muokkausNappula = new Nappula(100, 30);
