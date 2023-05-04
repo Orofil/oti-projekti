@@ -22,9 +22,7 @@ import java.math.BigDecimal;
 import java.sql.SQLException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Objects;
+import java.util.*;
 
 
 public class Main extends Application {
@@ -81,12 +79,12 @@ public class Main extends Application {
     // TODO sama on Tietokanta.javassa, kannattaisi olla vain toisessa ehkä
     private final DateTimeFormatter dateTimeFormat = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 
-    ArrayList<Alue> aluelista = new ArrayList<>();
-    ArrayList<Mokki> mokkilista = new ArrayList<>();
-    ArrayList<Asiakas> asiakaslista = new ArrayList<>();
-    ArrayList<Palvelu> palvelulista = new ArrayList<>();
-    ArrayList<Varaus> varauslista = new ArrayList<>();
-    ArrayList<Lasku> laskulista = new ArrayList<>();
+    ArrayList<Alue> alueLista = new ArrayList<>();
+    ArrayList<Mokki> mokkiLista = new ArrayList<>();
+    ArrayList<Asiakas> asiakasLista = new ArrayList<>();
+    ArrayList<Palvelu> palveluLista = new ArrayList<>();
+    ArrayList<Varaus> varausLista = new ArrayList<>();
+    ArrayList<Lasku> laskuLista = new ArrayList<>();
 
 
     @Override
@@ -94,10 +92,10 @@ public class Main extends Application {
 
         try {
             // TODO alueiden haku
-            mokkilista = tietokanta.haeMokki();
-            asiakaslista = tietokanta.haeAsiakas();
-            palvelulista = tietokanta.haePalvelu();
-            varauslista = tietokanta.haeVaraus();
+            mokkiLista = tietokanta.haeMokki();
+            asiakasLista = tietokanta.haeAsiakas();
+            palveluLista = tietokanta.haePalvelu();
+            varausLista = tietokanta.haeVaraus();
             // TODO laskujen haku
         } catch (SQLException e) {
             ilmoitusPaneeli.lisaaIlmoitus(IlmoitusTyyppi.VAROITUS, String.valueOf(e));
@@ -218,8 +216,21 @@ public class Main extends Application {
                 "Vanhin > Uusin",
                 "A > Ö"
         )));
-        alueLajittelu.setValue("Uusin > Vanhin"); // Oletuksena valittu vaihtoehto, TODO mitkään näistä ei vielä tee mitään
+        alueLajittelu.setValue("Uusin > Vanhin"); // Oletuksena valittu vaihtoehto
         alueHaku.add(alueLajittelu, 2, 1);
+
+        // Lajittelu
+        alueLajittelu.setOnAction(e -> {
+            switch (alueLajittelu.getValue()) {
+                case "Tunnuksen mukaan" ->
+                    alueLista.sort(Comparator.comparing(Alue::getAlueID));
+                case "Uusin > Vanhin" -> {} // TODO miten tämä toimii?
+                case "Vanhin > Uusin" -> {} // TODO miten tämä toimii?
+                case "A > Ö" ->
+                    alueLista.sort(Comparator.comparing(Alue::getAlueenNimi));
+            }
+            // TODO päivitä näkymä
+        });
 
         ScrollPane alueScrollaus = new ScrollPane();
         aluepaneeli.setCenter(alueScrollaus);
@@ -245,12 +256,12 @@ public class Main extends Application {
         alueTaulukko.add(alueennimiOtsikko, 1, 1);
 
 
-        aluelista.add(new Alue(1, "Ylläs"));       //TEMP
-        aluelista.add(new Alue(2, "Levi"));        //TEMP
+        alueLista.add(new Alue(1, "Ylläs"));       //TEMP
+        alueLista.add(new Alue(2, "Levi"));        //TEMP
 
 
         int rivi = 2;
-        for (Alue obj : aluelista) {
+        for (Alue obj : alueLista) {
             Text alueID = new Text(String.valueOf(obj.getAlueID()));
             alueID.setFont(fontti);
             Text alueNimi = new Text(String.valueOf(obj.getAlueenNimi()));
@@ -313,6 +324,25 @@ public class Main extends Application {
         mokkiLajittelu.setValue("Tunnuksen mukaan"); // Oletuksena valittu vaihtoehto
         mokkiHaku.add(mokkiLajittelu, 2, 1);
 
+        // Lajittelu
+        mokkiLajittelu.setOnAction(e -> {
+            switch (mokkiLajittelu.getValue()) {
+                case "Tunnuksen mukaan" ->
+                        mokkiLista.sort(Comparator.comparing(Mokki::getMokkiID));
+                case "Edullisin > Kallein" -> 
+                        mokkiLista.sort(Comparator.comparing(Mokki::getHinta));
+                case "Kallein > Edullisin" -> 
+                        mokkiLista.sort(Comparator.comparing(Mokki::getHinta).reversed());
+                case "A > Ö" ->
+                        mokkiLista.sort(Comparator.comparing(Mokki::getMokkiNimi));
+                case "Henkilömäärän mukaan" -> 
+                        mokkiLista.sort(Comparator.comparing(Mokki::getHloMaara));
+                case "Alueittain" -> 
+                        mokkiLista.sort(Comparator.comparing(Mokki::getAlueID));
+            }
+            // TODO päivitä näkymä
+        });
+
         ScrollPane mokkiScrollaus = new ScrollPane();
         mokkipaneeli.setCenter(mokkiScrollaus);
         GridPane mokkiTaulukko = new GridPane();
@@ -349,7 +379,7 @@ public class Main extends Application {
 
 
         int rivi = 2;
-        for (Mokki obj : mokkilista) {
+        for (Mokki obj : mokkiLista) {
             Text mokkiID = new Text(String.valueOf(obj.getMokkiID()));
             mokkiID.setFont(fontti);
             Text mokkiNimi = new Text(String.valueOf(obj.getMokkiNimi()));
@@ -435,6 +465,21 @@ public class Main extends Application {
         palveluLajittelu.setValue("Uusin > Vanhin"); // Oletuksena valittu vaihtoehto
         palveluHaku.add(palveluLajittelu, 2, 1);
 
+        // Lajittelu
+        palveluLajittelu.setOnAction(e -> {
+            switch (palveluLajittelu.getValue()) {
+                case "Tunnuksen mukaan" ->
+                        palveluLista.sort(Comparator.comparing(Palvelu::getPalveluID));
+                case "Uusin > Vanhin" -> {} // TODO miten tämä toimii?
+                case "Vanhin > Uusin" -> {} // TODO miten tämä toimii?
+                case "A > Ö" ->
+                        palveluLista.sort(Comparator.comparing(Palvelu::getPalvelunNimi));
+                case "Alueittain" ->
+                        palveluLista.sort(Comparator.comparing(Palvelu::getAlueID));
+            }
+            // TODO päivitä näkymä
+        });
+
         ScrollPane palveluScrollaus = new ScrollPane();
         palvelupaneeli.setCenter(palveluScrollaus);
         GridPane palveluTaulukko = new GridPane();
@@ -468,7 +513,7 @@ public class Main extends Application {
 
 
         int rivi = 2;
-        for (Palvelu obj : palvelulista) {
+        for (Palvelu obj : palveluLista) {
             Text palveluID = new Text(String.valueOf(obj.getPalveluID()));
             palveluID.setFont(fontti);
             Text palveluNimi = new Text(String.valueOf(obj.getPalvelunNimi()));
@@ -556,6 +601,21 @@ public class Main extends Application {
         )));
         varausLajittelu.setValue("Uusin > Vanhin"); // Oletuksena valittu vaihtoehto
         varausHaku.add(varausLajittelu, 2, 1);
+
+        // Lajittelu
+        varausLajittelu.setOnAction(e -> {
+            switch (varausLajittelu.getValue()) {
+                case "Tunnuksen mukaan" ->
+                        varausLista.sort(Comparator.comparing(Varaus::getVarausID));
+                case "Uusin > Vanhin" ->
+                        varausLista.sort(Comparator.comparing(Varaus::getVarausAlkuPvm).reversed());
+                case "Vanhin > Uusin" ->
+                        varausLista.sort(Comparator.comparing(Varaus::getVarausAlkuPvm));
+                case "A > Ö" -> {} // TODO miten tämä toimii?
+                case "Alueittain" -> {} // TODO tämä on vähän monimutkaisempi, mutta ehkä voi tehdä erillisen metodin
+            }
+            // TODO päivitä näkymä
+        });
 
         varausHaku.add(new Text("Suodata päivämäärän mukaan:"), 3, 0);
         varausHaku.add(new Text("Alkupäivä:"), 3, 1);
@@ -692,18 +752,18 @@ public class Main extends Application {
                 try {
                     int asiakasIDInsert;
                     if (uusiAsiakas.isSelected()) {
-                        asiakaslista.add(tietokanta.insertAsiakas(
+                        asiakasLista.add(tietokanta.insertAsiakas(
                                 postinro.getText(),
                                 enimi.getText(),
                                 snimi.getText(),
                                 lahiosoite.getText(),
                                 email.getText(),
                                 puhnro.getText()));
-                        asiakasIDInsert = asiakaslista.get(asiakaslista.size()-1).getAsiakasID();
+                        asiakasIDInsert = asiakasLista.get(asiakasLista.size()-1).getAsiakasID();
                     } else {
                         asiakasIDInsert = Integer.parseInt(asiakasID.getText()); // TODO virheiden käsittely, näytetään virheteksti ikkunassa
                     }
-                    varauslista.add(tietokanta.insertVaraus( // TODO tuleeko kenttään varattu_pvm tämänhetkinen aika?
+                    varausLista.add(tietokanta.insertVaraus( // TODO tuleeko kenttään varattu_pvm tämänhetkinen aika?
                             asiakasIDInsert,
                             Integer.parseInt(mokkiID.getText()),
                             LocalDateTime.now().format(dateTimeFormat),
@@ -746,7 +806,7 @@ public class Main extends Application {
 
 
         int rivi = 2;
-        for (Varaus obj : varauslista) { // TODO nyt kun SQL-haku saattaa epäonnistua, voi tulla NullPointerException
+        for (Varaus obj : varausLista) { // TODO nyt kun SQL-haku saattaa epäonnistua, voi tulla NullPointerException
             Text varausID = new Text(String.valueOf(obj.getVarausID()));
             varausID.setFont(fontti);
             Text varausNimi = new Text(String.valueOf(obj.getAsiakasID()));
@@ -950,11 +1010,24 @@ public class Main extends Application {
         asiakasLajittelu.setValue("Uusin > Vanhin"); // Oletuksena valittu vaihtoehto
         asiakasHaku.add(asiakasLajittelu, 2, 1);
 
+        // Lajittelu
+        asiakasLajittelu.setOnAction(e -> {
+            switch (asiakasLajittelu.getValue()) {
+                case "Tunnuksen mukaan" ->
+                        asiakasLista.sort(Comparator.comparing(Asiakas::getAsiakasID));
+                case "Uusin > Vanhin" -> {} // TODO miten tämä toimii?
+                case "Vanhin > Uusin" -> {} // TODO miten tämä toimii?
+                case "A > Ö" ->
+                        asiakasLista.sort(Comparator.comparing(Asiakas::getSukunimi));
+            }
+            // TODO päivitä näkymä
+        });
+
         ScrollPane asiakasScrollaus = new ScrollPane();
         asiakaspaneeli.setCenter(asiakasScrollaus);
         GridPane asiakasTaulukko = new GridPane();
         asiakasTaulukko.setPadding(new Insets(20));
-        asiakasTaulukko.getColumnConstraints().addAll(sarakeLyhyt, sarakeLevea, sarakeLevea, sarakeSemi, sarakeLyhyt, sarakeLyhyt, sarakeLyhyt);
+        asiakasTaulukko.getColumnConstraints().addAll(sarakeLyhyt, sarakeLevea, sarakeLevea, sarakeLevea, sarakeLyhyt, sarakeLyhyt, sarakeLyhyt);
         asiakasTaulukko.setGridLinesVisible(true);
         asiakasScrollaus.setContent(asiakasTaulukko);
 
@@ -983,7 +1056,7 @@ public class Main extends Application {
 
 
         int rivi = 2;
-        for (Asiakas obj : asiakaslista) {
+        for (Asiakas obj : asiakasLista) {
             Text asiakasID = new Text(String.valueOf(obj.getAsiakasID()));
             asiakasID.setFont(fontti);
             Text asiakasNimi = new Text(obj.getNimi(false));
@@ -1065,6 +1138,29 @@ public class Main extends Application {
             asiakasTaulukko.add(tarkasteleNappula, 6, rivi);
             tarkasteleNappula.setOnMouseClicked(e -> {
                 // tarkasteleMokkia();                          //TODO  tarkasteleMokkia() - metodin luominen
+                Stage tarkasteleAsiakasIkkuna = new Stage();
+                tarkasteleAsiakasIkkuna.show();
+                GridPane tarkasteleAsiakasPaneeli = new GridPane();
+                tarkasteleAsiakasPaneeli.setPadding(new Insets(25));
+                tarkasteleAsiakasPaneeli.setVgap(15);
+                tarkasteleAsiakasPaneeli.setHgap(15);
+                Scene tarkasteleAsiakasKehys = new Scene(tarkasteleAsiakasPaneeli, 400, 300);
+                tarkasteleAsiakasIkkuna.setScene(tarkasteleAsiakasKehys);
+
+                tarkasteleAsiakasPaneeli.add(new Text("Asiakkaan tiedot"),0,0);
+                tarkasteleAsiakasPaneeli.add(new Text("AsiakasID: "),0,1);
+                tarkasteleAsiakasPaneeli.add(new Text("Nimi: "),0,2);
+                tarkasteleAsiakasPaneeli.add(new Text("Email: "),0,3);
+                tarkasteleAsiakasPaneeli.add(new Text("Puhelinnumero: "),0,4);
+                tarkasteleAsiakasPaneeli.add(new Text("Lähiosoite: "),0,5);
+                tarkasteleAsiakasPaneeli.add(new Text("Postinumero: "),0,6);
+
+                tarkasteleAsiakasPaneeli.add(new Text(String.valueOf(obj.getAsiakasID())),1,1);
+                tarkasteleAsiakasPaneeli.add(new Text(obj.getNimi(true)),1,2);
+                tarkasteleAsiakasPaneeli.add(new Text(obj.getEmail()),1,3);
+                tarkasteleAsiakasPaneeli.add(new Text(obj.getPuhnro()),1,4);
+                tarkasteleAsiakasPaneeli.add(new Text(obj.getLahiosoite()),1,5);
+                tarkasteleAsiakasPaneeli.add(new Text(obj.getPostinro()),1,6);
             });
 
             rivi++;
@@ -1106,6 +1202,19 @@ public class Main extends Application {
         laskuLajittelu.setValue("Uusin > Vanhin"); // Oletuksena valittu vaihtoehto
         laskuHaku.add(laskuLajittelu, 2, 1);
 
+        // Lajittelu
+        laskuLajittelu.setOnAction(e -> {
+            switch (laskuLajittelu.getValue()) {
+                case "Tunnuksen mukaan" ->
+                        laskuLista.sort(Comparator.comparing(Lasku::getLaskuID));
+                case "Uusin > Vanhin" -> {} // TODO taas vähän monimutkaisempi
+                case "Vanhin > Uusin" -> {} // TODO sama kuin ylempänä
+                case "Varaustunnuksen mukaan" ->
+                        laskuLista.sort(Comparator.comparing(Lasku::getVarausID));
+            }
+            // TODO päivitä näkymä
+        });
+
         ScrollPane laskuScrollaus = new ScrollPane();
         laskupaneeli.setCenter(laskuScrollaus);
         GridPane laskuTaulukko = new GridPane();
@@ -1138,16 +1247,16 @@ public class Main extends Application {
         laskuTaulukko.add(laskuStatusOtsikko, 3, 1);
 
 
-        laskulista.add(new Lasku(
+        laskuLista.add(new Lasku(
                 24, 345, BigDecimal.valueOf(240), 14,
                 "Maksettu"));
-        laskulista.add(new Lasku(
+        laskuLista.add(new Lasku(
                 25, 346, BigDecimal.valueOf(380), 14,
                 "Maksamatta"));     //TEMP
 
 
         int rivi = 2;
-        for (Lasku obj : laskulista) {
+        for (Lasku obj : laskuLista) {
             Text laskuID = new Text(String.valueOf(obj.getLaskuID()));
             laskuID.setFont(fontti);
             Text laskuVaraus = new Text(String.valueOf(obj.getVarausID()));
