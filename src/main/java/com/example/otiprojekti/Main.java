@@ -1128,8 +1128,67 @@ public class Main extends Application {
             muokkausNappula.setGraphic(muokkaus);
             asiakasTaulukko.add(muokkausNappula, 5, rivi);
             muokkausNappula.setOnMouseClicked(e -> {
-                // muokkaaMokki();                          //TODO  muokkaamokki() - metodin luominen
+                // muokkaaAsiakas();                          //TODO  muokkaaAsiakas() - metodin luominen
+
+                Stage asiakasMuokkausIkkuna = new Stage();
+
+                VBox asiakasMuokkausPaneeli = new VBox(10);
+                asiakasMuokkausPaneeli.setPadding(new Insets(25));
+
+                GridPane asiakasMuokkausGridPaneeli = new GridPane();
+                asiakasMuokkausGridPaneeli.setVgap(5);
+                asiakasMuokkausGridPaneeli.add(new Text("Muokkaa asiakkaan tietoja."), 0, 0);
+                TextField enimi = new TextField();
+                TextField snimi = new TextField();
+                TextField email = new TextField();
+                TextField puhnro = new TextField();
+                TextField lahiosoite = new TextField();
+                TextField postinro = new TextField();
+
+                enimi.setText(obj.getEtunimi());
+                snimi.setText(obj.getSukunimi());
+                email.setText(obj.getEmail());
+                puhnro.setText(obj.getPuhnro());
+                lahiosoite.setText(obj.getLahiosoite());
+                postinro.setText(obj.getPostinro());
+
+                Text enimiText = new Text("Etunimi");
+                Text snimiText = new Text("Sukunimi");
+                Text emailText = new Text("Sähköpostiosoite");
+                Text puhnroText = new Text("Puhelinnumero");
+                Text lahiosoiteText = new Text("Lähiosoite");
+                Text postinroText = new Text("Postinumero");
+
+                asiakasMuokkausGridPaneeli.add(enimiText, 0,1);
+                asiakasMuokkausGridPaneeli.add(enimi, 1,1);
+                asiakasMuokkausGridPaneeli.add(snimiText, 0,2);
+                asiakasMuokkausGridPaneeli.add(snimi, 1,2);
+                asiakasMuokkausGridPaneeli.add(emailText, 0,3);
+                asiakasMuokkausGridPaneeli.add(email, 1,3);
+                asiakasMuokkausGridPaneeli.add(puhnroText, 0,4);
+                asiakasMuokkausGridPaneeli.add(puhnro, 1,4);
+                asiakasMuokkausGridPaneeli.add(lahiosoiteText, 0,5);
+                asiakasMuokkausGridPaneeli.add(lahiosoite, 1,5);
+                asiakasMuokkausGridPaneeli.add(postinroText, 0,6);
+                asiakasMuokkausGridPaneeli.add(postinro, 1,6);
+
+
+                Nappula tallennaAsiakasMuutokset = new Nappula("Tallenna muutokset");
+                tallennaAsiakasMuutokset.setOnAction( event -> {
+                    //TÄHÄN DROP IF EXISTS tai UPDATE
+                    //(tietokanta.insertAsiakas();)
+                });
+
+                asiakasMuokkausPaneeli.getChildren().addAll
+                        (asiakasMuokkausGridPaneeli, tallennaAsiakasMuutokset);
+
+                Scene asiakasMuokkausKehys = new Scene(asiakasMuokkausPaneeli, 400, 350);
+                asiakasMuokkausIkkuna.setScene(asiakasMuokkausKehys);
+                asiakasMuokkausIkkuna.setTitle("Muokkaa asiakasta");
+                asiakasMuokkausIkkuna.show();
             });
+
+
             Nappula tarkasteleNappula = new Nappula(170, 30);
             ImageView tarkastelu = new ImageView(imageKuvasta("tarkastelu.png"));
             tarkastelu.setFitWidth(23);
