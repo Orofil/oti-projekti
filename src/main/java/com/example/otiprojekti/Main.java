@@ -71,6 +71,7 @@ public class Main extends Application {
     ColumnConstraints sarakeSemi = new ColumnConstraints();
     ColumnConstraints sarakeLyhyt = new ColumnConstraints();
 
+
     // Tietokantayhteys
     private final Tietokanta tietokanta = new Tietokanta(); // TODO jos tehdään nappi uudelleen yhdistämiseen niin sitten final pitää poistaa koska olio luodaan uudelleen
 
@@ -869,13 +870,15 @@ public class Main extends Application {
             tarkastelu.setFitHeight(22);
             tarkasteleNappula.setGraphic(tarkastelu);
             varausTaulukko.add(tarkasteleNappula, 5, rivi);
-            tarkasteleNappula.setOnMouseClicked(e -> {
+            tarkasteleNappula.setOnMouseClicked( e -> {
                 // tarkasteleMokkia();                          //TODO  tarkasteleMokkia() - metodin luominen
                 Stage tarkasteleVarausIkkuna = new Stage();
+                tarkasteleVarausIkkuna.show();
                 GridPane tarkasteleVarausPaneeli = new GridPane();
                 tarkasteleVarausPaneeli.setPadding(new Insets(25));
                 tarkasteleVarausPaneeli.setVgap(15);
-                Scene tarkasteleVarausKehys = new Scene(tarkasteleVarausPaneeli, 400, 400);
+                tarkasteleVarausPaneeli.setHgap(15);
+                Scene tarkasteleVarausKehys = new Scene(tarkasteleVarausPaneeli, 400, 300);
                 tarkasteleVarausIkkuna.setScene(tarkasteleVarausKehys);
 
                 tarkasteleVarausPaneeli.add(new Text("Varauksen tiedot"),0,0);
@@ -890,10 +893,10 @@ public class Main extends Application {
                 tarkasteleVarausPaneeli.add(new Text(String.valueOf(obj.getVarausID())),1,1);
                 tarkasteleVarausPaneeli.add(new Text(String.valueOf(obj.getAsiakasID())),1,2);
                 tarkasteleVarausPaneeli.add(new Text(String.valueOf(obj.getMokkiID())),1,3);
-                tarkasteleVarausPaneeli.add(new Text(String.valueOf(obj.getVarattuPvm())),1,4);
-                tarkasteleVarausPaneeli.add(new Text(String.valueOf(obj.getVahvistusPvm())),1,5);
-                tarkasteleVarausPaneeli.add(new Text(String.valueOf(obj.getVarausAlkuPvm())),1,6);
-                tarkasteleVarausPaneeli.add(new Text(String.valueOf(obj.getVarausLoppuPvm())),1,7);
+                tarkasteleVarausPaneeli.add(new Text(dateTimeFormat.format(obj.getVarattuPvm())),1,4);
+                tarkasteleVarausPaneeli.add(new Text(dateTimeFormat.format(obj.getVahvistusPvm())),1,5);
+                tarkasteleVarausPaneeli.add(new Text(dateTimeFormat.format(obj.getVarausAlkuPvm())),1,6);
+                tarkasteleVarausPaneeli.add(new Text(dateTimeFormat.format(obj.getVarausLoppuPvm())),1,7);
 
             });
 
