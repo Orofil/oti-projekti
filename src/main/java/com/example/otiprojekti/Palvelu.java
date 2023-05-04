@@ -5,7 +5,7 @@ import java.util.Objects;
 
 public class Palvelu {
     private int palveluID;
-    private int alueID;
+    private Alue alue;
     private String palvelunNimi;
     private String palvelunTyyppi;
     private String palvelunKuvaus;
@@ -13,10 +13,10 @@ public class Palvelu {
     private int palvelunAlv;
 
     //Alustaja perustiedoille
-    public Palvelu(int palveluID, int alueID, String palvelunNimi, String palvelunTyyppi, String palvelunKuvaus,
+    public Palvelu(int palveluID, Alue alue, String palvelunNimi, String palvelunTyyppi, String palvelunKuvaus,
                    BigDecimal palvelunHinta, int palvelunAlv){
         this.palveluID=palveluID;
-        this.alueID=alueID;
+        this.alue = alue;
         this.palvelunNimi=palvelunNimi;
         this.palvelunTyyppi=palvelunTyyppi;
         this.palvelunKuvaus=palvelunKuvaus;
@@ -31,8 +31,8 @@ public class Palvelu {
         return palveluID;
     }
 
-    public int getAlueID() {
-        return alueID;
+    public Alue getAlue() {
+        return alue;
     }
     // Luodaan getterit ja setterit muille kentille
 
@@ -78,7 +78,7 @@ public class Palvelu {
 
     @Override
     public String toString(){
-        String str= "Palvelun ID on: " + palveluID + "\nAlueen ID: "+ alueID+ "\nPalvelun nimi: "+ palvelunNimi+
+        String str= "Palvelun ID on: " + palveluID + "\nAlueen ID: "+ alue + "\nPalvelun nimi: "+ palvelunNimi+
                 "\nPalvelun tyyppi: "+ palvelunTyyppi+"\nPalvelun kuvaus: "+ palvelunKuvaus+ "\nPalvelun hinta: "
                 + palvelunHinta + "\nPalvelun Alv: "+ palvelunAlv;
         return str;
@@ -91,7 +91,7 @@ public class Palvelu {
         if (o == null || getClass() != o.getClass()) return false;
         Palvelu palvelu = (Palvelu) o;
         return palveluID == palvelu.palveluID &&
-                alueID == palvelu.alueID &&
+                alue == palvelu.alue &&
                 Objects.equals(palvelunHinta, palvelu.palvelunHinta) &&
                 Double.compare(palvelu.palvelunAlv, palvelunAlv) == 0 &&
                 Objects.equals(palvelunNimi, palvelu.palvelunNimi) &&

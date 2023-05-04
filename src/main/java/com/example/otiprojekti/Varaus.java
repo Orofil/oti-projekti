@@ -5,8 +5,8 @@ import java.util.Objects;
 
 public class Varaus {
     private int varausID;
-    private int asiakasID;
-    private int mokkiID;
+    private Asiakas asiakas;
+    private Mokki mokki;
 
     private LocalDateTime varattuPvm;
     private LocalDateTime vahvistusPvm;
@@ -14,15 +14,15 @@ public class Varaus {
     private LocalDateTime varausLoppuPvm;
 
     public Varaus(int varausID,
-                  int asiakasID,
-                  int mokkiID,
+                  Asiakas asiakas,
+                  Mokki mokki,
                   LocalDateTime varattuPvm,
                   LocalDateTime vahvistusPvm,
                   LocalDateTime varausAlkuPvm,
                   LocalDateTime varausLoppuPvm) {
         this.varausID = varausID;
-        this.asiakasID = asiakasID;
-        this.mokkiID = mokkiID;
+        this.asiakas = asiakas;
+        this.mokki = mokki;
 
         this.varattuPvm = varattuPvm;
         this.vahvistusPvm = vahvistusPvm;
@@ -34,20 +34,20 @@ public class Varaus {
         return varausID;
     }
 
-    public int getAsiakasID() {
-        return asiakasID;
+    public Asiakas getAsiakas() {
+        return asiakas;
     }
 
-    public void setAsiakasID(int asiakasID) {
-        this.asiakasID = asiakasID;
+    public void setAsiakas(Asiakas asiakas) {
+        this.asiakas = asiakas;
     }
 
-    public int getMokkiID() {
-        return mokkiID;
+    public Mokki getMokki() {
+        return mokki;
     }
 
-    public void setMokkiID(int mokkiID) {
-        this.mokkiID = mokkiID;
+    public void setMokki(Mokki mokki) {
+        this.mokki = mokki;
     }
 
     public LocalDateTime getVarattuPvm() {
@@ -86,7 +86,7 @@ public class Varaus {
     public String toString() {
         return "Varaus[" +
                 "varausID=" + varausID +
-                ", mokkiID=" + mokkiID +
+                ", mokkiID=" + mokki +
                 ", varattuPvm=" + varattuPvm +
                 ", varausAlkuPvm=" + varausAlkuPvm +
                 ", varausLoppuPvm=" + varausLoppuPvm +
@@ -99,8 +99,8 @@ public class Varaus {
         if (o == null || getClass() != o.getClass()) return false;
         Varaus varaus = (Varaus) o;
         return varausID == varaus.varausID &&
-                asiakasID == varaus.asiakasID &&
-                mokkiID == varaus.mokkiID &&
+                asiakas == varaus.asiakas &&
+                mokki == varaus.mokki &&
                 Objects.equals(varattuPvm, varaus.varattuPvm) &&
                 Objects.equals(vahvistusPvm, varaus.vahvistusPvm) &&
                 Objects.equals(varausAlkuPvm, varaus.varausAlkuPvm) &&

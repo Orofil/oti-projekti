@@ -4,6 +4,7 @@ module com.example.otiprojekti {
     requires java.sql;
     requires mysql.connector.j;
     requires itext;
+    requires itextpdf;
 
     opens com.example.otiprojekti to javafx.fxml;
     exports com.example.otiprojekti;

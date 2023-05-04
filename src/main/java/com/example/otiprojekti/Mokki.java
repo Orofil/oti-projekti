@@ -4,8 +4,8 @@ import java.math.BigDecimal;
 import java.util.Objects;
 
 public class Mokki {
-    private int mokkiID;
-    private int alueID;
+    private final int mokkiID;
+    private Alue alue;
     private String postiNro;
     private String mokkiNimi;
     private String katuosoite;
@@ -14,10 +14,10 @@ public class Mokki {
     private int hloMaara;
     private String varustelu;
 
-    public Mokki(int mokkiID, int alueID, String postiNro, String mokkiNimi, String katuosoite,
+    public Mokki(int mokkiID, Alue alue, String postiNro, String mokkiNimi, String katuosoite,
                  BigDecimal hinta, String kuvaus, int hloMaara, String varustelu){
         this.mokkiID = mokkiID;
-        this.alueID = alueID;
+        this.alue = alue;
         this.postiNro = postiNro;
         this.mokkiNimi = mokkiNimi;
         this.katuosoite = katuosoite;
@@ -31,8 +31,8 @@ public class Mokki {
         return mokkiID;
     }
 
-    public int getAlueID() {
-        return alueID;
+    public Alue getAlue() {
+        return alue;
     }
 
     public String getPostiNro() {
@@ -93,7 +93,7 @@ public class Mokki {
 
     @Override
     public String toString() {
-        String str= "Mökin ID on: " + mokkiID + "\nAlueen ID: "+ alueID+ "\nPostinro: "+ postiNro+"\nMökin nimi: "+
+        String str= "Mökin ID on: " + mokkiID + "\nAlueen ID: "+ alue + "\nPostinro: "+ postiNro+"\nMökin nimi: "+
                 mokkiNimi+"\nKatuosoite: "+ katuosoite+ "\nHinta: "+ hinta + "\nKuvaus: "+ kuvaus+ "\nHenkilömäärä: "+
                 hloMaara+"\nVarustelu: "+ varustelu;
         return str;
@@ -106,7 +106,7 @@ public class Mokki {
         if (o == null || getClass() != o.getClass()) return false;
         Mokki mokki = (Mokki) o;
         return mokkiID == mokki.mokkiID &&
-                alueID == mokki.alueID &&
+                alue == mokki.alue &&
                 hloMaara == mokki.hloMaara &&
                 Objects.equals(postiNro, mokki.postiNro) &&
                 Objects.equals(mokkiNimi, mokki.mokkiNimi) &&

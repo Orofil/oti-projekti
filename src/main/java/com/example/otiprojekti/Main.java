@@ -18,18 +18,16 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.text.Font;
 
-import java.math.BigDecimal;
 import java.sql.SQLException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 
+import static com.example.otiprojekti.Utils.imageKuvasta;
+
 
 public class Main extends Application {
-    /**
-     * Polku projektin resurssikansioon.
-     */
-    private static final String IMGPOLKU = "src/main/resources/com/example/otiprojekti/";
+
 
     // Ikkunan mittasuhde jaettuna kahteen kenttään
     private final double SUHDE_W = 5.5;
@@ -95,10 +93,10 @@ public class Main extends Application {
         try {
             // alueLista = tietokanta.haeAlue();
             // TODO alueiden haku
-            mokkiLista = tietokanta.haeMokki();
             asiakasLista = tietokanta.haeAsiakas();
-            palveluLista = tietokanta.haePalvelu();
-            varausLista = tietokanta.haeVaraus();
+            mokkiLista = tietokanta.haeMokki(alueLista);
+            palveluLista = tietokanta.haePalvelu(alueLista);
+            varausLista = tietokanta.haeVaraus(asiakasLista, mokkiLista);
             // laskuLista = tietokanta.haeLasku();
             // TODO laskujen haku
         } catch (SQLException e) {
@@ -342,7 +340,7 @@ public class Main extends Application {
                 case "Henkilömäärän mukaan" -> 
                         mokkiLista.sort(Comparator.comparing(Mokki::getHloMaara));
                 case "Alueittain" -> 
-                        mokkiLista.sort(Comparator.comparing(Mokki::getAlueID));
+                        mokkiLista.sort(Comparator.comparing(Mokki -> Mokki.getAlue().getAlueID())); // TODO onko alueen ID:n vai nimen mukaan
             }
             // TODO päivitä näkymä
         });
@@ -388,7 +386,7 @@ public class Main extends Application {
             mokkiID.setFont(fontti);
             Text mokkiNimi = new Text(String.valueOf(obj.getMokkiNimi()));
             mokkiNimi.setFont(fontti);
-            Text mokkiAlue = new Text(String.valueOf(obj.getAlueID()));
+            Text mokkiAlue = new Text(String.valueOf(obj.getAlue()));
             mokkiAlue.setFont(fontti);
             Text mokkiHinta = new Text(String.valueOf(obj.getHinta()));
             mokkiHinta.setFont(fontti);
@@ -479,7 +477,7 @@ public class Main extends Application {
                 case "A > Ö" ->
                         palveluLista.sort(Comparator.comparing(Palvelu::getPalvelunNimi));
                 case "Alueittain" ->
-                        palveluLista.sort(Comparator.comparing(Palvelu::getAlueID));
+                        palveluLista.sort(Comparator.comparing(Palvelu -> Palvelu.getAlue().getAlueID())); // TODO onko alueen ID:n vai nimen mukaan
             }
             // TODO päivitä näkymä
         });
@@ -522,7 +520,7 @@ public class Main extends Application {
             palveluID.setFont(fontti);
             Text palveluNimi = new Text(String.valueOf(obj.getPalvelunNimi()));
             palveluNimi.setFont(fontti);
-            Text palveluAlue = new Text(String.valueOf(obj.getAlueID()));
+            Text palveluAlue = new Text(String.valueOf(obj.getAlue()));
             palveluAlue.setFont(fontti);
             Text palveluHinta = new Text(String.valueOf(obj.getPalvelunHinta()));
             palveluHinta.setFont(fontti);
@@ -773,7 +771,9 @@ public class Main extends Application {
                             LocalDateTime.now().format(dateTimeFormat),
                             null,
                             varausAlkuAika,
-                            varausLoppuAika));
+                            varausLoppuAika,
+                            asiakasLista,
+                            mokkiLista));
                     varausLisaysStage.close();
                 } catch (SQLException ex) {
                     ilmoitusPaneeli.lisaaIlmoitus(IlmoitusTyyppi.VAROITUS, String.valueOf(ex));
@@ -831,9 +831,9 @@ public class Main extends Application {
         for (Varaus obj : varausLista) { // TODO nyt kun SQL-haku saattaa epäonnistua, voi tulla NullPointerException
             Text varausID = new Text(String.valueOf(obj.getVarausID()));
             varausID.setFont(fontti);
-            Text varausNimi = new Text(String.valueOf(obj.getAsiakasID()));
+            Text varausNimi = new Text(String.valueOf(obj.getAsiakas()));
             varausNimi.setFont(fontti);
-            Text varausMokki = new Text(String.valueOf(obj.getMokkiID()));
+            Text varausMokki = new Text(String.valueOf(obj.getMokki()));
             varausMokki.setFont(fontti);
 
 
@@ -881,8 +881,8 @@ public class Main extends Application {
                 GridPane varausMuokkausGridPaneeli = new GridPane();
                 varausMuokkausGridPaneeli.setVgap(5);
                 varausMuokkausGridPaneeli.add(new Text("Muokkaa varauksen tietoja:"), 0, 0);
-                TextField asiakasID = new TextField(String.valueOf(obj.getAsiakasID()));
-                TextField mokkiID = new TextField(String.valueOf(obj.getMokkiID()));
+                TextField asiakasID = new TextField(String.valueOf(obj.getAsiakas()));
+                TextField mokkiID = new TextField(String.valueOf(obj.getMokki()));
                 DatePicker aloitusPvm = new DatePicker(obj.getVarausAlkuPvm().toLocalDate());
                 // Laittaa tekstiksi varausAlkuPvm:n ajan jos se ei ole null, muuten 16:00, TODO tuleeko sekunnit mukaan varausAlkuPvm:stä
                 TextField aloitusAika = new TextField(String.valueOf(Objects.requireNonNullElse(
@@ -956,8 +956,8 @@ public class Main extends Application {
                 tarkasteleVarausPaneeli.add(new Text("Varauksen loppupvm: "),0,7);
 
                 tarkasteleVarausPaneeli.add(new Text(String.valueOf(obj.getVarausID())),1,1);
-                tarkasteleVarausPaneeli.add(new Text(String.valueOf(obj.getAsiakasID())),1,2);
-                tarkasteleVarausPaneeli.add(new Text(String.valueOf(obj.getMokkiID())),1,3);
+                tarkasteleVarausPaneeli.add(new Text(String.valueOf(obj.getAsiakas())),1,2);
+                tarkasteleVarausPaneeli.add(new Text(String.valueOf(obj.getMokki())),1,3);
                 tarkasteleVarausPaneeli.add(new Text(dateTimeFormat.format(obj.getVarattuPvm())),1,4);
                 tarkasteleVarausPaneeli.add(new Text(dateTimeFormat.format(obj.getVahvistusPvm())),1,5);
                 tarkasteleVarausPaneeli.add(new Text(dateTimeFormat.format(obj.getVarausAlkuPvm())),1,6);
@@ -1314,7 +1314,7 @@ public class Main extends Application {
                 case "Uusin > Vanhin" -> {} // TODO taas vähän monimutkaisempi
                 case "Vanhin > Uusin" -> {} // TODO sama kuin ylempänä
                 case "Varaustunnuksen mukaan" ->
-                        laskuLista.sort(Comparator.comparing(Lasku::getVarausID));
+                        laskuLista.sort(Comparator.comparing(Lasku -> Lasku.getVaraus().getVarausID()));
             }
             // TODO päivitä näkymä
         });
@@ -1351,19 +1351,19 @@ public class Main extends Application {
         laskuTaulukko.add(laskuStatusOtsikko, 3, 1);
 
 
-        laskuLista.add(new Lasku(
-                24, 345, BigDecimal.valueOf(240), 14,
-                "Maksettu"));
-        laskuLista.add(new Lasku(
-                25, 346, BigDecimal.valueOf(380), 14,
-                "Maksamatta"));     //TEMP
+//        laskuLista.add(new Lasku(
+//                24, 345, BigDecimal.valueOf(240), 14,
+//                "Maksettu"));
+//        laskuLista.add(new Lasku(
+//                25, 346, BigDecimal.valueOf(380), 14,
+//                "Maksamatta"));     //TEMP
 
 
         int rivi = 2;
         for (Lasku obj : laskuLista) {
             Text laskuID = new Text(String.valueOf(obj.getLaskuID()));
             laskuID.setFont(fontti);
-            Text laskuVaraus = new Text(String.valueOf(obj.getVarausID()));
+            Text laskuVaraus = new Text(String.valueOf(obj.getVaraus()));
             laskuVaraus.setFont(fontti);
             Text laskuSumma = new Text(String.valueOf(obj.getLaskunSumma()));
             laskuSumma.setFont(fontti);
@@ -1462,21 +1462,5 @@ public class Main extends Application {
         launch();
     }
 
-    /**
-     * Avaa resources-kansiossa sijaitsevan kuvan JavaFX:n {@link Image Image}-luokan oliona.
-     * @param kuva Kuvan nimi
-     * @return Image
-     */
-    private Image imageKuvasta(String kuva) {
-        try {
-            return new Image(IMGPOLKU + kuva);
-        } catch (IllegalArgumentException e) {
-            return new Image(kuva);
-        }
-    }
-
-    public void jarjestaLista(ArrayList<Object> lista) {
-
-    }
 
 }

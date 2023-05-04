@@ -1,13 +1,12 @@
 package com.example.otiprojekti;
 
-import java.io.*;
 import java.math.BigDecimal;
-import java.nio.file.Files;
-import java.nio.file.Path;
 import java.sql.*;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+
+import static com.example.otiprojekti.Utils.*;
 
 /*
 Lähteet:
@@ -202,10 +201,13 @@ public class Tietokanta {
      * @param vahvistus_pvm Tyyppiä datetime (muotoa YYYY-MM-DD hh:mm:ss).
      * @param varattu_alkupvm Tyyppiä datetime (muotoa YYYY-MM-DD hh:mm:ss).
      * @param varattu_loppupvm Tyyppiä datetime (muotoa YYYY-MM-DD hh:mm:ss).
+     * @param asiakkaat Lista asiakkaista.
+     * @param mokit Lista mökeistä.
      * @return {@link Varaus}
      */
     public Varaus insertVaraus(int asiakas_id, int mokki_id, String varattu_pvm,
-                                    String vahvistus_pvm, String varattu_alkupvm, String varattu_loppupvm) throws SQLException {
+                                    String vahvistus_pvm, String varattu_alkupvm, String varattu_loppupvm,
+                                    ArrayList<Asiakas> asiakkaat, ArrayList<Mokki> mokit) throws SQLException {
         stm = con.prepareStatement(
                 "INSERT INTO varaus(asiakas_id,mokki_id,varattu_pvm,vahvistus_pvm,varattu_alkupvm,varattu_loppupvm) " +
                 "VALUES (?,?,?,?,?,?)");
@@ -217,7 +219,7 @@ public class Tietokanta {
         stm.setString(6, varattu_loppupvm);
         stm.executeUpdate();
         stm.close();
-        return haeVarausUusi();
+        return haeVarausUusi(asiakkaat, mokit);
     }
 
 
@@ -466,7 +468,7 @@ public class Tietokanta {
 
     ///// Tietokannasta hakemiset
     // TODO vaikka mitä tarvittavia hakuja
-    // TODO yksittäisten olioiden hakeminen
+    // TODO uusimpien hakeminen
 
     /**
      * Hakee tietokannasta uusimman asiakkaan.
@@ -497,10 +499,10 @@ public class Tietokanta {
      * Hakee tietokannasta kaikki mökit.
      * @return Lista {@link Mokki Mokeista}
      */
-    public ArrayList<Mokki> haeMokki() throws SQLException {
+    public ArrayList<Mokki> haeMokki(ArrayList<Alue> alueet) throws SQLException {
         stm = con.prepareStatement("SELECT * FROM mokki");
         ResultSet rs = stm.executeQuery();
-        ArrayList<Mokki> tulokset = mokkiLuokaksi(rs);
+        ArrayList<Mokki> tulokset = mokkiLuokaksi(rs, alueet);
         stm.close();
         return tulokset;
     }
@@ -509,10 +511,10 @@ public class Tietokanta {
      * Hakee tietokannasta kaikki palvelut.
      * @return Lista {@link Palvelu Palveluista}
      */
-    public ArrayList<Palvelu> haePalvelu() throws SQLException {
+    public ArrayList<Palvelu> haePalvelu(ArrayList<Alue> alueet) throws SQLException {
         stm = con.prepareStatement("SELECT * FROM palvelu");
         ResultSet rs = stm.executeQuery();
-        ArrayList<Palvelu> tulokset = palveluLuokaksi(rs);
+        ArrayList<Palvelu> tulokset = palveluLuokaksi(rs, alueet);
         stm.close();
         return tulokset;
     }
@@ -521,11 +523,11 @@ public class Tietokanta {
      * Hakee tietokannasta uusimman varauksen.
      * @return {@link Varaus}
      */
-    public Varaus haeVarausUusi() throws SQLException {
+    public Varaus haeVarausUusi(ArrayList<Asiakas> asiakkaat, ArrayList<Mokki> mokit) throws SQLException {
         stm = con.prepareStatement(
                 "SELECT * FROM varaus WHERE varaus_id = (SELECT MAX(varaus_id) FROM varaus)");
         ResultSet rs = stm.executeQuery();
-        ArrayList<Varaus> tulokset = varausLuokaksi(rs);
+        ArrayList<Varaus> tulokset = varausLuokaksi(rs, asiakkaat, mokit);
         stm.close();
         return tulokset.get(0);
     }
@@ -534,10 +536,10 @@ public class Tietokanta {
      * Hakee tietokannasta kaikki varaukset.
      * @return Lista {@link Varaus Varauksista}
      */
-    public ArrayList<Varaus> haeVaraus() throws SQLException {
+    public ArrayList<Varaus> haeVaraus(ArrayList<Asiakas> asiakkaat, ArrayList<Mokki> mokit) throws SQLException {
         stm = con.prepareStatement("SELECT * FROM varaus");
         ResultSet rs = stm.executeQuery();
-        ArrayList<Varaus> tulokset = varausLuokaksi(rs);
+        ArrayList<Varaus> tulokset = varausLuokaksi(rs, asiakkaat, mokit);
         stm.close();
         return tulokset;
     }
@@ -567,12 +569,12 @@ public class Tietokanta {
         return asiakkaat;
     }
 
-    private ArrayList<Mokki> mokkiLuokaksi(ResultSet rs) throws SQLException {
+    private ArrayList<Mokki> mokkiLuokaksi(ResultSet rs, ArrayList<Alue> alueet) throws SQLException {
         ArrayList<Mokki> mokit = new ArrayList<>();
         while (rs.next()) {
             mokit.add(new Mokki(
                     rs.getInt("mokki_id"),
-                    rs.getInt("alue_id"),
+                    etsiAlueID(alueet, rs.getInt("alue_id")),
                     rs.getString("postinro"), // TODO toimiiko getInt vai pitääkö käyttää Integer.valueOf koska tietokannassa postinro on tyyppiä char
                     rs.getString("mokkinimi"),
                     rs.getString("katuosoite"),
@@ -589,12 +591,12 @@ public class Tietokanta {
      * @param rs Tietokannasta saatu ResultSet palveluja
      * @return Lista palveluista
      */
-    private ArrayList<Palvelu> palveluLuokaksi(ResultSet rs) throws SQLException {
+    private ArrayList<Palvelu> palveluLuokaksi(ResultSet rs, ArrayList<Alue> alueet) throws SQLException {
         ArrayList<Palvelu> palvelut = new ArrayList<>();
         while (rs.next()) {
             palvelut.add(new Palvelu(
                     rs.getInt("palvelu_id"),
-                    rs.getInt("alue_id"),
+                    etsiAlueID(alueet, rs.getInt("alue_id")),
                     rs.getString("nimi"),
                     rs.getString("tyyppi"),
                     rs.getString("kuvaus"),
@@ -610,18 +612,18 @@ public class Tietokanta {
      * @param rs Tietokannasta saatu ResultSet varauksia
      * @return Lista varauksista
      */
-    private ArrayList<Varaus> varausLuokaksi(ResultSet rs) throws SQLException {
+    private ArrayList<Varaus> varausLuokaksi(ResultSet rs, ArrayList<Asiakas> asiakkaat, ArrayList<Mokki> mokit) throws SQLException {
         ArrayList<Varaus> varaukset = new ArrayList<>();
         while (rs.next()) {
-            LocalDateTime vahvistusPvm = null; // TODO miten käsitellään tällaiset jotka voi olla null, tässä vähän monimutkainen ratkaisu
+            LocalDateTime vahvistusPvm = null; // TODO miten käsitellään tällaiset jotka voi olla null, tässä vähän monimutkainen ratkaisu, joku vastaava pitää lisätä muillekin jotka voi olla tyhjiä
             try {
                 vahvistusPvm = LocalDateTime.parse(rs.getString("vahvistus_pvm"), dateTimeFormat);
             } catch (NullPointerException ignored) {}
 
             varaukset.add(new Varaus(
                     rs.getInt("varaus_id"),
-                    rs.getInt("asiakas_id"),
-                    rs.getInt("mokki_id"),
+                    etsiAsiakasID(asiakkaat, rs.getInt("asiakas_id")),
+                    etsiMokkiID(mokit, rs.getInt("mokki_id")),
                     LocalDateTime.parse(rs.getString("varattu_pvm"), dateTimeFormat),
                     vahvistusPvm,
                     LocalDateTime.parse(rs.getString("varattu_alkupvm"), dateTimeFormat),

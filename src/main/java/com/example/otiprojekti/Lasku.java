@@ -1,25 +1,24 @@
 package com.example.otiprojekti;
 
 import java.io.FileOutputStream;
-import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.Objects;
-import java.io.FileWriter;
+
 import com.itextpdf.text.Document;
 import com.itextpdf.text.Paragraph;
 import com.itextpdf.text.pdf.PdfWriter;
 
 public class Lasku {
-    private int laskuID;
-    private int varausID;
+    private final int laskuID;
+    private Varaus varaus;
     private BigDecimal laskunSumma;
     private int laskuAlv;
     private String laskunStatus;
 
     //alustaja
-    public Lasku(int laskuID, int varausID, BigDecimal laskunSumma, int laskuAlv, String laskunStatus) {
+    public Lasku(int laskuID, Varaus varaus, BigDecimal laskunSumma, int laskuAlv, String laskunStatus) {
         this.laskuID = laskuID;
-        this.varausID = varausID;
+        this.varaus = varaus;
         this.laskunSumma = laskunSumma;
         this.laskuAlv = laskuAlv;
         this.laskunStatus = laskunStatus;
@@ -29,12 +28,12 @@ public class Lasku {
         return laskuID;
     }
 
-    public int getVarausID() {
-        return varausID;
+    public Varaus getVaraus() {
+        return varaus;
     }
 
-    public void setVarausID(int varausID) {
-        this.varausID = varausID;
+    public void setVaraus(Varaus varaus) {
+        this.varaus = varaus;
     }
 
     public BigDecimal getLaskunSumma() {
@@ -63,7 +62,7 @@ public class Lasku {
 
     @Override
     public String toString() {
-        String str = "LaskuID: " + laskuID + "\n VarausID: " + varausID +
+        String str = "LaskuID: " + laskuID + "\n VarausID: " + varaus.getVarausID() +
                 "\n Laskun summa: " + laskunSumma + "\n Laskun alv: " + laskuAlv +
                 "\n Laskun tila: " + laskunStatus;
         return str;
@@ -75,7 +74,7 @@ public class Lasku {
         if (o == null || getClass() != o.getClass()) return false;
         Lasku lasku = (Lasku) o;
         return getLaskuID() == lasku.getLaskuID() &&
-                getVarausID() == lasku.getVarausID() &&
+                getVaraus().equals(lasku.getVaraus()) &&
                 Objects.equals(getLaskunSumma(), lasku.getLaskunSumma()) &&
                 Double.compare(lasku.getLaskuAlv(), getLaskuAlv()) == 0 &&
                 Objects.equals(getLaskunStatus(), lasku.getLaskunStatus());
