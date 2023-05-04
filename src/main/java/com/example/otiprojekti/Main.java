@@ -659,7 +659,8 @@ public class Main extends Application {
 
             GridPane varausLisaysPaneeli = new GridPane();
             varausLisaysPaneeli.setVgap(5);
-            varausLisaysPaneeli.add(new Text("Jos kyseessä on vanha asiakas, syötä asiakasID."), 0, 0);
+            Text vanhaAsiakasTeksti = new Text("Jos kyseessä on vanha asiakas, syötä asiakasID.");
+            varausLisaysPaneeli.add(vanhaAsiakasTeksti, 0, 0);
             TextField asiakasID = new TextField();
             TextField mokkiID = new TextField();
             DatePicker aloitusPvm = new DatePicker();
@@ -688,13 +689,22 @@ public class Main extends Application {
             varausLisaysPaneeli.add(lopetusAikaText, 0, 6);
             varausLisaysPaneeli.add(lopetusAika, 1, 6);
 
+            vanhaAsiakasTeksti.setVisible(false);
+            asiakasIDText.setVisible(false);
+            asiakasID.setVisible(false);
 
 
             uusiAsiakas.setOnAction( event -> {
                 asiakasLisaysPaneeli.setVisible(true);
+                vanhaAsiakasTeksti.setVisible(false);
+                asiakasIDText.setVisible(false);
+                asiakasID.setVisible(false);
             });
             vanhaAsiakas.setOnAction( event -> {
                 asiakasLisaysPaneeli.setVisible(false);
+                vanhaAsiakasTeksti.setVisible(true);
+                asiakasIDText.setVisible(true);
+                asiakasID.setVisible(true);
             });
 
             Nappula lisaaVaraus = new Nappula("Aseta varaus");
@@ -1207,6 +1217,43 @@ public class Main extends Application {
             laskuTaulukko.add(poistoNappula, 4, rivi);
             poistoNappula.setOnMouseClicked(e -> {
                 // poistalasku();                          //TODO  poistalasku() - metodin luominen
+                Stage poistaLaskuIkkuna = new Stage();
+                poistaLaskuIkkuna.show();
+                BorderPane poistaLaskuPaneeli = new BorderPane();
+                poistaLaskuPaneeli.setPadding(new Insets(50));
+
+                Scene poistaLaskuKehys = new Scene(poistaLaskuPaneeli, 600, 200);
+                poistaLaskuIkkuna.setScene(poistaLaskuKehys);
+                poistaLaskuIkkuna.setTitle("Poista lasku");
+
+                HBox poistaLaskuNappulaPaneeli = new HBox();
+                poistaLaskuNappulaPaneeli.setSpacing(30);
+                poistaLaskuNappulaPaneeli.setPadding(new Insets(30));
+                Nappula poistaLaskuNappula = new Nappula("Poista lasku");
+                Nappula peruutaLaskuPoistoNappula = new Nappula("Peruuta");
+                poistaLaskuNappulaPaneeli.getChildren().addAll(poistaLaskuNappula, peruutaLaskuPoistoNappula);
+
+                StackPane tekstiPaneeli = new StackPane();
+                Text haluatkoPoistaalaskuTeksti = new Text("Haluatko varmasti poistaa laskun?");
+                haluatkoPoistaalaskuTeksti.setTextAlignment(TextAlignment.CENTER);
+                haluatkoPoistaalaskuTeksti.setFont(Font.font(16));
+                tekstiPaneeli.getChildren().add(haluatkoPoistaalaskuTeksti);
+                poistaLaskuPaneeli.setTop(tekstiPaneeli);
+                poistaLaskuPaneeli.setCenter(poistaLaskuNappulaPaneeli);
+
+                poistaLaskuNappula.setOnAction( event -> {
+                    try {
+                        tietokanta.poistaLasku(obj.getLaskuID());
+                    } catch (SQLException ex) {
+                        throw new RuntimeException(ex);
+                    }
+                    poistaLaskuIkkuna.close();
+                    //TODO listan päivitys!!!
+                });
+
+                peruutaLaskuPoistoNappula.setOnAction( event -> {
+                    poistaLaskuIkkuna.close();
+                });
             });
 
             Nappula muokkausNappula = new Nappula(100, 30);
