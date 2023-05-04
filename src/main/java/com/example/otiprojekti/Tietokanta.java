@@ -51,6 +51,7 @@ public class Tietokanta {
 
 
     ///// Tietojen syöttö tietokantaan
+    // TODO kaikki palauttaa uusimman syötetyn rivin
 
     /**
      * Syöttää tietokantaan alueen.
@@ -192,15 +193,16 @@ public class Tietokanta {
     }
 
     /**
-     * Syöttää tietokantaan varauksen.
+     * Syöttää tietokantaan varauksen ja palauttaa sen.
      * @param asiakas_id Tyyppiä int. Oltava taulussa asiakas.
      * @param mokki_id Tyyppiä int. Oltava taulussa mokki.
      * @param varattu_pvm Tyyppiä datetime (muotoa YYYY-MM-DD hh:mm:ss).
      * @param vahvistus_pvm Tyyppiä datetime (muotoa YYYY-MM-DD hh:mm:ss).
      * @param varattu_alkupvm Tyyppiä datetime (muotoa YYYY-MM-DD hh:mm:ss).
      * @param varattu_loppupvm Tyyppiä datetime (muotoa YYYY-MM-DD hh:mm:ss).
+     * @return {@link Varaus}
      */
-    public void insertVaraus(int asiakas_id, int mokki_id, String varattu_pvm,
+    public Varaus insertVaraus(int asiakas_id, int mokki_id, String varattu_pvm,
                                     String vahvistus_pvm, String varattu_alkupvm, String varattu_loppupvm) throws SQLException {
         stm = con.prepareStatement(
                 "INSERT INTO varaus(asiakas_id,mokki_id,varattu_pvm,vahvistus_pvm,varattu_alkupvm,varattu_loppupvm) " +
@@ -213,6 +215,7 @@ public class Tietokanta {
         stm.setString(6, varattu_loppupvm);
         stm.executeUpdate();
         stm.close();
+        return haeVarausUusi();
     }
 
 
@@ -360,6 +363,7 @@ public class Tietokanta {
 
     ///// Tietokannasta hakemiset
     // TODO vaikka mitä tarvittavia hakuja
+    // TODO yksittäisten olioiden hakeminen
 
     /**
      * Hakee tietokannasta kaikki mökit.
@@ -395,6 +399,19 @@ public class Tietokanta {
         ArrayList<Palvelu> tulokset = palveluLuokaksi(rs);
         stm.close();
         return tulokset;
+    }
+
+    /**
+     * Hakee tietokannasta uusimman varauksen.
+     * @return {@link Varaus}
+     */
+    public Varaus haeVarausUusi() throws SQLException {
+        stm = con.prepareStatement(
+                "SELECT * FROM varaus WHERE varaus_id = (SELECT MAX(varaus_id) FROM varaus)");
+        ResultSet rs = stm.executeQuery();
+        ArrayList<Varaus> tulokset = varausLuokaksi(rs);
+        stm.close();
+        return tulokset.get(0);
     }
 
     /**
