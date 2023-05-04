@@ -258,6 +258,93 @@ public class Tietokanta {
     // TODO poistamismetodit
 
     /**
+     * Poistaa tietokannasta alueen.
+     * @param alue_id Tyyppiä int. Oltava taulussa alue.
+     */
+    public void poistaAlue(int alue_id) throws SQLException {
+        stm = con.prepareStatement(
+                "DELETE FROM alue WHERE alue_id = ?");
+        stm.setInt(1, alue_id);
+        stm.executeUpdate();
+        stm.close();
+    }
+
+    /**
+     * Poistaa tietokannasta asiakkaan.
+     * @param asiakas_id Tyyppiä int. Oltava taulussa asiakas.
+     */
+    public void poistaAsiakas(int asiakas_id) throws SQLException {
+        stm = con.prepareStatement(
+                "DELETE FROM asiakas WHERE asiakas_id = ?");
+        stm.setInt(1, asiakas_id);
+        stm.executeUpdate();
+        stm.close();
+    }
+
+    /**
+     * Poistaa tietokannasta laskun.
+     * @param lasku_id Tyyppiä int. Oltava taulussa lasku.
+     */
+    public void poistaLasku(int lasku_id) throws SQLException {
+        stm = con.prepareStatement(
+                "DELETE FROM lasku WHERE lasku_id = ?");
+        stm.setInt(1, lasku_id);
+        stm.executeUpdate();
+        stm.close();
+    }
+
+    /**
+     * Poistaa tietokannasta mökin.
+     * @param mokki_id Tyyppiä int. Oltava taulussa mokki.
+     */
+    public void poistaMokki(int mokki_id) throws SQLException {
+        stm = con.prepareStatement(
+                "DELETE FROM mokki WHERE mokki_id = ?");
+        stm.setInt(1, mokki_id);
+        stm.executeUpdate();
+        stm.close();
+    }
+
+    /**
+     * Poistaa tietokannasta palvelun.
+     * @param palvelu_id Tyyppiä int. Oltava taulussa palvelu.
+     */
+    public void poistaPalvelu(int palvelu_id) throws SQLException {
+        stm = con.prepareStatement(
+                "DELETE FROM palvelu WHERE palvelu_id = ?");
+        stm.setInt(1, palvelu_id);
+        stm.executeUpdate();
+        stm.close();
+    }
+
+    /**
+     * Poistaa tietokannasta postinumeron.
+     * @param postinro Tyyppiä int. Oltava taulussa posti.
+     */
+    public void poistaPosti(int postinro) throws SQLException {
+        stm = con.prepareStatement(
+                "DELETE FROM posti WHERE postinro = ?");
+        stm.setInt(1, postinro);
+        stm.executeUpdate();
+        stm.close();
+    }
+
+    /**
+     * Poistaa tietokannasta varaukseen liittyvän palvelun.
+     * @param varaus_id Tyyppiä int. Oltava taulussa varaus.
+     * @param palvelu_id Tyyppiä int. Oltava taulussa palvelu.
+     */
+    // TODO tehdäänkö tämä näin vähän oudosti erillään
+    public void poistaVarauksenPalvelut(int varaus_id, int palvelu_id) throws SQLException {
+        stm = con.prepareStatement(
+                "DELETE FROM varauksen_palvelut WHERE varaus_id = ? AND palvelu_id = ?");
+        stm.setInt(1, varaus_id);
+        stm.setInt(2, palvelu_id);
+        stm.executeUpdate();
+        stm.close();
+    }
+
+    /**
      * Poistaa tietokannasta varauksen.
      * @param varaus_id Tyyppiä int. Oltava taulussa varaus.
      */
