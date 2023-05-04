@@ -4,7 +4,7 @@ import java.math.BigDecimal;
 import java.util.Objects;
 
 public class Palvelu {
-    private int palveluID;
+    private final int palveluID;
     private Alue alue;
     private String palvelunNimi;
     private String palvelunTyyppi;

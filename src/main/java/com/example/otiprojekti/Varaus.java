@@ -4,7 +4,7 @@ import java.time.LocalDateTime;
 import java.util.Objects;
 
 public class Varaus {
-    private int varausID;
+    private final int varausID;
     private Asiakas asiakas;
     private Mokki mokki;
 

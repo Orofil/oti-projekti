@@ -3,7 +3,7 @@ package com.example.otiprojekti;
 import java.util.Objects;
 
 public class Alue {
-    private int alueID;
+    private final int alueID;
     private String alueenNimi;
 
     //alustaja
@@ -14,10 +14,6 @@ public class Alue {
 
     public int getAlueID() {
         return alueID;
-    }
-
-    public void setAlueID(int alueID) {
-        this.alueID = alueID;
     }
 
     public String getAlueenNimi() {

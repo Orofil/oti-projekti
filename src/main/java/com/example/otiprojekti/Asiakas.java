@@ -3,7 +3,7 @@ package com.example.otiprojekti;
 import java.util.Objects;
 
 public class Asiakas {
-    private int asiakasID;
+    private final int asiakasID;
     private String postinro;
 
     private String sukunimi;
