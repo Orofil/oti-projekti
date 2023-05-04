@@ -954,7 +954,7 @@ public class Main extends Application {
         asiakaspaneeli.setCenter(asiakasScrollaus);
         GridPane asiakasTaulukko = new GridPane();
         asiakasTaulukko.setPadding(new Insets(20));
-        asiakasTaulukko.getColumnConstraints().addAll(sarakeLyhyt, sarakeLevea, sarakeLevea, sarakeSemi, sarakeLyhyt, sarakeLyhyt, sarakeLyhyt);
+        asiakasTaulukko.getColumnConstraints().addAll(sarakeLyhyt, sarakeLevea, sarakeLevea, sarakeLevea, sarakeLyhyt, sarakeLyhyt, sarakeLyhyt);
         asiakasTaulukko.setGridLinesVisible(true);
         asiakasScrollaus.setContent(asiakasTaulukko);
 
@@ -1065,6 +1065,29 @@ public class Main extends Application {
             asiakasTaulukko.add(tarkasteleNappula, 6, rivi);
             tarkasteleNappula.setOnMouseClicked(e -> {
                 // tarkasteleMokkia();                          //TODO  tarkasteleMokkia() - metodin luominen
+                Stage tarkasteleAsiakasIkkuna = new Stage();
+                tarkasteleAsiakasIkkuna.show();
+                GridPane tarkasteleAsiakasPaneeli = new GridPane();
+                tarkasteleAsiakasPaneeli.setPadding(new Insets(25));
+                tarkasteleAsiakasPaneeli.setVgap(15);
+                tarkasteleAsiakasPaneeli.setHgap(15);
+                Scene tarkasteleAsiakasKehys = new Scene(tarkasteleAsiakasPaneeli, 400, 300);
+                tarkasteleAsiakasIkkuna.setScene(tarkasteleAsiakasKehys);
+
+                tarkasteleAsiakasPaneeli.add(new Text("Asiakkaan tiedot"),0,0);
+                tarkasteleAsiakasPaneeli.add(new Text("AsiakasID: "),0,1);
+                tarkasteleAsiakasPaneeli.add(new Text("Nimi: "),0,2);
+                tarkasteleAsiakasPaneeli.add(new Text("Email: "),0,3);
+                tarkasteleAsiakasPaneeli.add(new Text("Puhelinnumero: "),0,4);
+                tarkasteleAsiakasPaneeli.add(new Text("Lähiosoite: "),0,5);
+                tarkasteleAsiakasPaneeli.add(new Text("Postinumero: "),0,6);
+
+                tarkasteleAsiakasPaneeli.add(new Text(String.valueOf(obj.getAsiakasID())),1,1);
+                tarkasteleAsiakasPaneeli.add(new Text(obj.getNimi(true)),1,2);
+                tarkasteleAsiakasPaneeli.add(new Text(obj.getEmail()),1,3);
+                tarkasteleAsiakasPaneeli.add(new Text(obj.getPuhnro()),1,4);
+                tarkasteleAsiakasPaneeli.add(new Text(obj.getLahiosoite()),1,5);
+                tarkasteleAsiakasPaneeli.add(new Text(obj.getPostinro()),1,6);
             });
 
             rivi++;
