@@ -512,7 +512,21 @@ public class Tietokanta {
     }
 
     /**
+     * Hakee tietokannasta kaikki laskut.
+     * @param varaukset Lista {@link Varaus Varauksista}
+     * @return Lista {@link Lasku Laskuista}
+     */
+    public ArrayList<Lasku> haeLasku(ArrayList<Varaus> varaukset) throws SQLException {
+        stm = con.prepareStatement("SELECT * FROM lasku");
+        ResultSet rs = stm.executeQuery();
+        ArrayList<Lasku> tulokset = laskuLuokaksi(rs, varaukset);
+        stm.close();
+        return tulokset;
+    }
+
+    /**
      * Hakee tietokannasta kaikki mökit.
+     * @param alueet Lista {@link Alue Alueista}
      * @return Lista {@link Mokki Mokeista}
      */
     public ArrayList<Mokki> haeMokki(ArrayList<Alue> alueet) throws SQLException {
@@ -525,6 +539,7 @@ public class Tietokanta {
 
     /**
      * Hakee tietokannasta kaikki palvelut.
+     * @param alueet Lista {@link Alue Alueista}
      * @return Lista {@link Palvelu Palveluista}
      */
     public ArrayList<Palvelu> haePalvelu(ArrayList<Alue> alueet) throws SQLException {
@@ -537,6 +552,8 @@ public class Tietokanta {
 
     /**
      * Hakee tietokannasta uusimman varauksen.
+     * @param asiakkaat Lista {@link Asiakas Asiakkaista}
+     * @param mokit Lista {@link Mokki Mökeistä}
      * @return {@link Varaus}
      */
     public Varaus haeVarausUusi(ArrayList<Asiakas> asiakkaat, ArrayList<Mokki> mokit) throws SQLException {
@@ -550,6 +567,8 @@ public class Tietokanta {
 
     /**
      * Hakee tietokannasta kaikki varaukset.
+     * @param asiakkaat Lista {@link Asiakas Asiakkaista}
+     * @param mokit Lista {@link Mokki Mökeistä}
      * @return Lista {@link Varaus Varauksista}
      */
     public ArrayList<Varaus> haeVaraus(ArrayList<Asiakas> asiakkaat, ArrayList<Mokki> mokit) throws SQLException {
@@ -560,22 +579,9 @@ public class Tietokanta {
         return tulokset;
     }
 
-    public ArrayList<Lasku> haeLasku() throws SQLException {
-        stm = con.prepareStatement("SELECT * FROM lasku");
-        ResultSet rs = stm.executeQuery();
-        ArrayList<Lasku> tulokset = laskuLuokaksi(rs);
-        stm.close();
-        return tulokset;
-    }
-
     ///// Muuttamiset tietokannan tiedoista olioihin
     // TODO alue, lasku (postia ei ilmeisesti tehdä erillisenä olioluokkana, mutta en tiedä miksi sitten esim. alue tehdään)
 
-    /**
-     * Muuttaa tietokannasta saadun ResultSetin {@link Asiakas Asiakas}-olioiksi.
-     * @param rs Tietokannasta saatu ResultSet asiakkaita
-     * @return Lista asiakkaista
-     */
     private ArrayList<Asiakas> asiakasLuokaksi(ResultSet rs) throws SQLException {
         ArrayList<Asiakas> asiakkaat = new ArrayList<>();
         while (rs.next()) {
@@ -589,6 +595,19 @@ public class Tietokanta {
                     rs.getString("puhelinnro")));
         }
         return asiakkaat;
+    }
+
+    private ArrayList<Lasku> laskuLuokaksi(ResultSet rs, ArrayList<Varaus> varaukset) throws SQLException {
+        ArrayList<Lasku> laskut = new ArrayList<>();
+        while (rs.next()) {
+            laskut.add(new Lasku(
+                    rs.getInt("lasku_id"),
+                    etsiVarausID(varaukset, rs.getInt("varaus_id")),
+                    rs.getBigDecimal("summa"),
+                    rs.getInt("alv"),
+                    rs.getString("laskunStatus")));
+        }
+        return laskut;
     }
 
     private ArrayList<Mokki> mokkiLuokaksi(ResultSet rs, ArrayList<Alue> alueet) throws SQLException {
@@ -608,11 +627,6 @@ public class Tietokanta {
         return mokit;
     }
 
-    /**
-     * Muuttaa tietokannasta saadun ResultSetin {@link Palvelu Palvelu}-olioiksi.
-     * @param rs Tietokannasta saatu ResultSet palveluja
-     * @return Lista palveluista
-     */
     private ArrayList<Palvelu> palveluLuokaksi(ResultSet rs, ArrayList<Alue> alueet) throws SQLException {
         ArrayList<Palvelu> palvelut = new ArrayList<>();
         while (rs.next()) {
@@ -629,11 +643,6 @@ public class Tietokanta {
         return palvelut;
     }
 
-    /**
-     * Muuttaa tietokannasta saadun ResultSetin {@link Varaus Varaus}-olioiksi.
-     * @param rs Tietokannasta saatu ResultSet varauksia
-     * @return Lista varauksista
-     */
     private ArrayList<Varaus> varausLuokaksi(ResultSet rs, ArrayList<Asiakas> asiakkaat, ArrayList<Mokki> mokit) throws SQLException {
         ArrayList<Varaus> varaukset = new ArrayList<>();
         while (rs.next()) {
@@ -652,18 +661,5 @@ public class Tietokanta {
                     LocalDateTime.parse(rs.getString("varattu_loppupvm"), dateTimeFormat)));
         }
         return varaukset;
-    }
-
-    private ArrayList<Lasku> laskuLuokaksi(ResultSet rs) throws SQLException {
-        ArrayList<Lasku> laskut = new ArrayList<>();
-        while (rs.next()) {
-            laskut.add(new Lasku(
-                    rs.getInt("lasku_id"),
-                    rs.getInt("varaus_id"),
-                    rs.getBigDecimal("summa"),
-                    rs.getInt("alv"),
-                    rs.getString("laskunStatus")));
-        }
-        return laskut;
     }
 }
