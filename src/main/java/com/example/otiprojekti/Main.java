@@ -73,7 +73,7 @@ public class Main extends Application {
 
 
     // Tietokantayhteys
-    private final Tietokanta tietokanta = new Tietokanta(); // TODO jos tehdään nappi uudelleen yhdistämiseen niin sitten final pitää poistaa koska olio luodaan uudelleen
+    private final Tietokanta tietokanta = new Tietokanta(); // TODO jos tehdään vaikka nappi uudelleen yhdistämiseen niin sitten final pitää poistaa koska olio luodaan uudelleen
 
     /**
      * SQL:n käyttämä muotoilu DateTime-tietotyypeissä
@@ -81,32 +81,27 @@ public class Main extends Application {
     // TODO sama on Tietokanta.javassa, kannattaisi olla vain toisessa ehkä
     private final DateTimeFormatter dateTimeFormat = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 
-    ArrayList<Varaus> varauslista = null;
     ArrayList<Alue> aluelista = new ArrayList<>();
     ArrayList<Mokki> mokkilista = new ArrayList<>();
-    ArrayList<Palvelu> palvelulista = new ArrayList<>();
     ArrayList<Asiakas> asiakaslista = new ArrayList<>();
+    ArrayList<Palvelu> palvelulista = new ArrayList<>();
+    ArrayList<Varaus> varauslista = new ArrayList<>();
     ArrayList<Lasku> laskulista = new ArrayList<>();
 
 
     @Override
     public void start(Stage ikkuna) {
 
-
-
         try {
-            /*tietokanta.insertVaraus(1, 2,
-                    "2001-09-30 12:00:00",
-                    "2001-09-30 12:00:00",
-                    "2001-09-30 12:00:00",
-                    "2001-09-30 12:00:00");
-                    TESTI
-             */
-
+            // TODO alueiden haku
+            mokkilista = tietokanta.haeMokki();
+            asiakaslista = tietokanta.haeAsiakas();
+            palvelulista = tietokanta.haePalvelu();
             varauslista = tietokanta.haeVaraus();
+            // TODO laskujen haku
         } catch (SQLException e) {
-            throw new RuntimeException(e);
-            // TODO miten käsitellään SQL exceptionit? Tehdäänkö joku ilmoitus joka tulee ikkunan nurkkaan jos virhe tapahtuu?
+            ilmoitusPaneeli.lisaaIlmoitus(IlmoitusTyyppi.VAROITUS, String.valueOf(e));
+            throw new RuntimeException(e); // TEMP
         }
 
 
@@ -127,15 +122,15 @@ public class Main extends Application {
         // Yläpalkki
         Image logonkuva = imageKuvasta("vnlogo.png");
         ImageView logo = new ImageView(logonkuva);
-        logo.setFitWidth(75);
-        logo.setFitHeight(75);
+        logo.setPreserveRatio(true);
+        logo.setFitWidth(100);
 
         Pane ylapalkkipaneeli = new Pane();
         ylapalkkipaneeli.getChildren().add(logo);
         ylapalkkipaneeli.setBackground
                 (new Background(new BackgroundFill(Color.DARKSEAGREEN, null, null)));
-        logo.setX(73);
-        logo.setY(22);
+        logo.setX(63);
+        logo.setY(10);
         ylapalkkipaneeli.setMinHeight(110);
         paneeli.setTop(ylapalkkipaneeli);
 
@@ -353,15 +348,6 @@ public class Main extends Application {
         mokkiTaulukko.add(mokinHloMaaraOtsikko, 4, 1);
 
 
-
-        mokkilista.add(new Mokki(1,1, "34110","Sininen mökki", "Sinitie 2",
-        BigDecimal.valueOf(200), "Valoisa hirsimökki koko perheelle tai pienelle kaveriporukalle saunalla ja porealtaalla.",
-        6, "Sauna, poreallas"));       //TEMP
-        mokkilista.add(new Mokki(2,1, "34100","Punainen mökki", "Sinitie 3",
-                BigDecimal.valueOf(250), "Viihtyisä ja tilava hirsimökki koko perheelle tai kaveriporukalle saunalla ja porealtaalla.",
-                8, "Sauna, poreallas"));       //TEMP
-
-
         int rivi = 2;
         for (Mokki obj : mokkilista) {
             Text mokkiID = new Text(String.valueOf(obj.getMokkiID()));
@@ -479,14 +465,6 @@ public class Main extends Application {
         palveluTaulukko.add(palvelunnimiOtsikko, 1, 1);
         palveluTaulukko.add(palveluAlueOtsikko, 2, 1);
         palveluTaulukko.add(palvelunHintaOtsikko, 3, 1);
-
-
-        palvelulista.add(new Palvelu(1, 1, "Moottorikelkkavuokra",
-                "Välinevuokraus", "Moottorikelkan vuokraus 1 hlö 3h",
-                BigDecimal.valueOf(60), 24)); // TEMP
-        palvelulista.add(new Palvelu(2, 1, "Kuumakivihieronta 60 min",
-                "Hieronta", "Kuumakivihieronta 60 min koulutetulla hierojalla Levin elämyshoitolassa",
-                BigDecimal.valueOf(70), 24)); // TEMP
 
 
         int rivi = 2;
@@ -766,19 +744,6 @@ public class Main extends Application {
         varausTaulukko.add(varausAsiakasOtsikko, 1, 1);
         varausTaulukko.add(varausMokkiOtsikko, 2, 1);
 
-//        ArrayList<Varaus> varauslista = new ArrayList<Varaus>();
-//        varauslista.add(new Varaus(123, 122, 234,
-//                LocalDateTime.of(2022, 9, 30, 12, 50),
-//                LocalDateTime.of(2022, 9, 30, 12, 52 ),
-//                LocalDateTime.of(2022, 10, 8, 15, 30),
-//                LocalDateTime.of(2022, 10, 10, 12, 0 )));
-//        varauslista.add(new Varaus(13, 12, 24,
-//                LocalDateTime.of(2023, 1, 15, 13, 50),
-//                LocalDateTime.of(2023, 1, 15, 14, 52 ),
-//                LocalDateTime.of(2023, 3, 6, 15, 30),
-//                LocalDateTime.of(2023, 3, 12, 12, 0 )));        //TEMP
-
-
 
         int rivi = 2;
         for (Varaus obj : varauslista) { // TODO nyt kun SQL-haku saattaa epäonnistua, voi tulla NullPointerException
@@ -1015,14 +980,6 @@ public class Main extends Application {
         asiakasTaulukko.add(asiakasNimiOtsikko, 1, 1);
         asiakasTaulukko.add(asiakasEmailOtsikko, 2, 1);
         asiakasTaulukko.add(asiakasPuhNroOtsikko, 3, 1);
-
-
-        asiakaslista.add(new Asiakas(
-                24, "34560", "Kukko", "Veikka",
-                "veikka.kukko@gmail.com", "Savontie 26", "0440153888"));
-        asiakaslista.add(new Asiakas(
-                25, "34572", "Kukka", "Jukka",
-                "jukka.kukka@gmail.com", "Savontie 27", "0504643299"));       //TEMP
 
 
         int rivi = 2;
