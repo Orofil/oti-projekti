@@ -287,9 +287,10 @@ public class Tietokanta {
         stm.setString(3, mokkinimi);
         stm.setString(4, katuosoite);
         stm.setBigDecimal(5, hinta);
-        stm.setInt(6, henkilomaara);
-        stm.setString(7, varustelu);
-        stm.setInt(8, mokki_id);
+        stm.setString(6, kuvaus);
+        stm.setInt(7, henkilomaara);
+        stm.setString(8, varustelu);
+        stm.setInt(9, mokki_id);
         stm.executeUpdate();
         stm.close();
     }
@@ -315,6 +316,8 @@ public class Tietokanta {
         stm.executeUpdate();
         stm.close();
     }
+
+    public void muokkaaPalvelu() {}
 
     ///// Tietokannan tietojen poistamiset
 
