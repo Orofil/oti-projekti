@@ -48,52 +48,6 @@ public class Tietokanta {
         }
     }
 
-    // TEMP testaustarkoitukseen
-    public static void main(String[] args) throws SQLException, IOException {
-        Tietokanta tietokanta = new Tietokanta();
-
-        // Tehdään testi-insertit
-        tietokanta.testiInsertit();
-    }
-
-    // TEMP tämä on tilapäinen metodi testi-inserttien suorittamiseen, joka on aika sekavasti kirjoitettu
-    private void testiInsertit() throws IOException, SQLException {
-        String insertitTeksti = Files.readString(Path.of(POLKU, "insertit testi.sql"));
-        String[] insertit = insertitTeksti.split("\n");
-
-        String komento = null;
-        ArrayList<String[]> params = new ArrayList<>();
-        for (int i = 0; i < insertit.length; i++) {
-            String s = insertit[i].strip();
-            if (!s.isEmpty() && !(s.charAt(0) == '(') && !(s.charAt(0) == '-')) {
-                String sN = insertit[i+1].strip();
-                int paramsN = sN.length() - sN.replace(",", "").length() - 1;
-                if (komento != null) {
-                    for (String[] ins : params) {
-                        stm = con.prepareStatement(komento);
-                        for (int j = 0; j < ins.length; j++) {
-                            stm.setString(j+1, ins[j]); // TODO kaikki parametrit käsitellään nyt merkkijonoina vaikka niin ei saa aina olla
-                        }
-                        System.out.println(stm.toString());
-                        stm.executeUpdate();
-                    }
-                    params = new ArrayList<>();
-                }
-                komento = s + "(?" + new String(new char[paramsN]).replace("\0", ",?") + ")";
-            }
-            else if (!s.isEmpty() && !(s.charAt(0) == '-')) {
-                s = s.substring(1, s.lastIndexOf(")"));
-                params.add(s.split(",")); // TODO kaikki parametrit ovat nyt merkkijonoja vaikka niin ei saa aina olla
-                for (int j = 0; j < params.get(params.size()-1).length; j++) { // TODO ylimääräinen ' jää loppuun kun on monta argumenttia
-                    params.get(params.size()-1)[j] = params.get(params.size()-1)[j].strip()
-                            .substring(1, params.get(params.size()-1)[j].length() - 1);
-                }
-            }
-        }
-    }
-
-
-
     ///// Tietojen syöttö tietokantaan
     // TODO lasku
 
