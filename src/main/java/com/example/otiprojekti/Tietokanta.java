@@ -257,6 +257,31 @@ public class Tietokanta {
         stm.close();
     }
 
+    public void muokkaaMokki(int mokkiID, int alueID, String postiNro, String mokkiNimi, String katuosoite,
+                             BigDecimal hinta, String kuvaus, int hloMaara, String varustelu) throws SQLException {
+        stm = con.prepareStatement(
+                "UPDATE mökki" +
+                        "SET alueID = ?," +
+                        "postiNro = ?," +
+                        "mokkiNimi = ?," +
+                        "katuosoite = ?," +
+                        "hinta = ?," +
+                        "kuvaus = ?," +
+                        "hloMaara = ?," +
+                        "varustelu = ?," +
+                "WHERE mokkiID = ?");
+        stm.setInt(1, alueID);
+        stm.setString(2, postiNro);
+        stm.setString(3, mokkiNimi);
+        stm.setString(4, katuosoite);
+        stm.setBigDecimal(5, hinta);
+        stm.setInt(6, hloMaara);
+        stm.setString(7, varustelu);
+        stm.setInt(8, mokkiID);
+        stm.executeUpdate();
+        stm.close();
+    }
+
 
 
     ///// Tietokannan tietojen poistamiset
