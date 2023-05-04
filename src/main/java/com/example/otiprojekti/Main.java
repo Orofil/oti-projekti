@@ -1038,6 +1038,57 @@ public class Main extends Application {
         asiakasLisays.setFitHeight(22);
         asiakasLisaysNappula.setGraphic(asiakasLisays);
         asiakasTaulukko.add(asiakasLisaysNappula, 1,0);
+        asiakasLisaysNappula.setOnAction( e -> {
+            Stage asiakasMuokkausIkkuna = new Stage();
+
+            VBox asiakasMuokkausPaneeli = new VBox(10);
+            asiakasMuokkausPaneeli.setPadding(new Insets(25));
+
+            GridPane asiakasMuokkausGridPaneeli = new GridPane();
+            asiakasMuokkausGridPaneeli.setVgap(5);
+            asiakasMuokkausGridPaneeli.add(new Text("Syötä asiakkaan tiedot."), 0, 0);
+            TextField enimi = new TextField();
+            TextField snimi = new TextField();
+            TextField email = new TextField();
+            TextField puhnro = new TextField();
+            TextField lahiosoite = new TextField();
+            TextField postinro = new TextField();
+
+            Text enimiText = new Text("Etunimi");
+            Text snimiText = new Text("Sukunimi");
+            Text emailText = new Text("Sähköpostiosoite");
+            Text puhnroText = new Text("Puhelinnumero");
+            Text lahiosoiteText = new Text("Lähiosoite");
+            Text postinroText = new Text("Postinumero");
+
+            asiakasMuokkausGridPaneeli.add(enimiText, 0,1);
+            asiakasMuokkausGridPaneeli.add(enimi, 1,1);
+            asiakasMuokkausGridPaneeli.add(snimiText, 0,2);
+            asiakasMuokkausGridPaneeli.add(snimi, 1,2);
+            asiakasMuokkausGridPaneeli.add(emailText, 0,3);
+            asiakasMuokkausGridPaneeli.add(email, 1,3);
+            asiakasMuokkausGridPaneeli.add(puhnroText, 0,4);
+            asiakasMuokkausGridPaneeli.add(puhnro, 1,4);
+            asiakasMuokkausGridPaneeli.add(lahiosoiteText, 0,5);
+            asiakasMuokkausGridPaneeli.add(lahiosoite, 1,5);
+            asiakasMuokkausGridPaneeli.add(postinroText, 0,6);
+            asiakasMuokkausGridPaneeli.add(postinro, 1,6);
+
+
+            Nappula tallennaAsiakasMuutokset = new Nappula("Lisää asiakas");
+            tallennaAsiakasMuutokset.setOnAction( event -> {
+                //TÄHÄN DROP IF EXISTS tai UPDATE
+                //(tietokanta.insertAsiakas();)
+            });
+
+            asiakasMuokkausPaneeli.getChildren().addAll
+                    (asiakasMuokkausGridPaneeli, tallennaAsiakasMuutokset);
+
+            Scene asiakasMuokkausKehys = new Scene(asiakasMuokkausPaneeli, 400, 350);
+            asiakasMuokkausIkkuna.setScene(asiakasMuokkausKehys);
+            asiakasMuokkausIkkuna.setTitle("Lisää asiakas");
+            asiakasMuokkausIkkuna.show();
+        });
 
         Text asiakastunnusOtsikko = new Text("AsiakasID");
         asiakastunnusOtsikko.setFont(fontti);
@@ -1184,7 +1235,7 @@ public class Main extends Application {
 
                 Scene asiakasMuokkausKehys = new Scene(asiakasMuokkausPaneeli, 400, 350);
                 asiakasMuokkausIkkuna.setScene(asiakasMuokkausKehys);
-                asiakasMuokkausIkkuna.setTitle("Muokkaa asiakasta");
+                asiakasMuokkausIkkuna.setTitle("Muokkaa asiakkaan tietoja");
                 asiakasMuokkausIkkuna.show();
             });
 
