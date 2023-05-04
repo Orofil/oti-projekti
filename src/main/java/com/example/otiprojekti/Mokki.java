@@ -4,22 +4,33 @@ import java.math.BigDecimal;
 import java.util.Objects;
 
 public class Mokki {
-    private final int mokkiID;
+    private final int ID;
     private Alue alue;
     private String postiNro;
-    private String mokkiNimi;
+    private String nimi;
     private String katuosoite;
     private BigDecimal hinta;
     private String kuvaus;
     private int hloMaara;
     private String varustelu;
 
-    public Mokki(int mokkiID, Alue alue, String postiNro, String mokkiNimi, String katuosoite,
-                 BigDecimal hinta, String kuvaus, int hloMaara, String varustelu){
-        this.mokkiID = mokkiID;
+    /**
+     * @param ID
+     * @param alue
+     * @param postiNro
+     * @param nimi Maksimipituus 45
+     * @param katuosoite Maksimipituus 45
+     * @param hinta Desimaaleja enintään 2, pituus enintään 8
+     * @param kuvaus Maksimipituus 150
+     * @param hloMaara
+     * @param varustelu Maksimipituus 100
+     */
+    public Mokki(int ID, Alue alue, String postiNro, String nimi, String katuosoite,
+                 BigDecimal hinta, String kuvaus, int hloMaara, String varustelu) {
+        this.ID = ID;
         this.alue = alue;
         this.postiNro = postiNro;
-        this.mokkiNimi = mokkiNimi;
+        this.nimi = nimi;
         this.katuosoite = katuosoite;
         this.hinta = hinta;
         this.kuvaus = kuvaus;
@@ -27,8 +38,8 @@ public class Mokki {
         this.varustelu = varustelu;
     }
 
-    public int getMokkiID() {
-        return mokkiID;
+    public int getID() {
+        return ID;
     }
 
     public Alue getAlue() {
@@ -43,18 +54,24 @@ public class Mokki {
         this.postiNro = postiNro;
     }
 
-    public String getMokkiNimi() {
-        return mokkiNimi;
+    public String getNimi() {
+        return nimi;
     }
 
-    public void setMokkiNimi(String mokkiNimi) {
-        this.mokkiNimi = mokkiNimi;
+    /**
+     * @param nimi Maksimipituus 45
+     */
+    public void setNimi(String nimi) {
+        this.nimi = nimi;
     }
 
     public String getKatuosoite() {
         return katuosoite;
     }
 
+    /**
+     * @param katuosoite Maksimipituus 45
+     */
     public void setKatuosoite(String katuosoite) {
         this.katuosoite = katuosoite;
     }
@@ -63,6 +80,9 @@ public class Mokki {
         return hinta;
     }
 
+    /**
+     * @param hinta Desimaaleja enintään 2, pituus enintään 8
+     */
     public void setHinta(BigDecimal hinta) {
         this.hinta = hinta;
     }
@@ -71,6 +91,9 @@ public class Mokki {
         return kuvaus;
     }
 
+    /**
+     * @param kuvaus Maksimipituus 150
+     */
     public void setKuvaus(String kuvaus) {
         this.kuvaus = kuvaus;
     }
@@ -87,14 +110,17 @@ public class Mokki {
         return varustelu;
     }
 
+    /**
+     * @param varustelu Maksimipituus 100
+     */
     public void setVarustelu(String varustelu) {
         this.varustelu = varustelu;
     }
 
     @Override
     public String toString() {
-        String str= "Mökin ID on: " + mokkiID + "\nAlueen ID: "+ alue + "\nPostinro: "+ postiNro+"\nMökin nimi: "+
-                mokkiNimi+"\nKatuosoite: "+ katuosoite+ "\nHinta: "+ hinta + "\nKuvaus: "+ kuvaus+ "\nHenkilömäärä: "+
+        String str= "Mökin ID on: " + ID + "\nAlueen ID: "+ alue + "\nPostinro: "+ postiNro+"\nMökin nimi: "+
+                nimi +"\nKatuosoite: "+ katuosoite+ "\nHinta: "+ hinta + "\nKuvaus: "+ kuvaus+ "\nHenkilömäärä: "+
                 hloMaara+"\nVarustelu: "+ varustelu;
         return str;
 
@@ -105,11 +131,11 @@ public class Mokki {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Mokki mokki = (Mokki) o;
-        return mokkiID == mokki.mokkiID &&
+        return ID == mokki.ID &&
                 alue == mokki.alue &&
                 hloMaara == mokki.hloMaara &&
                 Objects.equals(postiNro, mokki.postiNro) &&
-                Objects.equals(mokkiNimi, mokki.mokkiNimi) &&
+                Objects.equals(nimi, mokki.nimi) &&
                 Objects.equals(katuosoite, mokki.katuosoite) &&
                 Objects.equals(hinta, mokki.hinta) &&
                 Objects.equals(kuvaus, mokki.kuvaus) &&

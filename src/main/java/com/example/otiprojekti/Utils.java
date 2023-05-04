@@ -32,7 +32,7 @@ public class Utils {
      * @author <a href="https://stackoverflow.com/a/48839294">oleg.cherednik</a>
      */
     public static Alue etsiAlueID(Collection<Alue> lista, int id) {
-        return findByProperty(lista, alue -> id == alue.getAlueID());
+        return findByProperty(lista, alue -> id == alue.getID());
     }
 
     /**
@@ -43,7 +43,7 @@ public class Utils {
      * @author <a href="https://stackoverflow.com/a/48839294">oleg.cherednik</a>
      */
     public static Asiakas etsiAsiakasID(Collection<Asiakas> lista, int id) {
-        return findByProperty(lista, asiakas -> id == asiakas.getAsiakasID());
+        return findByProperty(lista, asiakas -> id == asiakas.getID());
     }
 
     /**
@@ -54,7 +54,7 @@ public class Utils {
      * @author <a href="https://stackoverflow.com/a/48839294">oleg.cherednik</a>
      */
     public static Lasku etsiLaskuID(Collection<Lasku> lista, int id) {
-        return findByProperty(lista, lasku -> id == lasku.getLaskuID());
+        return findByProperty(lista, lasku -> id == lasku.getID());
     }
 
     /**
@@ -65,7 +65,7 @@ public class Utils {
      * @author <a href="https://stackoverflow.com/a/48839294">oleg.cherednik</a>
      */
     public static Mokki etsiMokkiID(Collection<Mokki> lista, int id) {
-        return findByProperty(lista, mokki -> id == mokki.getMokkiID());
+        return findByProperty(lista, mokki -> id == mokki.getID());
     }
 
     /**
@@ -76,7 +76,7 @@ public class Utils {
      * @author <a href="https://stackoverflow.com/a/48839294">oleg.cherednik</a>
      */
     public static Palvelu etsiPalveluID(Collection<Palvelu> lista, int id) {
-        return findByProperty(lista, palvelu -> id == palvelu.getPalveluID());
+        return findByProperty(lista, palvelu -> id == palvelu.getID());
     }
 
     /**
@@ -87,7 +87,7 @@ public class Utils {
      * @author <a href="https://stackoverflow.com/a/48839294">oleg.cherednik</a>
      */
     public static Varaus etsiVarausID(Collection<Varaus> lista, int id) {
-        return findByProperty(lista, varaus -> id == varaus.getVarausID());
+        return findByProperty(lista, varaus -> id == varaus.getID());
     }
 
     /**

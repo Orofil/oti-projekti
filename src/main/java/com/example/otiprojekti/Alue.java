@@ -3,25 +3,31 @@ package com.example.otiprojekti;
 import java.util.Objects;
 
 public class Alue {
-    private final int alueID;
-    private String alueenNimi;
+    private final int ID;
+    private String nimi;
 
-    //alustaja
-    public Alue(int id, String nimi) { // TEMP
-        this.alueID = id;
-        this.alueenNimi = nimi;
+    /**
+     * @param ID
+     * @param nimi Maksimipituus 40
+     */
+    public Alue(int ID, String nimi) {
+        this.ID = ID;
+        this.nimi = nimi;
     }
 
-    public int getAlueID() {
-        return alueID;
+    public int getID() {
+        return ID;
     }
 
-    public String getAlueenNimi() {
-        return alueenNimi;
+    public String getNimi() {
+        return nimi;
     }
 
-    public void setAlueenNimi(String alueenNimi) {
-        this.alueenNimi = alueenNimi;
+    /**
+     * @param nimi Maksimipituus 40
+     */
+    public void setNimi(String nimi) {
+        this.nimi = nimi;
     }
 
     @Override
@@ -29,16 +35,13 @@ public class Alue {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Alue alue = (Alue) o;
-        return getAlueID() == alue.getAlueID() &&
-                Objects.equals(getAlueenNimi(), alue.getAlueenNimi());
+        return getID() == alue.getID() &&
+                Objects.equals(getNimi(), alue.getNimi());
     }
-
 
     @Override
     public String toString() {
-        String str = "Alueen ID on " + alueID + "\n Alueen nimi on " + alueenNimi;
+        String str = "Alueen ID on " + ID + "\n Alueen nimi on " + nimi;
         return str;
     }
-
-
 }

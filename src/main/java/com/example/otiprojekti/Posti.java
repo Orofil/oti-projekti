@@ -6,6 +6,10 @@ public class Posti {
     private String postiNro;
     private String toimipaikka;
 
+    /**
+     * @param postiNro Maksimipituus 5
+     * @param toimipaikka Maksimipituus 45
+     */
     public Posti(String postiNro, String toimipaikka) {
         this.postiNro = postiNro;
         this.toimipaikka = toimipaikka;
@@ -15,6 +19,9 @@ public class Posti {
         return postiNro;
     }
 
+    /**
+     * @param postiNro Maksimipituus 5
+     */
     public void setPostiNro(String postiNro) {
         this.postiNro = postiNro;
     }
@@ -23,6 +30,9 @@ public class Posti {
         return toimipaikka;
     }
 
+    /**
+     * @param toimipaikka Maksimipituus 45
+     */
     public void setToimipaikka(String toimipaikka) {
         this.toimipaikka = toimipaikka;
     }

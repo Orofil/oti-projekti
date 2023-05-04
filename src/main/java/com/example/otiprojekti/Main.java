@@ -225,11 +225,11 @@ public class Main extends Application {
         alueLajittelu.setOnAction(e -> {
             switch (alueLajittelu.getValue()) {
                 case "Tunnuksen mukaan" ->
-                    alueLista.sort(Comparator.comparing(Alue::getAlueID));
+                    alueLista.sort(Comparator.comparing(Alue::getID));
                 case "Uusin > Vanhin" -> {} // TODO miten tämä toimii?
                 case "Vanhin > Uusin" -> {} // TODO miten tämä toimii?
                 case "A > Ö" ->
-                    alueLista.sort(Comparator.comparing(Alue::getAlueenNimi));
+                    alueLista.sort(Comparator.comparing(Alue::getNimi));
             }
             // TODO päivitä näkymä
         });
@@ -264,9 +264,9 @@ public class Main extends Application {
 
         int rivi = 2;
         for (Alue obj : alueLista) {
-            Text alueID = new Text(String.valueOf(obj.getAlueID()));
+            Text alueID = new Text(String.valueOf(obj.getID()));
             alueID.setFont(fontti);
-            Text alueNimi = new Text(String.valueOf(obj.getAlueenNimi()));
+            Text alueNimi = new Text(String.valueOf(obj.getNimi()));
             alueNimi.setFont(fontti);
             alueTaulukko.add(alueID, 0, rivi);
 
@@ -330,17 +330,17 @@ public class Main extends Application {
         mokkiLajittelu.setOnAction(e -> {
             switch (mokkiLajittelu.getValue()) {
                 case "Tunnuksen mukaan" ->
-                        mokkiLista.sort(Comparator.comparing(Mokki::getMokkiID));
+                        mokkiLista.sort(Comparator.comparing(Mokki::getID));
                 case "Edullisin > Kallein" -> 
                         mokkiLista.sort(Comparator.comparing(Mokki::getHinta));
                 case "Kallein > Edullisin" -> 
                         mokkiLista.sort(Comparator.comparing(Mokki::getHinta).reversed());
                 case "A > Ö" ->
-                        mokkiLista.sort(Comparator.comparing(Mokki::getMokkiNimi));
+                        mokkiLista.sort(Comparator.comparing(Mokki::getNimi));
                 case "Henkilömäärän mukaan" -> 
                         mokkiLista.sort(Comparator.comparing(Mokki::getHloMaara));
                 case "Alueittain" -> 
-                        mokkiLista.sort(Comparator.comparing(Mokki -> Mokki.getAlue().getAlueID())); // TODO onko alueen ID:n vai nimen mukaan
+                        mokkiLista.sort(Comparator.comparing(Mokki -> Mokki.getAlue().getID())); // TODO onko alueen ID:n vai nimen mukaan
             }
             // TODO päivitä näkymä
         });
@@ -382,9 +382,9 @@ public class Main extends Application {
 
         int rivi = 2;
         for (Mokki obj : mokkiLista) {
-            Text mokkiID = new Text(String.valueOf(obj.getMokkiID()));
+            Text mokkiID = new Text(String.valueOf(obj.getID()));
             mokkiID.setFont(fontti);
-            Text mokkiNimi = new Text(String.valueOf(obj.getMokkiNimi()));
+            Text mokkiNimi = new Text(String.valueOf(obj.getNimi()));
             mokkiNimi.setFont(fontti);
             Text mokkiAlue = new Text(String.valueOf(obj.getAlue()));
             mokkiAlue.setFont(fontti);
@@ -471,13 +471,13 @@ public class Main extends Application {
         palveluLajittelu.setOnAction(e -> {
             switch (palveluLajittelu.getValue()) {
                 case "Tunnuksen mukaan" ->
-                        palveluLista.sort(Comparator.comparing(Palvelu::getPalveluID));
+                        palveluLista.sort(Comparator.comparing(Palvelu::getID));
                 case "Uusin > Vanhin" -> {} // TODO miten tämä toimii?
                 case "Vanhin > Uusin" -> {} // TODO miten tämä toimii?
                 case "A > Ö" ->
-                        palveluLista.sort(Comparator.comparing(Palvelu::getPalvelunNimi));
+                        palveluLista.sort(Comparator.comparing(Palvelu::getNimi));
                 case "Alueittain" ->
-                        palveluLista.sort(Comparator.comparing(Palvelu -> Palvelu.getAlue().getAlueID())); // TODO onko alueen ID:n vai nimen mukaan
+                        palveluLista.sort(Comparator.comparing(Palvelu -> Palvelu.getAlue().getID())); // TODO onko alueen ID:n vai nimen mukaan
             }
             // TODO päivitä näkymä
         });
@@ -516,13 +516,13 @@ public class Main extends Application {
 
         int rivi = 2;
         for (Palvelu obj : palveluLista) {
-            Text palveluID = new Text(String.valueOf(obj.getPalveluID()));
+            Text palveluID = new Text(String.valueOf(obj.getID()));
             palveluID.setFont(fontti);
-            Text palveluNimi = new Text(String.valueOf(obj.getPalvelunNimi()));
+            Text palveluNimi = new Text(String.valueOf(obj.getNimi()));
             palveluNimi.setFont(fontti);
             Text palveluAlue = new Text(String.valueOf(obj.getAlue()));
             palveluAlue.setFont(fontti);
-            Text palveluHinta = new Text(String.valueOf(obj.getPalvelunHinta()));
+            Text palveluHinta = new Text(String.valueOf(obj.getHinta()));
             palveluHinta.setFont(fontti);
 
 
@@ -611,7 +611,7 @@ public class Main extends Application {
         varausLajittelu.setOnAction(e -> {
             switch (varausLajittelu.getValue()) {
                 case "Tunnuksen mukaan" ->
-                        varausLista.sort(Comparator.comparing(Varaus::getVarausID));
+                        varausLista.sort(Comparator.comparing(Varaus::getID));
                 case "Uusin > Vanhin" ->
                         varausLista.sort(Comparator.comparing(Varaus::getVarausAlkuPvm).reversed());
                 case "Vanhin > Uusin" ->
@@ -761,7 +761,7 @@ public class Main extends Application {
                                 lahiosoite.getText(),
                                 email.getText(),
                                 puhnro.getText()));
-                        asiakasIDInsert = asiakasLista.get(asiakasLista.size()-1).getAsiakasID();
+                        asiakasIDInsert = asiakasLista.get(asiakasLista.size()-1).getID();
                     } else {
                         asiakasIDInsert = Integer.parseInt(asiakasID.getText()); // TODO virheiden käsittely, näytetään virheteksti ikkunassa
                     }
@@ -829,7 +829,7 @@ public class Main extends Application {
 
         int rivi = 2;
         for (Varaus obj : varausLista) { // TODO nyt kun SQL-haku saattaa epäonnistua, voi tulla NullPointerException
-            Text varausID = new Text(String.valueOf(obj.getVarausID()));
+            Text varausID = new Text(String.valueOf(obj.getID()));
             varausID.setFont(fontti);
             Text varausNimi = new Text(String.valueOf(obj.getAsiakas()));
             varausNimi.setFont(fontti);
@@ -856,7 +856,7 @@ public class Main extends Application {
 
                 poistoIkkuna.getPoistoNappula().setOnAction( event -> {
                     try {
-                        tietokanta.poistaVaraus(obj.getVarausID());
+                        tietokanta.poistaVaraus(obj.getID());
                     } catch (SQLException ex) {
                         throw new RuntimeException(ex);
                     }
@@ -955,7 +955,7 @@ public class Main extends Application {
                 tarkasteleVarausPaneeli.add(new Text("Varauksen alkupvm: "),0,6);
                 tarkasteleVarausPaneeli.add(new Text("Varauksen loppupvm: "),0,7);
 
-                tarkasteleVarausPaneeli.add(new Text(String.valueOf(obj.getVarausID())),1,1);
+                tarkasteleVarausPaneeli.add(new Text(String.valueOf(obj.getID())),1,1);
                 tarkasteleVarausPaneeli.add(new Text(String.valueOf(obj.getAsiakas())),1,2);
                 tarkasteleVarausPaneeli.add(new Text(String.valueOf(obj.getMokki())),1,3);
                 tarkasteleVarausPaneeli.add(new Text(dateTimeFormat.format(obj.getVarattuPvm())),1,4);
@@ -1008,7 +1008,7 @@ public class Main extends Application {
         asiakasLajittelu.setOnAction(e -> {
             switch (asiakasLajittelu.getValue()) {
                 case "Tunnuksen mukaan" ->
-                        asiakasLista.sort(Comparator.comparing(Asiakas::getAsiakasID));
+                        asiakasLista.sort(Comparator.comparing(Asiakas::getID));
                 case "Uusin > Vanhin" -> {} // TODO miten tämä toimii?
                 case "Vanhin > Uusin" -> {} // TODO miten tämä toimii?
                 case "A > Ö" ->
@@ -1102,13 +1102,13 @@ public class Main extends Application {
 
         int rivi = 2;
         for (Asiakas obj : asiakasLista) {
-            Text asiakasID = new Text(String.valueOf(obj.getAsiakasID()));
+            Text asiakasID = new Text(String.valueOf(obj.getID()));
             asiakasID.setFont(fontti);
             Text asiakasNimi = new Text(obj.getNimi(false));
             asiakasNimi.setFont(fontti);
             Text asiakasEmail = new Text(String.valueOf(obj.getEmail()));
             asiakasEmail.setFont(fontti);
-            Text asiakasPuhNro = new Text(String.valueOf(obj.getPuhnro()));
+            Text asiakasPuhNro = new Text(String.valueOf(obj.getPuhelinNro()));
             asiakasPuhNro.setFont(fontti);
 
 
@@ -1153,7 +1153,7 @@ public class Main extends Application {
 
                 poistaAsiakasNappula.setOnAction( event -> {
                     try {
-                        tietokanta.poistaAsiakas(obj.getAsiakasID());
+                        tietokanta.poistaAsiakas(obj.getID());
                     } catch (SQLException ex) {
                         throw new RuntimeException(ex);
                     }
@@ -1193,9 +1193,9 @@ public class Main extends Application {
                 enimi.setText(obj.getEtunimi());
                 snimi.setText(obj.getSukunimi());
                 email.setText(obj.getEmail());
-                puhnro.setText(obj.getPuhnro());
+                puhnro.setText(obj.getPuhelinNro());
                 lahiosoite.setText(obj.getLahiosoite());
-                postinro.setText(obj.getPostinro());
+                postinro.setText(obj.getPostiNro());
 
                 Text enimiText = new Text("Etunimi");
                 Text snimiText = new Text("Sukunimi");
@@ -1259,12 +1259,12 @@ public class Main extends Application {
                 tarkasteleAsiakasPaneeli.add(new Text("Lähiosoite: "),0,5);
                 tarkasteleAsiakasPaneeli.add(new Text("Postinumero: "),0,6);
 
-                tarkasteleAsiakasPaneeli.add(new Text(String.valueOf(obj.getAsiakasID())),1,1);
+                tarkasteleAsiakasPaneeli.add(new Text(String.valueOf(obj.getID())),1,1);
                 tarkasteleAsiakasPaneeli.add(new Text(obj.getNimi(true)),1,2);
                 tarkasteleAsiakasPaneeli.add(new Text(obj.getEmail()),1,3);
-                tarkasteleAsiakasPaneeli.add(new Text(obj.getPuhnro()),1,4);
+                tarkasteleAsiakasPaneeli.add(new Text(obj.getPuhelinNro()),1,4);
                 tarkasteleAsiakasPaneeli.add(new Text(obj.getLahiosoite()),1,5);
-                tarkasteleAsiakasPaneeli.add(new Text(obj.getPostinro()),1,6);
+                tarkasteleAsiakasPaneeli.add(new Text(obj.getPostiNro()),1,6);
             });
 
             rivi++;
@@ -1310,11 +1310,11 @@ public class Main extends Application {
         laskuLajittelu.setOnAction(e -> {
             switch (laskuLajittelu.getValue()) {
                 case "Tunnuksen mukaan" ->
-                        laskuLista.sort(Comparator.comparing(Lasku::getLaskuID));
+                        laskuLista.sort(Comparator.comparing(Lasku::getID));
                 case "Uusin > Vanhin" -> {} // TODO taas vähän monimutkaisempi
                 case "Vanhin > Uusin" -> {} // TODO sama kuin ylempänä
                 case "Varaustunnuksen mukaan" ->
-                        laskuLista.sort(Comparator.comparing(Lasku -> Lasku.getVaraus().getVarausID()));
+                        laskuLista.sort(Comparator.comparing(Lasku -> Lasku.getVaraus().getID()));
             }
             // TODO päivitä näkymä
         });
@@ -1361,13 +1361,13 @@ public class Main extends Application {
 
         int rivi = 2;
         for (Lasku obj : laskuLista) {
-            Text laskuID = new Text(String.valueOf(obj.getLaskuID()));
+            Text laskuID = new Text(String.valueOf(obj.getID()));
             laskuID.setFont(fontti);
             Text laskuVaraus = new Text(String.valueOf(obj.getVaraus()));
             laskuVaraus.setFont(fontti);
-            Text laskuSumma = new Text(String.valueOf(obj.getLaskunSumma()));
+            Text laskuSumma = new Text(String.valueOf(obj.getSumma()));
             laskuSumma.setFont(fontti);
-            Text laskuStatus = new Text(String.valueOf(obj.getLaskunStatus()));
+            Text laskuStatus = new Text(String.valueOf(obj.getStatus()));
             laskuStatus.setFont(fontti);
 
 
@@ -1411,7 +1411,7 @@ public class Main extends Application {
 
                 poistaLaskuNappula.setOnAction( event -> {
                     try {
-                        tietokanta.poistaLasku(obj.getLaskuID());
+                        tietokanta.poistaLasku(obj.getID());
                     } catch (SQLException ex) {
                         throw new RuntimeException(ex);
                     }

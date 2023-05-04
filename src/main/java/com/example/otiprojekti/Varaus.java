@@ -4,23 +4,23 @@ import java.time.LocalDateTime;
 import java.util.Objects;
 
 public class Varaus {
-    private final int varausID;
+    private final int ID;
     private Asiakas asiakas;
     private Mokki mokki;
 
     private LocalDateTime varattuPvm;
     private LocalDateTime vahvistusPvm;
-    private LocalDateTime varausAlkuPvm; // TODO nämä on vähän eri tavalla nimetty kuin tietokannassa, muutetaanko vastaamaan sitä?
+    private LocalDateTime varausAlkuPvm;
     private LocalDateTime varausLoppuPvm;
 
-    public Varaus(int varausID,
+    public Varaus(int ID,
                   Asiakas asiakas,
                   Mokki mokki,
                   LocalDateTime varattuPvm,
                   LocalDateTime vahvistusPvm,
                   LocalDateTime varausAlkuPvm,
                   LocalDateTime varausLoppuPvm) {
-        this.varausID = varausID;
+        this.ID = ID;
         this.asiakas = asiakas;
         this.mokki = mokki;
 
@@ -30,8 +30,8 @@ public class Varaus {
         this.varausLoppuPvm = varausLoppuPvm;
     }
 
-    public int getVarausID() {
-        return varausID;
+    public int getID() {
+        return ID;
     }
 
     public Asiakas getAsiakas() {
@@ -85,7 +85,7 @@ public class Varaus {
     @Override
     public String toString() {
         return "Varaus[" +
-                "varausID=" + varausID +
+                "varausID=" + ID +
                 ", mokkiID=" + mokki +
                 ", varattuPvm=" + varattuPvm +
                 ", varausAlkuPvm=" + varausAlkuPvm +
@@ -98,7 +98,7 @@ public class Varaus {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Varaus varaus = (Varaus) o;
-        return varausID == varaus.varausID &&
+        return ID == varaus.ID &&
                 asiakas == varaus.asiakas &&
                 mokki == varaus.mokki &&
                 Objects.equals(varattuPvm, varaus.varattuPvm) &&

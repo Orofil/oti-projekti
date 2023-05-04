@@ -4,31 +4,36 @@ import java.math.BigDecimal;
 import java.util.Objects;
 
 public class Palvelu {
-    private final int palveluID;
+    private final int ID;
     private Alue alue;
-    private String palvelunNimi;
-    private String palvelunTyyppi;
-    private String palvelunKuvaus;
-    private BigDecimal palvelunHinta;
-    private int palvelunAlv;
+    private String nimi;
+    private String tyyppi;
+    private String kuvaus;
+    private BigDecimal hinta;
+    private int alv;
 
-    //Alustaja perustiedoille
-    public Palvelu(int palveluID, Alue alue, String palvelunNimi, String palvelunTyyppi, String palvelunKuvaus,
-                   BigDecimal palvelunHinta, int palvelunAlv){
-        this.palveluID=palveluID;
+    /**
+     * @param ID
+     * @param alue
+     * @param nimi Maksimipituus 40
+     * @param tyyppi
+     * @param kuvaus Maksimipituus 255
+     * @param hinta Desimaaleja enintään 2, pituus enintään 8
+     * @param alv
+     */
+    public Palvelu(int ID, Alue alue, String nimi, String tyyppi, String kuvaus,
+                   BigDecimal hinta, int alv){
+        this.ID = ID;
         this.alue = alue;
-        this.palvelunNimi=palvelunNimi;
-        this.palvelunTyyppi=palvelunTyyppi;
-        this.palvelunKuvaus=palvelunKuvaus;
-        this.palvelunHinta=palvelunHinta;
-        this.palvelunAlv=palvelunAlv;
+        this.nimi = nimi;
+        this.tyyppi = tyyppi;
+        this.kuvaus = kuvaus;
+        this.hinta = hinta;
+        this.alv = alv;
     }
 
-
-    // Getterit palveluille ja alueille
-
-    public int getPalveluID() {
-        return palveluID;
+    public int getID() {
+        return ID;
     }
 
     public Alue getAlue() {
@@ -36,51 +41,60 @@ public class Palvelu {
     }
     // Luodaan getterit ja setterit muille kentille
 
-    public String getPalvelunNimi() {
-        return palvelunNimi;
+    public String getNimi() {
+        return nimi;
     }
 
-    public void setPalvelunNimi(String palvelunNimi) {
-        this.palvelunNimi = palvelunNimi;
+    /**
+     * @param nimi Maksimipituus 40
+     */
+    public void setNimi(String nimi) {
+        this.nimi = nimi;
     }
 
-    public String getPalvelunTyyppi() {
-        return palvelunTyyppi;
+    public String getTyyppi() {
+        return tyyppi;
     }
 
-    public void setPalvelunTyyppi(String palvelunTyyppi) {
-        this.palvelunTyyppi = palvelunTyyppi;
+    public void setTyyppi(String tyyppi) {
+        this.tyyppi = tyyppi;
     }
 
-    public String getPalvelunKuvaus() {
-        return palvelunKuvaus;
+    public String getKuvaus() {
+        return kuvaus;
     }
 
-    public void setPalvelunKuvaus(String palvelunKuvaus) {
-        this.palvelunKuvaus = palvelunKuvaus;
+    /**
+     * @param kuvaus Maksimipituus 255
+     */
+    public void setKuvaus(String kuvaus) {
+        this.kuvaus = kuvaus;
     }
 
-    public BigDecimal getPalvelunHinta() {
-        return palvelunHinta;
+    public BigDecimal getHinta() {
+        return hinta;
     }
 
-    public void setPalvelunHinta(BigDecimal palvelunHinta) {
-        this.palvelunHinta = palvelunHinta;
+    /**
+     * @param hinta Desimaaleja enintään 2, pituus enintään 8
+     */
+    public void setHinta(BigDecimal hinta) {
+        this.hinta = hinta;
     }
 
-    public int getPalvelunAlv() {
-        return palvelunAlv;
+    public int getAlv() {
+        return alv;
     }
 
-    public void setPalvelunAlv(int palvelunAlv) {
-        this.palvelunAlv = palvelunAlv;
+    public void setAlv(int alv) {
+        this.alv = alv;
     }
 
     @Override
     public String toString(){
-        String str= "Palvelun ID on: " + palveluID + "\nAlueen ID: "+ alue + "\nPalvelun nimi: "+ palvelunNimi+
-                "\nPalvelun tyyppi: "+ palvelunTyyppi+"\nPalvelun kuvaus: "+ palvelunKuvaus+ "\nPalvelun hinta: "
-                + palvelunHinta + "\nPalvelun Alv: "+ palvelunAlv;
+        String str= "Palvelun ID on: " + ID + "\nAlueen ID: "+ alue + "\nPalvelun nimi: "+ nimi +
+                "\nPalvelun tyyppi: "+ tyyppi +"\nPalvelun kuvaus: "+ kuvaus + "\nPalvelun hinta: "
+                + hinta + "\nPalvelun Alv: "+ alv;
         return str;
 
     }
@@ -90,12 +104,12 @@ public class Palvelu {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Palvelu palvelu = (Palvelu) o;
-        return palveluID == palvelu.palveluID &&
+        return ID == palvelu.ID &&
                 alue == palvelu.alue &&
-                Objects.equals(palvelunHinta, palvelu.palvelunHinta) &&
-                Double.compare(palvelu.palvelunAlv, palvelunAlv) == 0 &&
-                Objects.equals(palvelunNimi, palvelu.palvelunNimi) &&
-                Objects.equals(palvelunTyyppi, palvelu.palvelunTyyppi) &&
-                Objects.equals(palvelunKuvaus, palvelu.palvelunKuvaus);
+                Objects.equals(hinta, palvelu.hinta) &&
+                Double.compare(palvelu.alv, alv) == 0 &&
+                Objects.equals(nimi, palvelu.nimi) &&
+                Objects.equals(tyyppi, palvelu.tyyppi) &&
+                Objects.equals(kuvaus, palvelu.kuvaus);
     }
 }

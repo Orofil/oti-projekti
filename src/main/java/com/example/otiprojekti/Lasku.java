@@ -9,23 +9,29 @@ import com.itextpdf.text.Paragraph;
 import com.itextpdf.text.pdf.PdfWriter;
 
 public class Lasku {
-    private final int laskuID;
+    private final int ID;
     private Varaus varaus;
-    private BigDecimal laskunSumma;
-    private int laskuAlv;
-    private String laskunStatus;
+    private BigDecimal summa;
+    private int alv;
+    private String status;
 
-    //alustaja
-    public Lasku(int laskuID, Varaus varaus, BigDecimal laskunSumma, int laskuAlv, String laskunStatus) {
-        this.laskuID = laskuID;
+    /**
+     * @param ID
+     * @param varaus
+     * @param summa Desimaaleja enintään 2, pituus enintään 8
+     * @param alv
+     * @param status
+     */
+    public Lasku(int ID, Varaus varaus, BigDecimal summa, int alv, String status) {
+        this.ID = ID;
         this.varaus = varaus;
-        this.laskunSumma = laskunSumma;
-        this.laskuAlv = laskuAlv;
-        this.laskunStatus = laskunStatus;
+        this.summa = summa;
+        this.alv = alv;
+        this.status = status;
     }
 
-    public int getLaskuID() {
-        return laskuID;
+    public int getID() {
+        return ID;
     }
 
     public Varaus getVaraus() {
@@ -36,35 +42,38 @@ public class Lasku {
         this.varaus = varaus;
     }
 
-    public BigDecimal getLaskunSumma() {
-        return laskunSumma;
+    public BigDecimal getSumma() {
+        return summa;
     }
 
-    public void setLaskunSumma(BigDecimal laskunSumma) {
-        this.laskunSumma = laskunSumma;
+    /**
+     * @param summa Desimaaleja enintään 2, pituus enintään 8
+     */
+    public void setSumma(BigDecimal summa) {
+        this.summa = summa;
     }
 
-    public int getLaskuAlv() {
-        return laskuAlv;
+    public int getAlv() {
+        return alv;
     }
 
-    public void setLaskuAlv(int laskuAlv) {
-        this.laskuAlv = laskuAlv;
+    public void setAlv(int alv) {
+        this.alv = alv;
     }
 
-    public String getLaskunStatus() {
-        return laskunStatus;
+    public String getStatus() {
+        return status;
     }
 
-    public void setLaskunStatus(String laskunStatus) {
-        this.laskunStatus = laskunStatus;
+    public void setStatus(String status) {
+        this.status = status;
     }
 
     @Override
     public String toString() {
-        String str = "LaskuID: " + laskuID + "\n VarausID: " + varaus.getVarausID() +
-                "\n Laskun summa: " + laskunSumma + "\n Laskun alv: " + laskuAlv +
-                "\n Laskun tila: " + laskunStatus;
+        String str = "LaskuID: " + ID + "\n VarausID: " + varaus.getID() +
+                "\n Laskun summa: " + summa + "\n Laskun alv: " + alv +
+                "\n Laskun tila: " + status;
         return str;
     }
 
@@ -73,11 +82,11 @@ public class Lasku {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Lasku lasku = (Lasku) o;
-        return getLaskuID() == lasku.getLaskuID() &&
+        return getID() == lasku.getID() &&
                 getVaraus().equals(lasku.getVaraus()) &&
-                Objects.equals(getLaskunSumma(), lasku.getLaskunSumma()) &&
-                Double.compare(lasku.getLaskuAlv(), getLaskuAlv()) == 0 &&
-                Objects.equals(getLaskunStatus(), lasku.getLaskunStatus());
+                Objects.equals(getSumma(), lasku.getSumma()) &&
+                Double.compare(lasku.getAlv(), getAlv()) == 0 &&
+                Objects.equals(getStatus(), lasku.getStatus());
     }
 
 
