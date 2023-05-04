@@ -287,14 +287,79 @@ public class Tietokanta {
         stm.setString(3, mokkinimi);
         stm.setString(4, katuosoite);
         stm.setBigDecimal(5, hinta);
-        stm.setInt(6, henkilomaara);
-        stm.setString(7, varustelu);
-        stm.setInt(8, mokki_id);
+        stm.setString(6, kuvaus);
+        stm.setInt(7, henkilomaara);
+        stm.setString(8, varustelu);
+        stm.setInt(9, mokki_id);
         stm.executeUpdate();
         stm.close();
     }
 
+    /**
+     * muokkaa asiakasta tietokannassa
+     * @param asiakas_id
+     * @param postinro
+     * @param sukunimi
+     * @param etunimi
+     * @param email
+     * @param lahiosoite
+     * @param puhelinnro
+     * @throws SQLException
+     */
+    public void muokkaaAsiakas(int asiakas_id, String postinro, String sukunimi, String etunimi,
+                               String email, String lahiosoite, String puhelinnro) throws SQLException {
+        stm = con.prepareStatement(
+                "UPDATE asiakas" +
+                        "SET postinro = ?," +
+                        "sukunimi = ?," +
+                        "etunimi = ?," +
+                        "email = ?," +
+                        "lahiosoite = ?," +
+                        "puhelinnro = ?," +
+                        "WHERE asiakas_id = ?");
+        stm.setString(1, postinro);
+        stm.setString(2, sukunimi);
+        stm.setString(3, etunimi);
+        stm.setString(4, email);
+        stm.setString(5, lahiosoite);
+        stm.setString(6, puhelinnro);
+        stm.setInt(7, asiakas_id);
+        stm.executeUpdate();
+        stm.close();
+    }
 
+    /**
+     * muokkaa palvelua tietokannassa
+     * @param palvelu_id
+     * @param alue_id
+     * @param nimi
+     * @param tyyppi
+     * @param kuvaus
+     * @param hinta
+     * @param alv
+     * @throws SQLException
+     */
+    public void muokkaaPalvelu(int palvelu_id, int alue_id, String nimi, int tyyppi, String kuvaus,
+                               BigDecimal hinta, int alv) throws SQLException {
+        stm = con.prepareStatement(
+                "UPDATE palvelu" +
+                    "SET alue_id = ?," +
+                        "nimi = ?," +
+                        "tyyppi = ?," +
+                        "kuvaus = ?," +
+                        "hinta = ?," +
+                        "alv = ?," +
+                    "WHERE palveluID = ?");
+        stm.setInt(1, alue_id);
+        stm.setString(2, nimi);
+        stm.setInt(3, tyyppi);
+        stm.setString(4, kuvaus);
+        stm.setBigDecimal(5, hinta);
+        stm.setInt(6,alv);
+        stm.setInt(7, palvelu_id);
+        stm.executeUpdate();
+        stm.close();
+    }
 
     ///// Tietokannan tietojen poistamiset
 
