@@ -63,9 +63,9 @@ public class Lasku {
 
     @Override
     public String toString() {
-        String str = "LaskuID on " + laskuID + "\n VarausID on " + varausID +
-                "\n Laskun summa on " + laskunSumma + "\n Laskun alv on " + laskuAlv +
-                "\n Laskun tila on " + laskunStatus;
+        String str = "LaskuID: " + laskuID + "\n VarausID: " + varausID +
+                "\n Laskun summa: " + laskunSumma + "\n Laskun alv: " + laskuAlv +
+                "\n Laskun tila: " + laskunStatus;
         return str;
     }
 
@@ -87,7 +87,7 @@ public class Lasku {
         try {
             PdfWriter.getInstance(lasku, new FileOutputStream("lasku.pdf"));
             lasku.open();
-            lasku.add(new Paragraph("Laskun tiedot"));
+            lasku.add(new Paragraph(toString()));
             lasku.close();
         }
         catch (Exception e) {
