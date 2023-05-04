@@ -558,7 +558,13 @@ public class Tietokanta {
         return tulokset;
     }
 
-
+    public ArrayList<Lasku> haeLasku() throws SQLException {
+        stm = con.prepareStatement("SELECT * FROM lasku");
+        ResultSet rs = stm.executeQuery();
+        ArrayList<Lasku> tulokset = laskuLuokaksi(rs);
+        stm.close();
+        return tulokset;
+    }
 
     ///// Muuttamiset tietokannan tiedoista olioihin
     // TODO alue, lasku (postia ei ilmeisesti tehdä erillisenä olioluokkana, mutta en tiedä miksi sitten esim. alue tehdään)
@@ -644,5 +650,18 @@ public class Tietokanta {
                     LocalDateTime.parse(rs.getString("varattu_loppupvm"), dateTimeFormat)));
         }
         return varaukset;
+    }
+
+    private ArrayList<Lasku> laskuLuokaksi(ResultSet rs) throws SQLException {
+        ArrayList<Lasku> laskut = new ArrayList<>();
+        while (rs.next()) {
+            laskut.add(new Lasku(
+                    rs.getInt("lasku_id"),
+                    rs.getInt("varaus_id"),
+                    rs.getBigDecimal("summa"),
+                    rs.getInt("alv"),
+                    rs.getString("laskunStatus")));
+        }
+        return laskut;
     }
 }
