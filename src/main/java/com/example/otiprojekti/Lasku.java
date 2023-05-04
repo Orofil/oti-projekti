@@ -94,4 +94,17 @@ public class Lasku {
             System.out.println("Laskutietojen tallennuksessa tapahtui virhe.");
         }
     }
+    public void maksuMuistutus() {
+        Document muistutus = new Document();
+        try {
+            PdfWriter.getInstance(muistutus, new FileOutputStream("muistutus.pdf"));
+            muistutus.open();
+            muistutus.add(new Paragraph("Tämä on maksumuistutus mökin vuokrasta. Maksathan laskun pikimmiten"));
+            muistutus.add(new Paragraph(toString()));
+            muistutus.close();
+        }
+        catch (Exception e) {
+            System.out.println("Laskutietojen tallennuksessa tapahtui virhe.");
+        }
+    }
 }
