@@ -351,7 +351,7 @@ public class Tietokanta {
                         "kuvaus = ?," +
                         "hinta = ?," +
                         "alv = ?," +
-                    "WHERE palveluID = ?");
+                    "WHERE palvelu_id = ?");
         stm.setInt(1, alue_id);
         stm.setString(2, nimi);
         stm.setInt(3, tyyppi);
@@ -363,6 +363,22 @@ public class Tietokanta {
         stm.close();
     }
 
+    /**
+     * muokkaa alueen tietokannassa
+     * @param alue_id
+     * @param nimi
+     * @throws SQLException
+     */
+    public void muokkaaAlue(int alue_id, String nimi) throws SQLException {
+        stm = con.prepareStatement(
+                "UPDATE alue" +
+                    "SET nimi = ?," +
+                    "WHERE alue_id = ?");
+        stm.setString(1, nimi);
+        stm.setInt(2, alue_id);
+        stm.executeUpdate();
+        stm.close();
+    }
     ///// Tietokannan tietojen poistamiset
 
     /**
@@ -544,7 +560,13 @@ public class Tietokanta {
         return tulokset;
     }
 
-
+    public ArrayList<Lasku> haeLasku() throws SQLException {
+        stm = con.prepareStatement("SELECT * FROM lasku");
+        ResultSet rs = stm.executeQuery();
+        ArrayList<Lasku> tulokset = laskuLuokaksi(rs);
+        stm.close();
+        return tulokset;
+    }
 
     ///// Muuttamiset tietokannan tiedoista olioihin
     // TODO alue, lasku (postia ei ilmeisesti tehdä erillisenä olioluokkana, mutta en tiedä miksi sitten esim. alue tehdään)
@@ -630,5 +652,18 @@ public class Tietokanta {
                     LocalDateTime.parse(rs.getString("varattu_loppupvm"), dateTimeFormat)));
         }
         return varaukset;
+    }
+
+    private ArrayList<Lasku> laskuLuokaksi(ResultSet rs) throws SQLException {
+        ArrayList<Lasku> laskut = new ArrayList<>();
+        while (rs.next()) {
+            laskut.add(new Lasku(
+                    rs.getInt("lasku_id"),
+                    rs.getInt("varaus_id"),
+                    rs.getBigDecimal("summa"),
+                    rs.getInt("alv"),
+                    rs.getString("laskunStatus")));
+        }
+        return laskut;
     }
 }
