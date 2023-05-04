@@ -257,6 +257,19 @@ public class Tietokanta {
         stm.close();
     }
 
+    /**
+     * muokkaa mökkiä tietokannassa
+     * @param mokkiID
+     * @param alueID
+     * @param postiNro
+     * @param mokkiNimi
+     * @param katuosoite
+     * @param hinta
+     * @param kuvaus
+     * @param hloMaara
+     * @param varustelu
+     * @throws SQLException
+     */
     public void muokkaaMokki(int mokkiID, int alueID, String postiNro, String mokkiNimi, String katuosoite,
                              BigDecimal hinta, String kuvaus, int hloMaara, String varustelu) throws SQLException {
         stm = con.prepareStatement(
@@ -282,7 +295,38 @@ public class Tietokanta {
         stm.close();
     }
 
-
+    /**
+     * muokkaa asiakkaan tietoja
+     * @param asiakasID
+     * @param postiNro
+     * @param sukunimi
+     * @param etunimi
+     * @param email
+     * @param lahiosoite
+     * @param puhelinnro
+     * @throws SQLException
+     */
+    public void muokkaaAsiakas(int asiakasID, String postiNro, String sukunimi, String etunimi,
+                               String email, String lahiosoite, String puhelinnro) throws SQLException {
+        stm = con.prepareStatement(
+                "UPDATE asiakas" +
+                        "SET postiNro = ?," +
+                        "sukunimi = ?," +
+                        "etunimi = ?," +
+                        "email = ?," +
+                        "lahiosoite = ?," +
+                        "puhelinnro = ?," +
+                    "WHERE asiakasID = ?");
+        stm.setString(1, postiNro);
+        stm.setString(2, sukunimi);
+        stm.setString(3, etunimi);
+        stm.setString(4, email);
+        stm.setString(5, lahiosoite);
+        stm.setString(6, puhelinnro);
+        stm.setInt(7, asiakasID);
+        stm.executeUpdate();
+        stm.close();
+    }
 
     ///// Tietokannan tietojen poistamiset
 
