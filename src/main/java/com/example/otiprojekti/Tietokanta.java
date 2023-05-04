@@ -294,7 +294,27 @@ public class Tietokanta {
         stm.close();
     }
 
-
+    public void muokkaaAsiakas(int asiakasID, String postinro, String sukunimi, String etunimi,
+                               String email, String lahiosoite, String puhelinnro) throws SQLException {
+        stm = con.prepareStatement(
+                "UPDATE asiakas" +
+                        "SET postinro = ?," +
+                        "sukunimi = ?," +
+                        "etunimi = ?," +
+                        "email = ?," +
+                        "lahiosoite = ?," +
+                        "puhelinnro = ?," +
+                        "WHERE asiakasID = ?");
+        stm.setString(1, postinro);
+        stm.setString(2, sukunimi);
+        stm.setString(3, etunimi);
+        stm.setString(4, email);
+        stm.setString(5, lahiosoite);
+        stm.setString(6, puhelinnro);
+        stm.setInt(7, asiakasID);
+        stm.executeUpdate();
+        stm.close();
+    }
 
     ///// Tietokannan tietojen poistamiset
 
