@@ -86,16 +86,20 @@ public class Main extends Application {
     ArrayList<Varaus> varausLista = new ArrayList<>();
     ArrayList<Lasku> laskuLista = new ArrayList<>();
 
+    GridPane varausTaulukko = new GridPane();
+    Nappula varausLisaysNappula = new Nappula(200, 30);
 
     @Override
     public void start(Stage ikkuna) {
 
         try {
+            // alueLista = tietokanta.haeAlue();
             // TODO alueiden haku
             mokkiLista = tietokanta.haeMokki();
             asiakasLista = tietokanta.haeAsiakas();
             palveluLista = tietokanta.haePalvelu();
             varausLista = tietokanta.haeVaraus();
+            // laskuLista = tietokanta.haeLasku();
             // TODO laskujen haku
         } catch (SQLException e) {
             ilmoitusPaneeli.lisaaIlmoitus(IlmoitusTyyppi.VAROITUS, String.valueOf(e));
@@ -590,6 +594,9 @@ public class Main extends Application {
         varausHaku.add(varausHakuKenttaLabel, 1, 1);
         Nappula varausHakuNappula = new Nappula("Suorita haku", 190, 30);
         varausHaku.add(varausHakuNappula, 1, 2);
+        varausHakuNappula.setOnAction( e -> {
+            paivitaVarausTaulukko();
+        });
 
         varausHaku.add(new Text("Lajittelu:"), 2, 0);
         ComboBox<String> varausLajittelu = new ComboBox<>(FXCollections.observableList(Arrays.asList(
@@ -634,19 +641,16 @@ public class Main extends Application {
 
         ScrollPane varausScrollaus = new ScrollPane();
         varauspaneeli.setCenter(varausScrollaus);
-        GridPane varausTaulukko = new GridPane();
-        varausTaulukko.setPadding(new Insets(20));
-        varausTaulukko.getColumnConstraints().addAll(sarakeSemi, sarakeLevea, sarakeLyhyt, sarakeLyhyt, sarakeLyhyt, sarakeLyhyt);
-        varausTaulukko.setGridLinesVisible(true);
+
         varausScrollaus.setContent(varausTaulukko);
 
 
-        Nappula varausLisaysNappula = new Nappula(200, 30);
+
         ImageView varausLisays = new ImageView(imageKuvasta("lisays.png"));
         varausLisays.setFitWidth(23);
         varausLisays.setFitHeight(22);
         varausLisaysNappula.setGraphic(varausLisays);
-        varausTaulukko.add(varausLisaysNappula, 1, 0);
+
         varausLisaysNappula.setOnAction(e -> {
             Stage varausLisaysStage = new Stage();
 
@@ -787,6 +791,25 @@ public class Main extends Application {
             varausLisaysStage.show();
         });
 
+        paivitaVarausTaulukko();
+
+    }
+
+    public void paivitaVarausTaulukko() {
+
+
+        varausTaulukko.setGridLinesVisible(false);
+        varausTaulukko.getColumnConstraints().clear();
+        varausTaulukko.getChildren().clear();
+        varausTaulukko.getColumnConstraints().addAll
+                (sarakeSemi, sarakeLevea, sarakeLyhyt, sarakeLyhyt, sarakeLyhyt, sarakeLyhyt);
+        varausTaulukko.setGridLinesVisible(true);
+
+        varausTaulukko.setPadding(new Insets(20));
+
+
+        varausTaulukko.add(varausLisaysNappula, 1, 0);
+
         Text varaustunnusOtsikko = new Text("Varaustunnus");
         varaustunnusOtsikko.setFont(fontti);
         Text varausAsiakasOtsikko = new Text("Asiakas");
@@ -803,7 +826,6 @@ public class Main extends Application {
         varausTaulukko.add(varaustunnusOtsikko, 0, 1);
         varausTaulukko.add(varausAsiakasOtsikko, 1, 1);
         varausTaulukko.add(varausMokkiOtsikko, 2, 1);
-
 
         int rivi = 2;
         for (Varaus obj : varausLista) { // TODO nyt kun SQL-haku saattaa epäonnistua, voi tulla NullPointerException
