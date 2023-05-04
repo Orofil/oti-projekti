@@ -493,8 +493,8 @@ public class Tietokanta {
             asiakkaat.add(new Asiakas(
                     rs.getInt("asiakas_id"),
                     rs.getString("postinro"),
-                    rs.getString("etunimi"),
                     rs.getString("sukunimi"),
+                    rs.getString("etunimi"),
                     rs.getString("lahiosoite"),
                     rs.getString("email"),
                     rs.getString("puhelinnro")));
