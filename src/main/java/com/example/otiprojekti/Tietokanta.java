@@ -349,7 +349,7 @@ public class Tietokanta {
                         "kuvaus = ?," +
                         "hinta = ?," +
                         "alv = ?," +
-                    "WHERE palveluID = ?");
+                    "WHERE palvelu_id = ?");
         stm.setInt(1, alue_id);
         stm.setString(2, nimi);
         stm.setInt(3, tyyppi);
@@ -361,6 +361,22 @@ public class Tietokanta {
         stm.close();
     }
 
+    /**
+     * muokkaa alueen tietokannassa
+     * @param alue_id
+     * @param nimi
+     * @throws SQLException
+     */
+    public void muokkaaAlue(int alue_id, String nimi) throws SQLException {
+        stm = con.prepareStatement(
+                "UPDATE alue" +
+                    "SET nimi = ?," +
+                    "WHERE alue_id = ?");
+        stm.setString(1, nimi);
+        stm.setInt(2, alue_id);
+        stm.executeUpdate();
+        stm.close();
+    }
     ///// Tietokannan tietojen poistamiset
 
     /**
