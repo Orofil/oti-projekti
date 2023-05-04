@@ -798,6 +798,44 @@ public class Main extends Application {
             varausTaulukko.add(poistoNappula, 3, rivi);
             poistoNappula.setOnMouseClicked(e -> {
                 // poistavaraus();                          //TODO  poistavaraus() - metodin luominen
+                Stage poistaVarausIkkuna = new Stage();
+                poistaVarausIkkuna.show();
+                BorderPane poistaVarausPaneeli = new BorderPane();
+                poistaVarausPaneeli.setPadding(new Insets(50));
+
+                Scene poistaVarausKehys = new Scene(poistaVarausPaneeli, 500, 200);
+                poistaVarausIkkuna.setScene(poistaVarausKehys);
+                poistaVarausIkkuna.setTitle("Poista varaus");
+
+                HBox poistaVarausNappulaPaneeli = new HBox();
+                poistaVarausNappulaPaneeli.setSpacing(30);
+                poistaVarausNappulaPaneeli.setPadding(new Insets(30));
+                Nappula poistaVarausNappula = new Nappula("Poista varaus");
+                Nappula peruutaVarausPoistoNappula = new Nappula("Peruuta");
+                poistaVarausNappulaPaneeli.getChildren().addAll(poistaVarausNappula, peruutaVarausPoistoNappula);
+
+                StackPane tekstiPaneeli = new StackPane();
+                Text haluatkoPoistaaVarausTeksti = new Text("Haluatko varmasti poistaa varauksen?");
+                haluatkoPoistaaVarausTeksti.setTextAlignment(TextAlignment.CENTER);
+                haluatkoPoistaaVarausTeksti.setFont(Font.font(16));
+                tekstiPaneeli.getChildren().add(haluatkoPoistaaVarausTeksti);
+                poistaVarausPaneeli.setTop(tekstiPaneeli);
+                poistaVarausPaneeli.setCenter(poistaVarausNappulaPaneeli);
+
+                poistaVarausNappula.setOnAction( event -> {
+                    try {
+                        tietokanta.poistaVaraus(obj.getVarausID());
+                    } catch (SQLException ex) {
+                        throw new RuntimeException(ex);
+                    }
+                    poistaVarausIkkuna.close();
+                    //TODO listan päivitys!!!
+                });
+
+                peruutaVarausPoistoNappula.setOnAction( event -> {
+                    poistaVarausIkkuna.close();
+                });
+
             });
 
             Nappula muokkausNappula = new Nappula(100, 30);
@@ -1183,4 +1221,9 @@ public class Main extends Application {
             return new Image(kuva);
         }
     }
+
+    public void jarjestaLista(ArrayList<Object> lista) {
+
+    }
+
 }
