@@ -226,6 +226,7 @@ public class Tietokanta {
 
     ///// Tietokannan tietojen muokkaamiset
     // TODO muokkausmetodit
+    // TODO tehdäänkö muokkausmetodit niin päin, että ensin muokataan ohjelmaan oliota ja sitten olio syötetään tänne metodille josta sen tiedot tietokantaan
 
     /**
      * Muokkaa varausta tietokannassa.
@@ -298,26 +299,25 @@ public class Tietokanta {
     }
 
     /**
-     * muokkaa asiakasta tietokannassa
-     * @param asiakas_id
-     * @param postinro
-     * @param sukunimi
-     * @param etunimi
-     * @param email
-     * @param lahiosoite
-     * @param puhelinnro
-     * @throws SQLException
+     * Muokkaa asiakasta tietokannassa.
+     * @param asiakas_id Tyyppiä int. Oltava taulussa asiakas.
+     * @param postinro Tyyppiä char(5). Oltava taulussa posti.
+     * @param sukunimi Tyyppiä varchar(40).
+     * @param etunimi Tyyppiä varchar(20).
+     * @param email Tyyppiä varchar(50).
+     * @param lahiosoite Tyyppiä varchar(40).
+     * @param puhelinnro Tyyppiä varchar(15).
      */
     public void muokkaaAsiakas(int asiakas_id, String postinro, String sukunimi, String etunimi,
                                String email, String lahiosoite, String puhelinnro) throws SQLException {
         stm = con.prepareStatement(
-                "UPDATE asiakas" +
+                "UPDATE asiakas " +
                         "SET postinro = ?," +
                         "sukunimi = ?," +
                         "etunimi = ?," +
                         "email = ?," +
                         "lahiosoite = ?," +
-                        "puhelinnro = ?," +
+                        "puhelinnro = ? " +
                         "WHERE asiakas_id = ?");
         stm.setString(1, postinro);
         stm.setString(2, sukunimi);
@@ -331,26 +331,25 @@ public class Tietokanta {
     }
 
     /**
-     * muokkaa palvelua tietokannassa
-     * @param palvelu_id
-     * @param alue_id
-     * @param nimi
-     * @param tyyppi
-     * @param kuvaus
-     * @param hinta
-     * @param alv
-     * @throws SQLException
+     * Muokkaa palvelua tietokannassa.
+     * @param palvelu_id Tyyppiä int. Oltava taulussa palvelu.
+     * @param alue_id Tyyppiä int. Oltava taulussa alue.
+     * @param nimi Tyyppiä varchar(40).
+     * @param tyyppi Tyyppiä int.
+     * @param kuvaus Tyyppiä varchar(255).
+     * @param hinta Tyyppiä double(8,2).
+     * @param alv Tyyppiä int.
      */
     public void muokkaaPalvelu(int palvelu_id, int alue_id, String nimi, int tyyppi, String kuvaus,
                                BigDecimal hinta, int alv) throws SQLException {
         stm = con.prepareStatement(
-                "UPDATE palvelu" +
+                "UPDATE palvelu " +
                     "SET alue_id = ?," +
                         "nimi = ?," +
                         "tyyppi = ?," +
                         "kuvaus = ?," +
                         "hinta = ?," +
-                        "alv = ?," +
+                        "alv = ? " +
                     "WHERE palvelu_id = ?");
         stm.setInt(1, alue_id);
         stm.setString(2, nimi);
@@ -364,21 +363,23 @@ public class Tietokanta {
     }
 
     /**
-     * muokkaa alueen tietokannassa
-     * @param alue_id
-     * @param nimi
-     * @throws SQLException
+     * Muokkaa aluetta tietokannassa.
+     * @param alue_id Tyyppiä int. Oltava taulussa alue.
+     * @param nimi Tyyppiä varchar(40).
      */
     public void muokkaaAlue(int alue_id, String nimi) throws SQLException {
         stm = con.prepareStatement(
-                "UPDATE alue" +
-                    "SET nimi = ?," +
+                "UPDATE alue " +
+                    "SET nimi = ? " +
                     "WHERE alue_id = ?");
         stm.setString(1, nimi);
         stm.setInt(2, alue_id);
         stm.executeUpdate();
         stm.close();
     }
+
+
+
     ///// Tietokannan tietojen poistamiset
 
     /**
