@@ -23,6 +23,7 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 
+import static com.example.otiprojekti.Utils.etsiPostiNro;
 import static com.example.otiprojekti.Utils.imageKuvasta;
 
 
@@ -87,6 +88,9 @@ public class Main extends Application {
 
     GridPane varausTaulukko = new GridPane();
     Nappula varausLisaysNappula = new Nappula(200, 30);
+    GridPane asiakasTaulukko = new GridPane();
+    Nappula asiakasLisaysNappula = new Nappula(200, 30);
+
 
     @Override
     public void start(Stage ikkuna) {
@@ -975,7 +979,9 @@ public class Main extends Application {
         asiakasHakuKenttaLabel.setContentDisplay(ContentDisplay.RIGHT);
         asiakasHaku.add(asiakasHakuKenttaLabel, 1, 1);
         Nappula asiakasHakuNappula = new Nappula("Suorita haku", 190, 30);
-        // TODO päivitä näkymä
+        asiakasHakuNappula.setOnAction( e -> {
+            paivitaAsiakasTaulukko();
+        });
         asiakasHaku.add(asiakasHakuNappula, 1, 2);
 
         asiakasHaku.add(new Text("Lajittelu:"), 2, 0);
@@ -1002,28 +1008,27 @@ public class Main extends Application {
 
         ScrollPane asiakasScrollaus = new ScrollPane();
         asiakaspaneeli.setCenter(asiakasScrollaus);
-        GridPane asiakasTaulukko = new GridPane();
-        asiakasTaulukko.setPadding(new Insets(20));
-        asiakasTaulukko.getColumnConstraints().addAll(sarakeLyhyt, sarakeLevea, sarakeLevea, sarakeLevea, sarakeLyhyt, sarakeLyhyt, sarakeLyhyt);
-        asiakasTaulukko.setGridLinesVisible(true);
+
+
         asiakasScrollaus.setContent(asiakasTaulukko);
 
 
-        Nappula asiakasLisaysNappula = new Nappula(200, 30);
+
         ImageView asiakasLisays = new ImageView(imageKuvasta("lisays.png"));
         asiakasLisays.setFitWidth(23);
         asiakasLisays.setFitHeight(22);
         asiakasLisaysNappula.setGraphic(asiakasLisays);
-        asiakasTaulukko.add(asiakasLisaysNappula, 1,0);
+
         asiakasLisaysNappula.setOnAction( e -> {
-            Stage asiakasMuokkausIkkuna = new Stage();
+            Stage asiakasLisaysIkkuna = new Stage();
 
-            VBox asiakasMuokkausPaneeli = new VBox(10);
-            asiakasMuokkausPaneeli.setPadding(new Insets(25));
+            VBox asiakasLisaysPaneeli = new VBox(10);
+            asiakasLisaysPaneeli.setPadding(new Insets(25));
 
-            GridPane asiakasMuokkausGridPaneeli = new GridPane();
-            asiakasMuokkausGridPaneeli.setVgap(5);
-            asiakasMuokkausGridPaneeli.add(new Text("Syötä asiakkaan tiedot."), 0, 0);
+            GridPane asiakasLisaysGridPaneeli = new GridPane();
+            asiakasLisaysGridPaneeli.setVgap(5);
+            Text asiakasLisaysTeksti = new Text("Syötä asiakkaan tiedot.");
+            asiakasLisaysGridPaneeli.add(asiakasLisaysTeksti, 0, 0);
             TextField enimi = new TextField();
             TextField snimi = new TextField();
             TextField email = new TextField();
@@ -1038,33 +1043,59 @@ public class Main extends Application {
             Text lahiosoiteText = new Text("Lähiosoite");
             Text postinroText = new Text("Postinumero");
 
-            asiakasMuokkausGridPaneeli.add(enimiText, 0,1);
-            asiakasMuokkausGridPaneeli.add(enimi, 1,1);
-            asiakasMuokkausGridPaneeli.add(snimiText, 0,2);
-            asiakasMuokkausGridPaneeli.add(snimi, 1,2);
-            asiakasMuokkausGridPaneeli.add(emailText, 0,3);
-            asiakasMuokkausGridPaneeli.add(email, 1,3);
-            asiakasMuokkausGridPaneeli.add(puhnroText, 0,4);
-            asiakasMuokkausGridPaneeli.add(puhnro, 1,4);
-            asiakasMuokkausGridPaneeli.add(lahiosoiteText, 0,5);
-            asiakasMuokkausGridPaneeli.add(lahiosoite, 1,5);
-            asiakasMuokkausGridPaneeli.add(postinroText, 0,6);
-            asiakasMuokkausGridPaneeli.add(postinro, 1,6);
+            asiakasLisaysGridPaneeli.add(enimiText, 0,1);
+            asiakasLisaysGridPaneeli.add(enimi, 1,1);
+            asiakasLisaysGridPaneeli.add(snimiText, 0,2);
+            asiakasLisaysGridPaneeli.add(snimi, 1,2);
+            asiakasLisaysGridPaneeli.add(emailText, 0,3);
+            asiakasLisaysGridPaneeli.add(email, 1,3);
+            asiakasLisaysGridPaneeli.add(puhnroText, 0,4);
+            asiakasLisaysGridPaneeli.add(puhnro, 1,4);
+            asiakasLisaysGridPaneeli.add(lahiosoiteText, 0,5);
+            asiakasLisaysGridPaneeli.add(lahiosoite, 1,5);
+            asiakasLisaysGridPaneeli.add(postinroText, 0,6);
+            asiakasLisaysGridPaneeli.add(postinro, 1,6);
 
 
-            Nappula tallennaAsiakasMuutokset = new Nappula("Lisää asiakas");
-            tallennaAsiakasMuutokset.setOnAction( event -> {
-                // TODO päivitys
+            Nappula tallennaAsiakas = new Nappula("Lisää asiakas");
+            tallennaAsiakas.setOnAction( event -> {
+                try {
+                    asiakasLista.add(tietokanta.insertAsiakas(postinro.getText(), enimi.getText(), snimi.getText(), lahiosoite.getText(),
+                            email.getText(), puhnro.getText(), postiLista));
+                    asiakasLisaysIkkuna.close();
+                    paivitaAsiakasTaulukko();
+                } catch (SQLException ex) {
+                    asiakasLisaysTeksti.setText("Tarkista, että syöttämäsi arvot ovat \n " +
+                            "oikeaa muotoa ja yritä uudelleen.");
+                    asiakasLisaysTeksti.setFill(Color.RED);
+                }
             });
 
-            asiakasMuokkausPaneeli.getChildren().addAll
-                    (asiakasMuokkausGridPaneeli, tallennaAsiakasMuutokset);
+            asiakasLisaysPaneeli.getChildren().addAll
+                    (asiakasLisaysGridPaneeli, tallennaAsiakas);
 
-            Scene asiakasMuokkausKehys = new Scene(asiakasMuokkausPaneeli, 400, 350);
-            asiakasMuokkausIkkuna.setScene(asiakasMuokkausKehys);
-            asiakasMuokkausIkkuna.setTitle("Lisää asiakas");
-            asiakasMuokkausIkkuna.show();
+            Scene asiakasLisaysKehys = new Scene(asiakasLisaysPaneeli, 400, 350);
+            asiakasLisaysIkkuna.setScene(asiakasLisaysKehys);
+            asiakasLisaysIkkuna.setTitle("Lisää asiakas");
+            asiakasLisaysIkkuna.show();
         });
+
+        paivitaAsiakasTaulukko();
+
+    }
+
+
+    public void paivitaAsiakasTaulukko() {
+
+        asiakasTaulukko.setGridLinesVisible(false);
+        asiakasTaulukko.getColumnConstraints().clear();
+        asiakasTaulukko.getChildren().clear();
+        asiakasTaulukko.getColumnConstraints().addAll(sarakeLyhyt, sarakeLevea, sarakeLevea, sarakeLevea, sarakeLyhyt, sarakeLyhyt, sarakeLyhyt);
+        asiakasTaulukko.setGridLinesVisible(true);
+
+        asiakasTaulukko.setPadding(new Insets(20));
+
+        asiakasTaulukko.add(asiakasLisaysNappula, 1,0);
 
         Text asiakastunnusOtsikko = new Text("AsiakasID");
         asiakastunnusOtsikko.setFont(fontti);
@@ -1117,7 +1148,7 @@ public class Main extends Application {
                         throw new RuntimeException(ex);
                     }
                     poistoIkkuna.getIkkuna().close();
-                    //TODO listan päivitys!!!
+                    paivitaAsiakasTaulukko();
                 });
             });
 
@@ -1137,7 +1168,8 @@ public class Main extends Application {
 
                 GridPane asiakasMuokkausGridPaneeli = new GridPane();
                 asiakasMuokkausGridPaneeli.setVgap(5);
-                asiakasMuokkausGridPaneeli.add(new Text("Muokkaa asiakkaan tietoja."), 0, 0);
+                Text asiakasMuokkausTeksti = new Text("Muokkaa asiakkaan tietoja.");
+                asiakasMuokkausGridPaneeli.add(asiakasMuokkausTeksti, 0, 0);
                 TextField enimi = new TextField();
                 TextField snimi = new TextField();
                 TextField email = new TextField();
@@ -1175,7 +1207,17 @@ public class Main extends Application {
 
                 Nappula tallennaAsiakasMuutokset = new Nappula("Tallenna muutokset");
                 tallennaAsiakasMuutokset.setOnAction( event -> {
-                    // TODO muokkausmetodi
+                    try {
+                        tietokanta.muokkaaAsiakas
+                                (obj.getID(), postinro.getText(), snimi.getText(), enimi.getText(),
+                                        email.getText(), lahiosoite.getText(), puhnro.getText());
+                        asiakasMuokkausIkkuna.close();
+                        paivitaAsiakasTaulukko();
+                    } catch (SQLException ex) {
+                        asiakasMuokkausTeksti.setText("Varmista, että tiedot ovat oikeaa\n " +
+                                "tietotyyppiä ja yritä uudelleen.");
+                        asiakasMuokkausTeksti.setFill(Color.RED);
+                    }
                 });
 
                 asiakasMuokkausPaneeli.getChildren().addAll

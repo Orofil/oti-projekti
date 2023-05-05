@@ -31,7 +31,7 @@ public class PoistoIkkuna {
         BorderPane paneeli = new BorderPane();
         paneeli.setPadding(new Insets(50));
 
-        Scene kehys = new Scene(paneeli, 500, 200);
+        Scene kehys = new Scene(paneeli, 600, 200);
         ikkuna.setScene(kehys);
         ikkuna.setTitle("Poista " + teksti);
 
