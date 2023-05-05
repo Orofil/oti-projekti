@@ -90,7 +90,8 @@ public class Main extends Application {
     Nappula varausLisaysNappula = new Nappula(200, 30);
     GridPane asiakasTaulukko = new GridPane();
     Nappula asiakasLisaysNappula = new Nappula(200, 30);
-
+    GridPane laskuTaulukko = new GridPane();
+    Nappula laskunLisaysNappula = new Nappula(200, 30);
 
     @Override
     public void start(Stage ikkuna) {
@@ -904,8 +905,22 @@ public class Main extends Application {
 
                 Nappula tallennaVarausMuutokset = new Nappula("Tallenna muutokset");
                 tallennaVarausMuutokset.setOnAction( event -> {
-                    //TÄHÄN DROP IF EXISTS tai UPDATE
-                    //(tietokanta.insertVaraus();)
+                    String varausAlkuAika = aloitusPvm.getValue() + " " + aloitusAika.getText(); // TODO muotoilun tarkistus, aka virheiden käsittely
+                    String varausLoppuAika = lopetusPvm.getValue() + " " + lopetusAika.getText();
+                    try {
+                        tietokanta.muokkaaVaraus( // TODO  asiakasLista.add()
+                                obj.getID(),
+                                Integer.parseInt(asiakasID.getText()),
+                                Integer.parseInt(mokkiID.getText()),
+                                LocalDateTime.now().format(dateTimeFormat),
+                                null,
+                                varausAlkuAika,
+                                varausLoppuAika);
+                        varausMuokkausIkkuna.close();
+                    } catch (SQLException ex) {
+                        ilmoitusPaneeli.lisaaIlmoitus(IlmoitusTyyppi.VAROITUS, String.valueOf(ex));
+                        throw new RuntimeException(ex); // TEMP
+                    }
                 });
 
                 varausMuokkausPaneeli.getChildren().addAll
@@ -925,7 +940,6 @@ public class Main extends Application {
             tarkasteleNappula.setGraphic(tarkastelu);
             varausTaulukko.add(tarkasteleNappula, 5, rivi);
             tarkasteleNappula.setOnMouseClicked( e -> {
-                // tarkasteleMokkia();                          //TODO  tarkasteleMokkia() - metodin luominen
                 Stage tarkasteleVarausIkkuna = new Stage();
                 tarkasteleVarausIkkuna.show();
                 GridPane tarkasteleVarausPaneeli = new GridPane();
@@ -948,9 +962,9 @@ public class Main extends Application {
                 tarkasteleVarausPaneeli.add(new Text(String.valueOf(obj.getID())),1,1);
                 tarkasteleVarausPaneeli.add(new Text(obj.getAsiakas().getNimi(false)),1,2);
                 tarkasteleVarausPaneeli.add(new Text(String.valueOf(obj.getAsiakas().getID())),1,3);
-                tarkasteleVarausPaneeli.add(new Text(obj.getMokki().getNimi()),1,4); // TODO mökin nimi vai ID vai molemmat
+                tarkasteleVarausPaneeli.add(new Text(obj.getMokki().getNimi()),1,4);
                 tarkasteleVarausPaneeli.add(new Text(dateTimeFormat.format(obj.getVarattuPvm())),1,5);
-                tarkasteleVarausPaneeli.add(new Text(dateTimeFormat.format(obj.getVahvistusPvm())),1,6);
+                tarkasteleVarausPaneeli.add(new Text(dateTimeFormat.format(obj.getVahvistusPvm())),1,6); // TODO tämä ei kirjoita päivämääriä
                 tarkasteleVarausPaneeli.add(new Text(dateTimeFormat.format(obj.getVarausAlkuPvm())),1,7);
                 tarkasteleVarausPaneeli.add(new Text(dateTimeFormat.format(obj.getVarausLoppuPvm())),1,8);
 
@@ -1035,6 +1049,7 @@ public class Main extends Application {
             TextField puhnro = new TextField();
             TextField lahiosoite = new TextField();
             TextField postinro = new TextField();
+            TextField postitoimipaikka = new TextField();
 
             Text enimiText = new Text("Etunimi");
             Text snimiText = new Text("Sukunimi");
@@ -1042,6 +1057,7 @@ public class Main extends Application {
             Text puhnroText = new Text("Puhelinnumero");
             Text lahiosoiteText = new Text("Lähiosoite");
             Text postinroText = new Text("Postinumero");
+            Text postitoimipaikkaText = new Text("Postitoimipaikka");
 
             asiakasLisaysGridPaneeli.add(enimiText, 0,1);
             asiakasLisaysGridPaneeli.add(enimi, 1,1);
@@ -1055,11 +1071,17 @@ public class Main extends Application {
             asiakasLisaysGridPaneeli.add(lahiosoite, 1,5);
             asiakasLisaysGridPaneeli.add(postinroText, 0,6);
             asiakasLisaysGridPaneeli.add(postinro, 1,6);
+            asiakasLisaysGridPaneeli.add(postitoimipaikkaText, 0,7);
+            asiakasLisaysGridPaneeli.add(postitoimipaikka, 1,7);
 
 
             Nappula tallennaAsiakas = new Nappula("Lisää asiakas");
             tallennaAsiakas.setOnAction( event -> {
                 try {
+                    if (etsiPostiNro(postiLista, String.valueOf(postinro)) == null) {
+                        tietokanta.insertPosti(postinro.getText(), postitoimipaikka.getText());
+                    }
+
                     asiakasLista.add(tietokanta.insertAsiakas(postinro.getText(), enimi.getText(), snimi.getText(), lahiosoite.getText(),
                             email.getText(), puhnro.getText(), postiLista));
                     asiakasLisaysIkkuna.close();
@@ -1176,6 +1198,7 @@ public class Main extends Application {
                 TextField puhnro = new TextField();
                 TextField lahiosoite = new TextField();
                 TextField postinro = new TextField();
+                TextField postitoimipaikka = new TextField();
 
                 enimi.setText(obj.getEtunimi());
                 snimi.setText(obj.getSukunimi());
@@ -1183,6 +1206,7 @@ public class Main extends Application {
                 puhnro.setText(obj.getPuhelinNro());
                 lahiosoite.setText(obj.getLahiosoite());
                 postinro.setText(obj.getPostiNro().getPostiNro());
+                postitoimipaikka.setText(obj.getPostiNro().getToimipaikka());
 
                 Text enimiText = new Text("Etunimi");
                 Text snimiText = new Text("Sukunimi");
@@ -1190,6 +1214,7 @@ public class Main extends Application {
                 Text puhnroText = new Text("Puhelinnumero");
                 Text lahiosoiteText = new Text("Lähiosoite");
                 Text postinroText = new Text("Postinumero");
+                Text postitoimipaikkaText = new Text("Postitoimipaikka");
 
                 asiakasMuokkausGridPaneeli.add(enimiText, 0,1);
                 asiakasMuokkausGridPaneeli.add(enimi, 1,1);
@@ -1203,11 +1228,17 @@ public class Main extends Application {
                 asiakasMuokkausGridPaneeli.add(lahiosoite, 1,5);
                 asiakasMuokkausGridPaneeli.add(postinroText, 0,6);
                 asiakasMuokkausGridPaneeli.add(postinro, 1,6);
+                asiakasMuokkausGridPaneeli.add(postitoimipaikkaText, 0,7);
+                asiakasMuokkausGridPaneeli.add(postitoimipaikka, 1,7);
 
 
                 Nappula tallennaAsiakasMuutokset = new Nappula("Tallenna muutokset");
                 tallennaAsiakasMuutokset.setOnAction( event -> {
                     try {
+                        if (etsiPostiNro(postiLista, String.valueOf(postinro)) == null) {
+                            tietokanta.insertPosti(postinro.getText(), postitoimipaikka.getText());
+                        }
+
                         tietokanta.muokkaaAsiakas
                                 (obj.getID(), postinro.getText(), snimi.getText(), enimi.getText(),
                                         email.getText(), lahiosoite.getText(), puhnro.getText());
@@ -1286,7 +1317,9 @@ public class Main extends Application {
         laskuHakuKenttaLabel.setContentDisplay(ContentDisplay.RIGHT);
         laskuHaku.add(laskuHakuKenttaLabel, 1, 1);
         Nappula laskuHakuNappula = new Nappula("Suorita haku", 190, 30);
-        // TODO päivitä näkymä
+        laskuHakuNappula.setOnAction(e -> {
+            paivitaLaskuTaulukko();
+        });
         laskuHaku.add(laskuHakuNappula, 1, 2);
 
         laskuHaku.add(new Text("Lajittelu:"), 2, 0);
@@ -1315,18 +1348,60 @@ public class Main extends Application {
 
         ScrollPane laskuScrollaus = new ScrollPane();
         laskupaneeli.setCenter(laskuScrollaus);
-        GridPane laskuTaulukko = new GridPane();
-        laskuTaulukko.setPadding(new Insets(20));
-        laskuTaulukko.getColumnConstraints().addAll(sarakeLyhyt, sarakeLevea, sarakeLyhyt, sarakeSemi, sarakeLyhyt, sarakeLyhyt, sarakeLyhyt, sarakeLyhyt);
-        laskuTaulukko.setGridLinesVisible(true);
+        
         laskuScrollaus.setContent(laskuTaulukko);
-
-
-        Nappula laskunLisaysNappula = new Nappula(200, 30);
+        
         ImageView laskunLisays = new ImageView(imageKuvasta("lisays.png"));
         laskunLisays.setFitWidth(23);
         laskunLisays.setFitHeight(22);
         laskunLisaysNappula.setGraphic(laskunLisays);
+        laskunLisaysNappula.setOnAction( e -> {
+            /*Stage laskuLisaysIkkuna = new Stage();
+
+            VBox laskuLisaysPaneeli = new VBox(10);
+            laskuLisaysPaneeli.setPadding(new Insets(25));
+
+            Text laskuLisaysTeksti = new Text("Syötä sen varauksen ID, josta haluat muodostaa laskun.");
+            TextField varausID = new TextField();
+            Nappula haeLaskulleTiedotNappula = new Nappula("Hae varauksen tiedot laskulle");
+            haeLaskulleTiedotNappula.setOnAction( event -> {
+                //TODO tähän toiminto joka hakee laskulle tarvittavat tiedot varauksesta
+            });
+
+            GridPane laskunLisaysGridPaneeli = new GridPane();
+            laskunLisaysGridPaneeli.setPadding(new Insets(25));
+            laskunLisaysGridPaneeli.setHgap(15);
+            laskunLisaysGridPaneeli.setVgap(15);
+
+            Text asiakkaanNimiText = new Text("Asiakkaan nimi");
+            Text mokkiText = new Text("Mökki");
+            Text varausAlkupvmText = new Text("Varauksen alkamispvm.");
+            Text varausLoppupvmText = new Text("Varauksen loppumispvm.");
+            Text mokkiHintaText = new Text("Mökin hinta/vrk (€)");
+            // keskeneräinen
+
+            laskuLisaysPaneeli.getChildren().addAll(laskuLisaysTeksti, varausID);
+            Scene laskuLisaysKehys = new Scene(laskuLisaysPaneeli, 400, 350);
+            laskuLisaysIkkuna.setScene(laskuLisaysKehys);
+            laskuLisaysIkkuna.setTitle("Luo lasku");
+            laskuLisaysIkkuna.show();
+
+             */
+        });
+        
+        paivitaLaskuTaulukko();
+    }
+    
+    public void paivitaLaskuTaulukko() {
+
+        laskuTaulukko.setGridLinesVisible(false);
+        laskuTaulukko.getColumnConstraints().clear();
+        laskuTaulukko.getChildren().clear();
+        laskuTaulukko.getColumnConstraints().addAll(sarakeLyhyt, sarakeLevea, sarakeLyhyt, sarakeSemi, sarakeLyhyt, sarakeLyhyt, sarakeLyhyt, sarakeLyhyt);
+        laskuTaulukko.setGridLinesVisible(true);
+
+        laskuTaulukko.setPadding(new Insets(20));
+        
         laskuTaulukko.add(laskunLisaysNappula, 1,0);
 
         Text laskuTunnusOtsikko = new Text("Laskunro.");
@@ -1337,8 +1412,7 @@ public class Main extends Application {
         laskuSummaOtsikko.setFont(fontti);
         Text laskuStatusOtsikko = new Text("Status");
         laskuStatusOtsikko.setFont(fontti);
-
-
+        
         laskuTaulukko.add(laskuTunnusOtsikko, 0, 1);
         laskuTaulukko.add(laskuVarausOtsikko, 1, 1);
         laskuTaulukko.add(laskuSummaOtsikko, 2, 1);
