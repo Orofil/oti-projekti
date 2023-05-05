@@ -7,7 +7,7 @@ public class Palvelu {
     private final int ID;
     private Alue alue;
     private String nimi;
-    private String tyyppi;
+    private int tyyppi;
     private String kuvaus;
     private BigDecimal hinta;
     private int alv;
@@ -21,7 +21,7 @@ public class Palvelu {
      * @param hinta Desimaaleja enintään 2, pituus enintään 8
      * @param alv
      */
-    public Palvelu(int ID, Alue alue, String nimi, String tyyppi, String kuvaus,
+    public Palvelu(int ID, Alue alue, String nimi, int tyyppi, String kuvaus,
                    BigDecimal hinta, int alv){
         this.ID = ID;
         this.alue = alue;
@@ -52,11 +52,11 @@ public class Palvelu {
         this.nimi = nimi;
     }
 
-    public String getTyyppi() {
+    public int getTyyppi() {
         return tyyppi;
     }
 
-    public void setTyyppi(String tyyppi) {
+    public void setTyyppi(int tyyppi) {
         this.tyyppi = tyyppi;
     }
 
