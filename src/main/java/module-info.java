@@ -3,7 +3,6 @@ module com.example.otiprojekti {
     requires javafx.fxml;
     requires java.sql;
     requires mysql.connector.j;
-    requires itext;
     requires itextpdf;
 
     opens com.example.otiprojekti to javafx.fxml;
