@@ -5,6 +5,8 @@ import java.sql.*;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 import static com.example.otiprojekti.Utils.*;
 
@@ -205,11 +207,12 @@ public class Tietokanta {
      * @param varattu_loppupvm Tyyppiä datetime (muotoa YYYY-MM-DD hh:mm:ss)
      * @param asiakkaat Lista {@link Asiakas Asiakkaista}
      * @param mokit Lista {@link Mokki Mökeistä}
+     * @param palvelut Lista {@link Palvelu Palveluista}
      * @return {@link Varaus}
      */
-    public Varaus insertVaraus(int asiakas_id, int mokki_id, String varattu_pvm,
+    public Varaus insertVaraus(int asiakas_id, int mokki_id, HashMap<Palvelu, Integer> varauksenPalvelut, String varattu_pvm,
                                     String vahvistus_pvm, String varattu_alkupvm, String varattu_loppupvm,
-                                    ArrayList<Asiakas> asiakkaat, ArrayList<Mokki> mokit) throws SQLException {
+                                    ArrayList<Asiakas> asiakkaat, ArrayList<Mokki> mokit, ArrayList<Palvelu> palvelut) throws SQLException {
         stm = con.prepareStatement(
                 "INSERT INTO varaus(asiakas_id,mokki_id,varattu_pvm,vahvistus_pvm,varattu_alkupvm,varattu_loppupvm) " +
                 "VALUES (?,?,?,?,?,?)");
@@ -221,7 +224,18 @@ public class Tietokanta {
         stm.setString(6, varattu_loppupvm);
         stm.executeUpdate();
         stm.close();
-        return haeVarausUusi(asiakkaat, mokit);
+
+        Varaus uusiVaraus = haeVarausUusi(asiakkaat, mokit, palvelut);
+
+        for (Map.Entry<Palvelu, Integer> vp : varauksenPalvelut.entrySet()) {
+            stm = con.prepareStatement(
+                    "INSERT INTO varauksen_palvelut(varaus_id,palvelu_id,lkm) " +
+                    "VALUES (?,?,?)");
+            stm.setInt(1, uusiVaraus.getID());
+            stm.setInt(2, vp.getKey().getID());
+            stm.setInt(3, vp.getValue());
+        }
+        return uusiVaraus;
     }
 
 
@@ -235,12 +249,13 @@ public class Tietokanta {
      * @param varaus_id Tyyppiä int. Oltava taulussa varaus.
      * @param asiakas_id Tyyppiä int. Oltava taulussa asiakas.
      * @param mokki_id Tyyppiä int. Oltava taulussa mokki.
+     * @param palvelut HashMap {@link Palvelu Palveluista} ja kokonaisluvuista.
      * @param varattu_pvm Tyyppiä datetime (muotoa YYYY-MM-DD hh:mm:ss)
      * @param vahvistus_pvm Tyyppiä datetime (muotoa YYYY-MM-DD hh:mm:ss)
      * @param varattu_alkupvm Tyyppiä datetime (muotoa YYYY-MM-DD hh:mm:ss)
      * @param varattu_loppupvm Tyyppiä datetime (muotoa YYYY-MM-DD hh:mm:ss)
      */
-    public void muokkaaVaraus(int varaus_id, int asiakas_id, int mokki_id, String varattu_pvm,
+    public void muokkaaVaraus(int varaus_id, int asiakas_id, int mokki_id, HashMap<Palvelu, Integer> palvelut, String varattu_pvm,
                              String vahvistus_pvm, String varattu_alkupvm, String varattu_loppupvm) throws SQLException {
         stm = con.prepareStatement(
             "UPDATE varaus " +
@@ -260,6 +275,20 @@ public class Tietokanta {
         stm.setInt(7, varaus_id);
         stm.executeUpdate();
         stm.close();
+
+        // Muokataan varaukseen liittyvät palvelut
+        for (Map.Entry<Palvelu, Integer> vp : palvelut.entrySet()) {
+            stm = con.prepareStatement(
+                    "UPDATE varauksen_palvelut " +
+                            "SET lkm = ? " +
+                            "WHERE varaus_id = ? " +
+                            "AND palvelu_id = ?");
+            stm.setInt(1, vp.getValue());
+            stm.setInt(2, varaus_id);
+            stm.setInt(3, vp.getKey().getID());
+            stm.executeUpdate();
+            stm.close();
+        }
     }
 
     /**
@@ -578,17 +607,28 @@ public class Tietokanta {
         return tulokset;
     }
 
+    public HashMap<Integer, HashMap<Palvelu, Integer>> haeVarauksenPalvelut(ArrayList<Palvelu> palvelut) throws SQLException {
+        stm = con.prepareStatement("SELECT * FROM varauksen_palvelut");
+        ResultSet rs = stm.executeQuery();
+        HashMap<Integer, HashMap<Palvelu, Integer>> tulokset = varauksenPalvelutLuokaksi(rs, palvelut);
+        stm.close();
+        return tulokset;
+    }
+
     /**
      * Hakee tietokannasta uusimman varauksen.
      * @param asiakkaat Lista {@link Asiakas Asiakkaista}
      * @param mokit Lista {@link Mokki Mökeistä}
      * @return {@link Varaus}
      */
-    public Varaus haeVarausUusi(ArrayList<Asiakas> asiakkaat, ArrayList<Mokki> mokit) throws SQLException {
+    public Varaus haeVarausUusi(ArrayList<Asiakas> asiakkaat, ArrayList<Mokki> mokit, ArrayList<Palvelu> palvelut) throws SQLException {
+        // Haetaan ensin varaukseen liittyvät palvelut
+        HashMap<Integer, HashMap<Palvelu, Integer>> varauksenPalvelut = haeVarauksenPalvelut(palvelut);
+
         stm = con.prepareStatement(
                 "SELECT * FROM varaus WHERE varaus_id = (SELECT MAX(varaus_id) FROM varaus)");
         ResultSet rs = stm.executeQuery();
-        ArrayList<Varaus> tulokset = varausLuokaksi(rs, asiakkaat, mokit);
+        ArrayList<Varaus> tulokset = varausLuokaksi(rs, asiakkaat, mokit, varauksenPalvelut);
         stm.close();
         return tulokset.get(0);
     }
@@ -599,10 +639,13 @@ public class Tietokanta {
      * @param mokit Lista {@link Mokki Mökeistä}
      * @return Lista {@link Varaus Varauksista}
      */
-    public ArrayList<Varaus> haeVaraus(ArrayList<Asiakas> asiakkaat, ArrayList<Mokki> mokit) throws SQLException {
+    public ArrayList<Varaus> haeVaraus(ArrayList<Asiakas> asiakkaat, ArrayList<Mokki> mokit, ArrayList<Palvelu> palvelut) throws SQLException {
+        // Haetaan ensin varaukseen liittyvät palvelut
+        HashMap<Integer, HashMap<Palvelu, Integer>> varauksenPalvelut = haeVarauksenPalvelut(palvelut);
+
         stm = con.prepareStatement("SELECT * FROM varaus");
         ResultSet rs = stm.executeQuery();
-        ArrayList<Varaus> tulokset = varausLuokaksi(rs, asiakkaat, mokit);
+        ArrayList<Varaus> tulokset = varausLuokaksi(rs, asiakkaat, mokit, varauksenPalvelut);
         stm.close();
         return tulokset;
     }
@@ -692,7 +735,19 @@ public class Tietokanta {
         return postit;
     }
 
-    private ArrayList<Varaus> varausLuokaksi(ResultSet rs, ArrayList<Asiakas> asiakkaat, ArrayList<Mokki> mokit) throws SQLException {
+    private HashMap<Integer, HashMap<Palvelu, Integer>> varauksenPalvelutLuokaksi(ResultSet rs, ArrayList<Palvelu> palvelut) throws SQLException {
+        HashMap<Integer, HashMap<Palvelu, Integer>> varauksenPalvelut = new HashMap<>();
+        while (rs.next()) {
+            varauksenPalvelut.putIfAbsent(rs.getInt("varaus_id"), new HashMap<>());
+            varauksenPalvelut.get(rs.getInt("varaus_id")).put(
+                    etsiPalveluID(palvelut, rs.getInt("palvelu_id")),
+                    rs.getInt("lkm"));
+        }
+        return varauksenPalvelut;
+    }
+
+    private ArrayList<Varaus> varausLuokaksi(ResultSet rs, ArrayList<Asiakas> asiakkaat, ArrayList<Mokki> mokit,
+                                             HashMap<Integer, HashMap<Palvelu, Integer>> varauksenPalvelut) throws SQLException {
         ArrayList<Varaus> varaukset = new ArrayList<>();
         while (rs.next()) {
             LocalDateTime vahvistusPvm = null; // TODO miten käsitellään tällaiset jotka voi olla null, tässä vähän monimutkainen ratkaisu, joku vastaava pitää lisätä muillekin jotka voi olla tyhjiä
@@ -704,6 +759,7 @@ public class Tietokanta {
                     rs.getInt("varaus_id"),
                     etsiAsiakasID(asiakkaat, rs.getInt("asiakas_id")),
                     etsiMokkiID(mokit, rs.getInt("mokki_id")),
+                    varauksenPalvelut.get(rs.getInt("varaus_id")),
                     LocalDateTime.parse(rs.getString("varattu_pvm"), dateTimeFormat),
                     vahvistusPvm,
                     LocalDateTime.parse(rs.getString("varattu_alkupvm"), dateTimeFormat),

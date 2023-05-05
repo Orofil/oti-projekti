@@ -1,12 +1,18 @@
 package com.example.otiprojekti;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Objects;
 
 public class Varaus {
     private final int ID;
     private Asiakas asiakas;
     private Mokki mokki;
+    /**
+     * Avain on {@link Palvelu}, arvo on palvelun lukumäärä.
+     */
+    private HashMap<Palvelu, Integer> palvelut;
 
     private LocalDateTime varattuPvm;
     private LocalDateTime vahvistusPvm;
@@ -16,6 +22,7 @@ public class Varaus {
     public Varaus(int ID,
                   Asiakas asiakas,
                   Mokki mokki,
+                  HashMap<Palvelu, Integer> palvelut,
                   LocalDateTime varattuPvm,
                   LocalDateTime vahvistusPvm,
                   LocalDateTime varausAlkuPvm,
@@ -23,6 +30,7 @@ public class Varaus {
         this.ID = ID;
         this.asiakas = asiakas;
         this.mokki = mokki;
+        this.palvelut = palvelut;
 
         this.varattuPvm = varattuPvm;
         this.vahvistusPvm = vahvistusPvm;
@@ -48,6 +56,14 @@ public class Varaus {
 
     public void setMokki(Mokki mokki) {
         this.mokki = mokki;
+    }
+
+    public HashMap<Palvelu, Integer> getPalvelut() {
+        return palvelut;
+    }
+
+    public void setPalvelut(HashMap<Palvelu, Integer> palvelut) {
+        this.palvelut = palvelut;
     }
 
     public LocalDateTime getVarattuPvm() {
@@ -84,13 +100,13 @@ public class Varaus {
 
     @Override
     public String toString() {
-        return "Varaus[" +
-                "varausID=" + ID +
-                ", mokkiID=" + mokki +
-                ", varattuPvm=" + varattuPvm +
-                ", varausAlkuPvm=" + varausAlkuPvm +
-                ", varausLoppuPvm=" + varausLoppuPvm +
-                "]";
+        return "Varaus:" +
+                "\nvarausID=" + ID +
+                "\nmokki=" + mokki +
+                "\npalvelut=" + palvelut +
+                "\nvarattuPvm=" + varattuPvm +
+                "\nvarausAlkuPvm=" + varausAlkuPvm +
+                "\nvarausLoppuPvm=" + varausLoppuPvm;
     }
 
     @Override
@@ -101,6 +117,7 @@ public class Varaus {
         return ID == varaus.ID &&
                 asiakas == varaus.asiakas &&
                 mokki == varaus.mokki &&
+                palvelut.equals(varaus.palvelut) &&
                 Objects.equals(varattuPvm, varaus.varattuPvm) &&
                 Objects.equals(vahvistusPvm, varaus.vahvistusPvm) &&
                 Objects.equals(varausAlkuPvm, varaus.varausAlkuPvm) &&

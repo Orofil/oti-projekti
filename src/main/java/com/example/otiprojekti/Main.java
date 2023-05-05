@@ -103,7 +103,7 @@ public class Main extends Application {
             asiakasLista = tietokanta.haeAsiakas(postiLista);
             mokkiLista = tietokanta.haeMokki(alueLista, postiLista);
             palveluLista = tietokanta.haePalvelu(alueLista);
-            varausLista = tietokanta.haeVaraus(asiakasLista, mokkiLista);
+            varausLista = tietokanta.haeVaraus(asiakasLista, mokkiLista, palveluLista);
             laskuLista = tietokanta.haeLasku(varausLista);
         } catch (SQLException e) {
             ilmoitusPaneeli.lisaaIlmoitus(IlmoitusTyyppi.VAROITUS, String.valueOf(e));
@@ -755,15 +755,19 @@ public class Main extends Application {
                     } else {
                         asiakasIDInsert = Integer.parseInt(asiakasID.getText()); // TODO virheiden käsittely, näytetään virheteksti ikkunassa
                     }
+                    HashMap<Palvelu, Integer> varauksenPalvelut = new HashMap<>(); // TEMP varaukseen liittyviä palveluita varten
+                    varauksenPalvelut.put(palveluLista.get(0), 1); // TEMP
                     varausLista.add(tietokanta.insertVaraus( // TODO tuleeko kenttään varattu_pvm tämänhetkinen aika?
                             asiakasIDInsert,
                             Integer.parseInt(mokkiID.getText()),
+                            varauksenPalvelut, // TODO varauksen palvelut
                             LocalDateTime.now().format(dateTimeFormat),
                             null,
                             varausAlkuAika,
                             varausLoppuAika,
                             asiakasLista,
-                            mokkiLista));
+                            mokkiLista,
+                            palveluLista));
                     varausLisaysStage.close();
                 } catch (SQLException ex) {
                     ilmoitusPaneeli.lisaaIlmoitus(IlmoitusTyyppi.VAROITUS, String.valueOf(ex));
