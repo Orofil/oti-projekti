@@ -488,6 +488,18 @@ public class Tietokanta {
     // TODO uusimpien hakeminen
 
     /**
+     * Hakee tietokannasta kaikki alueet.
+     * @return Lista {@link Alue Alueista}
+     */
+    public ArrayList<Alue> haeAlue() throws SQLException {
+        stm = con.prepareStatement("SELECT * FROM alue");
+        ResultSet rs = stm.executeQuery();
+        ArrayList<Alue> tulokset = alueLuokaksi(rs);
+        stm.close();
+        return tulokset;
+    }
+
+    /**
      * Hakee tietokannasta uusimman asiakkaan.
      * @return {@link Asiakas}
      */
@@ -552,6 +564,18 @@ public class Tietokanta {
     }
 
     /**
+     * Hakee tietokannasta kaikki postinumerot.
+     * @return Lista {@link Posti Posteista}
+     */
+    public ArrayList<Posti> haePosti() throws SQLException {
+        stm = con.prepareStatement("SELECT * FROM posti");
+        ResultSet rs = stm.executeQuery();
+        ArrayList<Posti> tulokset = postiLuokaksi(rs);
+        stm.close();
+        return tulokset;
+    }
+
+    /**
      * Hakee tietokannasta uusimman varauksen.
      * @param asiakkaat Lista {@link Asiakas Asiakkaista}
      * @param mokit Lista {@link Mokki Mökeistä}
@@ -580,8 +604,19 @@ public class Tietokanta {
         return tulokset;
     }
 
+
+
     ///// Muuttamiset tietokannan tiedoista olioihin
-    // TODO alue, lasku (postia ei ilmeisesti tehdä erillisenä olioluokkana, mutta en tiedä miksi sitten esim. alue tehdään)
+
+    private ArrayList<Alue> alueLuokaksi(ResultSet rs) throws SQLException {
+        ArrayList<Alue> alueet = new ArrayList<>();
+        while (rs.next()) {
+            alueet.add(new Alue(
+                    rs.getInt("alue_id"),
+                    rs.getString("nimi")));
+        }
+        return alueet;
+    }
 
     private ArrayList<Asiakas> asiakasLuokaksi(ResultSet rs) throws SQLException {
         ArrayList<Asiakas> asiakkaat = new ArrayList<>();
@@ -606,7 +641,7 @@ public class Tietokanta {
                     etsiVarausID(varaukset, rs.getInt("varaus_id")),
                     rs.getBigDecimal("summa"),
                     rs.getInt("alv"),
-                    rs.getString("laskunStatus")));
+                    rs.getString("laskunStatus"))); // TODO laskun statusta ei ole tietokannassa
         }
         return laskut;
     }
@@ -642,6 +677,16 @@ public class Tietokanta {
             ));
         }
         return palvelut;
+    }
+
+    private ArrayList<Posti> postiLuokaksi(ResultSet rs) throws SQLException {
+        ArrayList<Posti> postit = new ArrayList<>();
+        while (rs.next()) {
+            postit.add(new Posti(
+                    rs.getString("postinro"),
+                    rs.getString("toimipaikka")));
+        }
+        return postit;
     }
 
     private ArrayList<Varaus> varausLuokaksi(ResultSet rs, ArrayList<Asiakas> asiakkaat, ArrayList<Mokki> mokit) throws SQLException {
