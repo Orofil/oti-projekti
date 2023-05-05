@@ -911,11 +911,14 @@ public class Main extends Application {
                 tallennaVarausMuutokset.setOnAction( event -> {
                     String varausAlkuAika = aloitusPvm.getValue() + " " + aloitusAika.getText(); // TODO muotoilun tarkistus, aka virheiden käsittely
                     String varausLoppuAika = lopetusPvm.getValue() + " " + lopetusAika.getText();
+                    HashMap<Palvelu, Integer> varauksenPalvelut = new HashMap<>(); // TEMP varaukseen liittyviä palveluita varten
+                    varauksenPalvelut.put(palveluLista.get(0), 1); // TEMP
                     try {
                         tietokanta.muokkaaVaraus( // TODO  asiakasLista.add()
                                 obj.getID(),
                                 Integer.parseInt(asiakasID.getText()),
                                 Integer.parseInt(mokkiID.getText()),
+                                varauksenPalvelut, // TODO varauksen palvelut
                                 LocalDateTime.now().format(dateTimeFormat),
                                 null,
                                 varausAlkuAika,
