@@ -644,7 +644,7 @@ public class Tietokanta {
                     etsiVarausID(varaukset, rs.getInt("varaus_id")),
                     rs.getBigDecimal("summa"),
                     rs.getInt("alv"),
-                    rs.getString("laskunStatus"))); // TODO laskun statusta ei ole tietokannassa
+                    null)); // TODO mikä asetetaan laskun statukseksi, sitä ei ole tietokannassa
         }
         return laskut;
     }
