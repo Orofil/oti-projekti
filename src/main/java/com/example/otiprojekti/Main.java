@@ -19,6 +19,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.text.Font;
 
 import java.sql.SQLException;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.*;
 
@@ -571,12 +572,12 @@ public class Main extends Application {
         Label varausHakuKenttaLabel = new Label("Hae varausta: ", varausHakuKentta);
         varausHakuKenttaLabel.setFont(fontti);
         varausHakuKenttaLabel.setContentDisplay(ContentDisplay.RIGHT);
-        varausHaku.add(varausHakuKenttaLabel, 1, 1);
+        varausHaku.add(varausHakuKenttaLabel, 0, 1);
         Nappula varausHakuNappula = new Nappula("Suorita haku", 190, 30);
-        varausHaku.add(varausHakuNappula, 1, 2);
+        varausHaku.add(varausHakuNappula, 0, 2);
         varausHakuNappula.setOnAction( e -> paivitaVarausTaulukko());
 
-        varausHaku.add(new Text("Lajittelu:"), 2, 0);
+        varausHaku.add(new Text("Lajittelu:"), 1, 0);
         ComboBox<String> varausLajittelu = new ComboBox<>(FXCollections.observableList(Arrays.asList(
                 "Tunnuksen mukaan",
                 "Uusin > Vanhin",
@@ -585,7 +586,7 @@ public class Main extends Application {
                 "Alueittain"
         )));
         varausLajittelu.setValue("Uusin > Vanhin"); // Oletuksena valittu vaihtoehto
-        varausHaku.add(varausLajittelu, 2, 1);
+        varausHaku.add(varausLajittelu, 1, 1);
 
         // Lajittelu
         varausLajittelu.setOnAction(e -> {
@@ -601,13 +602,37 @@ public class Main extends Application {
             }
         });
 
-        varausHaku.add(new Text("Suodata päivämäärän mukaan:"), 3, 0);
-        varausHaku.add(new Text("Alkupäivä:"), 3, 1);
-        varausHaku.add(new Text("Loppupäivä:"), 3, 2);
+        Text paivamaaraSuodatusTeksti = new Text("Suodata ajan mukaan:");
+        Text paivamaaraSuodatusAlkuTeksti = new Text("Alku"); // TODO ehkä labeliksi jossa on mukana nuo datepickerit
+        Text paivamaaraSuodatusLoppuTeksti = new Text("Loppu");
+        paivamaaraSuodatusAlkuTeksti.setTextAlignment(TextAlignment.RIGHT);
+        paivamaaraSuodatusLoppuTeksti.setTextAlignment(TextAlignment.RIGHT);
+        varausHaku.add(paivamaaraSuodatusTeksti, 2, 0);
+        varausHaku.add(paivamaaraSuodatusAlkuTeksti, 2, 1);
+        varausHaku.add(paivamaaraSuodatusLoppuTeksti, 2, 2);
+        GridPane.setColumnSpan(paivamaaraSuodatusTeksti, 2);
+
         DatePicker varausPvmAlku = new DatePicker();
-        varausHaku.add(varausPvmAlku, 4, 1);
         DatePicker varausPvmLoppu = new DatePicker();
-        varausHaku.add(varausPvmLoppu, 4, 2);
+        TextField varausAikaAlku = new TextField();
+        TextField varausAikaLoppu = new TextField();
+        varausHaku.add(varausPvmAlku, 3, 1);
+        varausHaku.add(varausPvmLoppu, 3, 2);
+        varausHaku.add(varausAikaAlku, 4, 1);
+        varausHaku.add(varausAikaLoppu, 4, 2);
+
+        varausHaku.add(new Text("Onko varattu päivänä"), 5, 0); // TODO paremmin tämä
+        DatePicker varattuPaivana = new DatePicker();
+        varausHaku.add(varattuPaivana, 5, 1);
+        varattuPaivana.setOnAction(e -> {
+            LocalDate valittuPaiva = varattuPaivana.getValue();
+            for (Varaus v : varausLista) {
+                if (v.getVarausAlkuPvm().isBefore(valittuPaiva.plusDays(1).atStartOfDay()) &&
+                v.getVarausLoppuPvm().isAfter(valittuPaiva.atStartOfDay())) {
+                    // TODO aseta jotenkin varausTaulukkoon esim. Paneja soluihin ja sitten väritetään ne jotka on varattu
+                }
+            }
+        });
 
         varausPvmAlku.setOnAction(e -> { // TEMP
             System.out.println(varausPvmAlku.getValue()); // Palauttaa LocalDate-olion
@@ -778,8 +803,6 @@ public class Main extends Application {
     }
 
     public void paivitaVarausTaulukko() {
-
-
         varausTaulukko.setGridLinesVisible(false);
         varausTaulukko.getColumnConstraints().clear();
         varausTaulukko.getChildren().clear();
