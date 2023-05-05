@@ -6,7 +6,7 @@ import java.util.Objects;
 public class Mokki {
     private final int ID;
     private Alue alue;
-    private String postiNro;
+    private Posti postiNro;
     private String nimi;
     private String katuosoite;
     private BigDecimal hinta;
@@ -25,7 +25,7 @@ public class Mokki {
      * @param hloMaara
      * @param varustelu Maksimipituus 100
      */
-    public Mokki(int ID, Alue alue, String postiNro, String nimi, String katuosoite,
+    public Mokki(int ID, Alue alue, Posti postiNro, String nimi, String katuosoite,
                  BigDecimal hinta, String kuvaus, int hloMaara, String varustelu) {
         this.ID = ID;
         this.alue = alue;
@@ -46,11 +46,11 @@ public class Mokki {
         return alue;
     }
 
-    public String getPostiNro() {
+    public Posti getPostiNro() {
         return postiNro;
     }
 
-    public void setPostiNro(String postiNro) {
+    public void setPostiNro(Posti postiNro) {
         this.postiNro = postiNro;
     }
 

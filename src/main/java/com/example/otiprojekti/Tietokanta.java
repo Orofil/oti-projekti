@@ -54,7 +54,7 @@ public class Tietokanta {
 
     /**
      * Syöttää tietokantaan alueen.
-     * @param nimi Tyyppiä varchar(40).
+     * @param nimi Tyyppiä varchar(40)
      */
     public void insertAlue(String nimi) throws SQLException {
         stm = con.prepareStatement(
@@ -68,15 +68,17 @@ public class Tietokanta {
     /**
      * Syöttää tietokantaan asiakkaan ja palauttaa sen oliona.
      * @param postinro Tyyppiä char(5). Oltava taulussa posti.
-     * @param etunimi Tyyppiä varchar(20).
-     * @param sukunimi Tyyppiä varchar(40).
-     * @param lahiosoite Tyyppiä varchar(40).
-     * @param email Tyyppiä varchar(50).
-     * @param puhelinnro Tyyppiä varchar(15).
+     * @param etunimi Tyyppiä varchar(20)
+     * @param sukunimi Tyyppiä varchar(40)
+     * @param lahiosoite Tyyppiä varchar(40)
+     * @param email Tyyppiä varchar(50)
+     * @param puhelinnro Tyyppiä varchar(15)
+     * @param postit Lista {@link Posti Posteista}
      * @return {@link Asiakas}
      */
     public Asiakas insertAsiakas(String postinro, String etunimi, String sukunimi,
-                                     String lahiosoite, String email, String puhelinnro) throws SQLException {
+                                     String lahiosoite, String email, String puhelinnro,
+                                     ArrayList<Posti> postit) throws SQLException {
         stm = con.prepareStatement(
                 "INSERT INTO asiakas(postinro,etunimi,sukunimi,lahiosoite,email,puhelinnro)" +
                 "VALUES (?,?,?,?,?,?)");
@@ -88,14 +90,14 @@ public class Tietokanta {
         stm.setString(6, puhelinnro);
         stm.executeUpdate();
         stm.close();
-        return haeAsiakasUusi();
+        return haeAsiakasUusi(postit);
     }
 
     /**
      * Syöttää tietokantaan laskun.
      * @param varaus_id Tyyppiä int. Oltava taulussa varaus.
-     * @param summa Tyyppiä double(8,2).
-     * @param alv Tyyppiä int.
+     * @param summa Tyyppiä double(8,2)
+     * @param alv Tyyppiä int
      */
     public void insertLasku(int varaus_id, BigDecimal summa, int alv) throws SQLException {
         stm = con.prepareStatement(
@@ -112,12 +114,12 @@ public class Tietokanta {
      * Syöttää tietokantaan mökin.
      * @param alue_id Tyyppiä int. Oltava taulussa alue.
      * @param postinro Tyyppiä char(5). Oltava taulussa posti.
-     * @param mokkinimi Tyyppiä varchar(45).
-     * @param katuosoite Tyyppiä varchar(45).
-     * @param hinta Tyyppiä double(8,2).
-     * @param kuvaus Tyyppiä varchar(150).
-     * @param henkilomaara Tyyppiä int.
-     * @param varustelu Tyyppiä varchar(100).
+     * @param mokkinimi Tyyppiä varchar(45)
+     * @param katuosoite Tyyppiä varchar(45)
+     * @param hinta Tyyppiä double(8,2)
+     * @param kuvaus Tyyppiä varchar(150)
+     * @param henkilomaara Tyyppiä int
+     * @param varustelu Tyyppiä varchar(100)
      */
     public void insertMokki(int alue_id, String postinro, String mokkinimi, String katuosoite,
                                    BigDecimal hinta, String kuvaus, int henkilomaara, String varustelu) throws SQLException {
@@ -139,11 +141,11 @@ public class Tietokanta {
     /**
      * Syöttää tietokantaan palvelun.
      * @param alue_id Tyyppiä int. Oltava taulussa alue.
-     * @param nimi Tyyppiä varchar(40).
-     * @param tyyppi Tyyppiä int.
-     * @param kuvaus Tyyppiä varchar(255).
-     * @param hinta Tyyppiä double(8,2).
-     * @param alv Tyyppiä int.
+     * @param nimi Tyyppiä varchar(40)
+     * @param tyyppi Tyyppiä int
+     * @param kuvaus Tyyppiä varchar(255)
+     * @param hinta Tyyppiä double(8,2)
+     * @param alv Tyyppiä int
      */
     public void insertPalvelu(int alue_id, String nimi, int tyyppi, String kuvaus,
                               BigDecimal hinta, BigDecimal alv) throws SQLException {
@@ -162,8 +164,8 @@ public class Tietokanta {
 
     /**
      * Syöttää tietokantaan postinumeron.
-     * @param postinro Tyyppiä char(5).
-     * @param toimipaikka Tyyppiä varchar(45).
+     * @param postinro Tyyppiä char(5)
+     * @param toimipaikka Tyyppiä varchar(45)
      */
     public void insertPosti(String postinro, String toimipaikka) throws SQLException {
         stm = con.prepareStatement(
@@ -179,7 +181,7 @@ public class Tietokanta {
      * Syöttää tietokantaan varaukseen liittyvän palvelun.
      * @param varaus_id Tyyppiä int. OLtava taulussa varaus.
      * @param palvelu_id Tyyppiä int. Oltava taulussa palvelu.
-     * @param lkm Tyyppiä int.
+     * @param lkm Tyyppiä int
      */
     // TODO tehdäänkö tämä näin vähän oudosti erillään
     public void insertVarauksenPalvelut(int varaus_id, int palvelu_id, int lkm) throws SQLException {
@@ -197,12 +199,12 @@ public class Tietokanta {
      * Syöttää tietokantaan varauksen ja palauttaa sen oliona.
      * @param asiakas_id Tyyppiä int. Oltava taulussa asiakas.
      * @param mokki_id Tyyppiä int. Oltava taulussa mokki.
-     * @param varattu_pvm Tyyppiä datetime (muotoa YYYY-MM-DD hh:mm:ss).
-     * @param vahvistus_pvm Tyyppiä datetime (muotoa YYYY-MM-DD hh:mm:ss).
-     * @param varattu_alkupvm Tyyppiä datetime (muotoa YYYY-MM-DD hh:mm:ss).
-     * @param varattu_loppupvm Tyyppiä datetime (muotoa YYYY-MM-DD hh:mm:ss).
-     * @param asiakkaat Lista asiakkaista.
-     * @param mokit Lista mökeistä.
+     * @param varattu_pvm Tyyppiä datetime (muotoa YYYY-MM-DD hh:mm:ss)
+     * @param vahvistus_pvm Tyyppiä datetime (muotoa YYYY-MM-DD hh:mm:ss)
+     * @param varattu_alkupvm Tyyppiä datetime (muotoa YYYY-MM-DD hh:mm:ss)
+     * @param varattu_loppupvm Tyyppiä datetime (muotoa YYYY-MM-DD hh:mm:ss)
+     * @param asiakkaat Lista {@link Asiakas Asiakkaista}
+     * @param mokit Lista {@link Mokki Mökeistä}
      * @return {@link Varaus}
      */
     public Varaus insertVaraus(int asiakas_id, int mokki_id, String varattu_pvm,
@@ -233,10 +235,10 @@ public class Tietokanta {
      * @param varaus_id Tyyppiä int. Oltava taulussa varaus.
      * @param asiakas_id Tyyppiä int. Oltava taulussa asiakas.
      * @param mokki_id Tyyppiä int. Oltava taulussa mokki.
-     * @param varattu_pvm Tyyppiä datetime (muotoa YYYY-MM-DD hh:mm:ss).
-     * @param vahvistus_pvm Tyyppiä datetime (muotoa YYYY-MM-DD hh:mm:ss).
-     * @param varattu_alkupvm Tyyppiä datetime (muotoa YYYY-MM-DD hh:mm:ss).
-     * @param varattu_loppupvm Tyyppiä datetime (muotoa YYYY-MM-DD hh:mm:ss).
+     * @param varattu_pvm Tyyppiä datetime (muotoa YYYY-MM-DD hh:mm:ss)
+     * @param vahvistus_pvm Tyyppiä datetime (muotoa YYYY-MM-DD hh:mm:ss)
+     * @param varattu_alkupvm Tyyppiä datetime (muotoa YYYY-MM-DD hh:mm:ss)
+     * @param varattu_loppupvm Tyyppiä datetime (muotoa YYYY-MM-DD hh:mm:ss)
      */
     public void muokkaaVaraus(int varaus_id, int asiakas_id, int mokki_id, String varattu_pvm,
                              String vahvistus_pvm, String varattu_alkupvm, String varattu_loppupvm) throws SQLException {
@@ -265,12 +267,12 @@ public class Tietokanta {
      * @param mokki_id Tyyppiä int. Oltava taulussa mokki.
      * @param alue_id Tyyppiä int. Oltava taulussa alue.
      * @param postinro Tyyppiä char(5). Oltava taulussa posti.
-     * @param mokkinimi Tyyppiä varchar(45).
-     * @param katuosoite Tyyppiä varchar(45).
-     * @param hinta Tyyppiä double(8,2).
-     * @param kuvaus Tyyppiä varchar(150).
-     * @param henkilomaara Tyyppiä int.
-     * @param varustelu Tyyppiä varchar(100).
+     * @param mokkinimi Tyyppiä varchar(45)
+     * @param katuosoite Tyyppiä varchar(45)
+     * @param hinta Tyyppiä double(8,2)
+     * @param kuvaus Tyyppiä varchar(150)
+     * @param henkilomaara Tyyppiä int
+     * @param varustelu Tyyppiä varchar(100)
      */
     public void muokkaaMokki(int mokki_id, int alue_id, String postinro, String mokkinimi, String katuosoite,
                              BigDecimal hinta, String kuvaus, int henkilomaara, String varustelu) throws SQLException {
@@ -302,11 +304,11 @@ public class Tietokanta {
      * Muokkaa asiakasta tietokannassa.
      * @param asiakas_id Tyyppiä int. Oltava taulussa asiakas.
      * @param postinro Tyyppiä char(5). Oltava taulussa posti.
-     * @param sukunimi Tyyppiä varchar(40).
-     * @param etunimi Tyyppiä varchar(20).
-     * @param email Tyyppiä varchar(50).
-     * @param lahiosoite Tyyppiä varchar(40).
-     * @param puhelinnro Tyyppiä varchar(15).
+     * @param sukunimi Tyyppiä varchar(40)
+     * @param etunimi Tyyppiä varchar(20)
+     * @param email Tyyppiä varchar(50)
+     * @param lahiosoite Tyyppiä varchar(40)
+     * @param puhelinnro Tyyppiä varchar(15)
      */
     public void muokkaaAsiakas(int asiakas_id, String postinro, String sukunimi, String etunimi,
                                String email, String lahiosoite, String puhelinnro) throws SQLException {
@@ -334,11 +336,11 @@ public class Tietokanta {
      * Muokkaa palvelua tietokannassa.
      * @param palvelu_id Tyyppiä int. Oltava taulussa palvelu.
      * @param alue_id Tyyppiä int. Oltava taulussa alue.
-     * @param nimi Tyyppiä varchar(40).
-     * @param tyyppi Tyyppiä int.
-     * @param kuvaus Tyyppiä varchar(255).
-     * @param hinta Tyyppiä double(8,2).
-     * @param alv Tyyppiä int.
+     * @param nimi Tyyppiä varchar(40)
+     * @param tyyppi Tyyppiä int
+     * @param kuvaus Tyyppiä varchar(255)
+     * @param hinta Tyyppiä double(8,2)
+     * @param alv Tyyppiä int
      */
     public void muokkaaPalvelu(int palvelu_id, int alue_id, String nimi, int tyyppi, String kuvaus,
                                BigDecimal hinta, int alv) throws SQLException {
@@ -365,7 +367,7 @@ public class Tietokanta {
     /**
      * Muokkaa aluetta tietokannassa.
      * @param alue_id Tyyppiä int. Oltava taulussa alue.
-     * @param nimi Tyyppiä varchar(40).
+     * @param nimi Tyyppiä varchar(40)
      */
     public void muokkaaAlue(int alue_id, String nimi) throws SQLException {
         stm = con.prepareStatement(
@@ -484,7 +486,6 @@ public class Tietokanta {
 
 
     ///// Tietokannasta hakemiset
-    // TODO vaikka mitä tarvittavia hakuja
     // TODO uusimpien hakeminen
 
     /**
@@ -503,23 +504,24 @@ public class Tietokanta {
      * Hakee tietokannasta uusimman asiakkaan.
      * @return {@link Asiakas}
      */
-    public Asiakas haeAsiakasUusi() throws SQLException {
+    public Asiakas haeAsiakasUusi(ArrayList<Posti> postit) throws SQLException {
         stm = con.prepareStatement(
                 "SELECT * FROM asiakas WHERE asiakas_id = (SELECT MAX(asiakas_id) FROM asiakas)");
         ResultSet rs = stm.executeQuery();
-        ArrayList<Asiakas> tulokset = asiakasLuokaksi(rs);
+        ArrayList<Asiakas> tulokset = asiakasLuokaksi(rs, postit);
         stm.close();
         return tulokset.get(0);
     }
 
     /**
      * Hakee tietokannasta kaikki asiakkaat.
+     * @param postit Lista {@link Posti Posteista}
      * @return Lista {@link Asiakas Asiakkaista}
      */
-    public ArrayList<Asiakas> haeAsiakas() throws SQLException {
+    public ArrayList<Asiakas> haeAsiakas(ArrayList<Posti> postit) throws SQLException {
         stm = con.prepareStatement("SELECT * FROM asiakas");
         ResultSet rs = stm.executeQuery();
-        ArrayList<Asiakas> tulokset = asiakasLuokaksi(rs);
+        ArrayList<Asiakas> tulokset = asiakasLuokaksi(rs, postit);
         stm.close();
         return tulokset;
     }
@@ -540,12 +542,13 @@ public class Tietokanta {
     /**
      * Hakee tietokannasta kaikki mökit.
      * @param alueet Lista {@link Alue Alueista}
+     * @param postit Lista {@link Posti Posteista}
      * @return Lista {@link Mokki Mokeista}
      */
-    public ArrayList<Mokki> haeMokki(ArrayList<Alue> alueet) throws SQLException {
+    public ArrayList<Mokki> haeMokki(ArrayList<Alue> alueet, ArrayList<Posti> postit) throws SQLException {
         stm = con.prepareStatement("SELECT * FROM mokki");
         ResultSet rs = stm.executeQuery();
-        ArrayList<Mokki> tulokset = mokkiLuokaksi(rs, alueet);
+        ArrayList<Mokki> tulokset = mokkiLuokaksi(rs, alueet, postit);
         stm.close();
         return tulokset;
     }
@@ -618,12 +621,12 @@ public class Tietokanta {
         return alueet;
     }
 
-    private ArrayList<Asiakas> asiakasLuokaksi(ResultSet rs) throws SQLException {
+    private ArrayList<Asiakas> asiakasLuokaksi(ResultSet rs, ArrayList<Posti> postit) throws SQLException {
         ArrayList<Asiakas> asiakkaat = new ArrayList<>();
         while (rs.next()) {
             asiakkaat.add(new Asiakas(
                     rs.getInt("asiakas_id"),
-                    rs.getString("postinro"),
+                    etsiPostiNro(postit, rs.getString("postinro")),
                     rs.getString("sukunimi"),
                     rs.getString("etunimi"),
                     rs.getString("lahiosoite"),
@@ -646,13 +649,13 @@ public class Tietokanta {
         return laskut;
     }
 
-    private ArrayList<Mokki> mokkiLuokaksi(ResultSet rs, ArrayList<Alue> alueet) throws SQLException {
+    private ArrayList<Mokki> mokkiLuokaksi(ResultSet rs, ArrayList<Alue> alueet, ArrayList<Posti> postit) throws SQLException {
         ArrayList<Mokki> mokit = new ArrayList<>();
         while (rs.next()) {
             mokit.add(new Mokki(
                     rs.getInt("mokki_id"),
                     etsiAlueID(alueet, rs.getInt("alue_id")),
-                    rs.getString("postinro"), // TODO toimiiko getInt vai pitääkö käyttää Integer.valueOf koska tietokannassa postinro on tyyppiä char
+                    etsiPostiNro(postit, rs.getString("postinro")),
                     rs.getString("mokkinimi"),
                     rs.getString("katuosoite"),
                     rs.getBigDecimal("hinta"),

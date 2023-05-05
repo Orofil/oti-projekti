@@ -77,6 +77,7 @@ public class Main extends Application {
     // TODO sama on Tietokanta.javassa, kannattaisi olla vain toisessa ehkä
     private final DateTimeFormatter dateTimeFormat = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 
+    ArrayList<Posti> postiLista = new ArrayList<>();
     ArrayList<Alue> alueLista = new ArrayList<>();
     ArrayList<Mokki> mokkiLista = new ArrayList<>();
     ArrayList<Asiakas> asiakasLista = new ArrayList<>();
@@ -90,15 +91,16 @@ public class Main extends Application {
     @Override
     public void start(Stage ikkuna) {
 
+        // Haetaan tiedot tietokannasta olioiksi
         try {
-            // alueLista = tietokanta.haeAlue();
-            // TODO alueiden haku
-            asiakasLista = tietokanta.haeAsiakas();
-            mokkiLista = tietokanta.haeMokki(alueLista);
+            // Tiedot täytyy hakea tietyssä järjestyksessä, koska osa luokista viittaa toisiinsa
+            postiLista = tietokanta.haePosti();
+            alueLista = tietokanta.haeAlue();
+            asiakasLista = tietokanta.haeAsiakas(postiLista);
+            mokkiLista = tietokanta.haeMokki(alueLista, postiLista);
             palveluLista = tietokanta.haePalvelu(alueLista);
             varausLista = tietokanta.haeVaraus(asiakasLista, mokkiLista);
-            // laskuLista = tietokanta.haeLasku();
-            // TODO laskujen haku
+            laskuLista = tietokanta.haeLasku(varausLista);
         } catch (SQLException e) {
             ilmoitusPaneeli.lisaaIlmoitus(IlmoitusTyyppi.VAROITUS, String.valueOf(e));
             throw new RuntimeException(e); // TEMP
@@ -760,7 +762,8 @@ public class Main extends Application {
                                 snimi.getText(),
                                 lahiosoite.getText(),
                                 email.getText(),
-                                puhnro.getText()));
+                                puhnro.getText(),
+                                postiLista));
                         asiakasIDInsert = asiakasLista.get(asiakasLista.size()-1).getID();
                     } else {
                         asiakasIDInsert = Integer.parseInt(asiakasID.getText()); // TODO virheiden käsittely, näytetään virheteksti ikkunassa
@@ -1195,7 +1198,7 @@ public class Main extends Application {
                 email.setText(obj.getEmail());
                 puhnro.setText(obj.getPuhelinNro());
                 lahiosoite.setText(obj.getLahiosoite());
-                postinro.setText(obj.getPostiNro());
+                postinro.setText(obj.getPostiNro().getPostiNro());
 
                 Text enimiText = new Text("Etunimi");
                 Text snimiText = new Text("Sukunimi");
@@ -1264,7 +1267,7 @@ public class Main extends Application {
                 tarkasteleAsiakasPaneeli.add(new Text(obj.getEmail()),1,3);
                 tarkasteleAsiakasPaneeli.add(new Text(obj.getPuhelinNro()),1,4);
                 tarkasteleAsiakasPaneeli.add(new Text(obj.getLahiosoite()),1,5);
-                tarkasteleAsiakasPaneeli.add(new Text(obj.getPostiNro()),1,6);
+                tarkasteleAsiakasPaneeli.add(new Text(obj.getPostiNro().getPostiNro()),1,6);
             });
 
             rivi++;

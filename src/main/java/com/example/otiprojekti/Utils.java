@@ -80,6 +80,17 @@ public class Utils {
     }
 
     /**
+     * Etsii posteista sen, jolla on annettu postinumero.
+     * @param lista Lista posteista
+     * @param postiNro postiNro
+     * @return {@link Posti}
+     * @author <a href="https://stackoverflow.com/a/48839294">oleg.cherednik</a>
+     */
+    public static Posti etsiPostiNro(Collection<Posti> lista, String postiNro) {
+        return findByProperty(lista, posti -> postiNro.equals(posti.getPostiNro()));
+    }
+
+    /**
      * Etsii varauksista sen, jolla on annettu ID.
      * @param lista Lista varauksista
      * @param id varausID
