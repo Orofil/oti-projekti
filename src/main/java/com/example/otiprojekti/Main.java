@@ -23,8 +23,7 @@ import java.time.LocalDateTime;
 import java.util.*;
 
 import static com.example.otiprojekti.Tietokanta.dateTimeFormat;
-import static com.example.otiprojekti.Utils.etsiPostiNro;
-import static com.example.otiprojekti.Utils.imageKuvasta;
+import static com.example.otiprojekti.Utils.*;
 
 public class Main extends Application {
     // Ikkunan mittasuhde jaettuna kahteen kenttään
@@ -575,9 +574,7 @@ public class Main extends Application {
         varausHaku.add(varausHakuKenttaLabel, 1, 1);
         Nappula varausHakuNappula = new Nappula("Suorita haku", 190, 30);
         varausHaku.add(varausHakuNappula, 1, 2);
-        varausHakuNappula.setOnAction( e -> {
-            paivitaVarausTaulukko();
-        });
+        varausHakuNappula.setOnAction( e -> paivitaVarausTaulukko());
 
         varausHaku.add(new Text("Lajittelu:"), 2, 0);
         ComboBox<String> varausLajittelu = new ComboBox<>(FXCollections.observableList(Arrays.asList(
@@ -991,9 +988,7 @@ public class Main extends Application {
         asiakasHakuKenttaLabel.setContentDisplay(ContentDisplay.RIGHT);
         asiakasHaku.add(asiakasHakuKenttaLabel, 1, 1);
         Nappula asiakasHakuNappula = new Nappula("Suorita haku", 190, 30);
-        asiakasHakuNappula.setOnAction( e -> {
-            paivitaAsiakasTaulukko();
-        });
+        asiakasHakuNappula.setOnAction( e -> paivitaAsiakasTaulukko());
         asiakasHaku.add(asiakasHakuNappula, 1, 2);
 
         asiakasHaku.add(new Text("Lajittelu:"), 2, 0);
@@ -1311,9 +1306,7 @@ public class Main extends Application {
         laskuHakuKenttaLabel.setContentDisplay(ContentDisplay.RIGHT);
         laskuHaku.add(laskuHakuKenttaLabel, 1, 1);
         Nappula laskuHakuNappula = new Nappula("Suorita haku", 190, 30);
-        laskuHakuNappula.setOnAction(e -> {
-            paivitaLaskuTaulukko();
-        });
+        laskuHakuNappula.setOnAction(e -> paivitaLaskuTaulukko());
         laskuHaku.add(laskuHakuNappula, 1, 2);
 
         laskuHaku.add(new Text("Lajittelu:"), 2, 0);
