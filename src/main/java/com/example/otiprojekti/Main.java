@@ -193,10 +193,6 @@ public class Main extends Application {
             isoOtsikkoTeksti.setText("ALUEET");
             ilmoitusPaneeli.lisaaIlmoitus(IlmoitusTyyppi.ILMOITUS,
                     "Alueet valittu! Vähän lisää tekstiä tähän vielä ihan testiksi."); // TEMP
-//            for (Nappula2 n : nappulat) {
-//                n.deselect();
-//            }
-//            aluenappula.select();
         });
 
         GridPane alueHaku = new GridPane();
@@ -296,10 +292,6 @@ public class Main extends Application {
         mokkinappula.setOnAction(e -> {
             paneeli.setCenter(mokkipaneeli);
             isoOtsikkoTeksti.setText("MÖKIT");
-//            for (Nappula n : nappulat) {
-//                n.deselect();
-//            }
-//            mokkinappula.select();
         });
 
         GridPane mokkiHaku = new GridPane();
@@ -314,6 +306,7 @@ public class Main extends Application {
         mokkiHakuKenttaLabel.setContentDisplay(ContentDisplay.RIGHT);
         mokkiHaku.add(mokkiHakuKenttaLabel, 1, 1);
         Nappula mokkiHakuNappula = new Nappula("Suorita haku", 190, 30);
+        // TODO päivitä näkymä
         mokkiHaku.add(mokkiHakuNappula, 1, 2);
 
         mokkiHaku.add(new Text("Lajittelu:"), 2, 0);
@@ -344,7 +337,6 @@ public class Main extends Application {
                 case "Alueittain" -> 
                         mokkiLista.sort(Comparator.comparing(Mokki -> Mokki.getAlue().getID())); // TODO onko alueen ID:n vai nimen mukaan
             }
-            // TODO päivitä näkymä
         });
 
         ScrollPane mokkiScrollaus = new ScrollPane();
@@ -388,9 +380,9 @@ public class Main extends Application {
             mokkiID.setFont(fontti);
             Text mokkiNimi = new Text(String.valueOf(obj.getNimi()));
             mokkiNimi.setFont(fontti);
-            Text mokkiAlue = new Text(String.valueOf(obj.getAlue()));
+            Text mokkiAlue = new Text(String.valueOf(obj.getAlue().getNimi()));
             mokkiAlue.setFont(fontti);
-            Text mokkiHinta = new Text(String.valueOf(obj.getHinta()));
+            Text mokkiHinta = new Text(obj.getHinta() + " €"); // TODO lisätäänkö €
             mokkiHinta.setFont(fontti);
             Text mokkiHloMaara = new Text(String.valueOf(obj.getHloMaara()));
             mokkiHloMaara.setFont(fontti);
@@ -438,10 +430,6 @@ public class Main extends Application {
         palvelunappula.setOnAction(e -> {
             paneeli.setCenter(palvelupaneeli);
             isoOtsikkoTeksti.setText("PALVELUT");
-//            for (Nappula n : nappulat) {
-//                n.deselect();
-//            }
-//            palvelunappula.select();
         });
 
         GridPane palveluHaku = new GridPane();
@@ -522,9 +510,9 @@ public class Main extends Application {
             palveluID.setFont(fontti);
             Text palveluNimi = new Text(String.valueOf(obj.getNimi()));
             palveluNimi.setFont(fontti);
-            Text palveluAlue = new Text(String.valueOf(obj.getAlue()));
+            Text palveluAlue = new Text(String.valueOf(obj.getAlue().getNimi()));
             palveluAlue.setFont(fontti);
-            Text palveluHinta = new Text(String.valueOf(obj.getHinta()));
+            Text palveluHinta = new Text(obj.getHinta() + " €");
             palveluHinta.setFont(fontti);
 
 
@@ -575,10 +563,6 @@ public class Main extends Application {
         varausnappula.setOnAction(e -> {
             paneeli.setCenter(varauspaneeli);
             isoOtsikkoTeksti.setText("VARAUKSET");
-//            for (Nappula n : nappulat) {
-//                n.deselect();
-//            }
-//            varausnappula.select();
         });
 
         GridPane varausHaku = new GridPane();
@@ -619,9 +603,8 @@ public class Main extends Application {
                 case "Vanhin > Uusin" ->
                         varausLista.sort(Comparator.comparing(Varaus::getVarausAlkuPvm));
                 case "A > Ö" -> {} // TODO miten tämä toimii?
-                case "Alueittain" -> {} // TODO tämä on vähän monimutkaisempi, mutta ehkä voi tehdä erillisen metodin
+                case "Alueittain" -> varausLista.sort(Comparator.comparing(Varaus -> Varaus.getMokki().getAlue().getID())); // TODO lajitellaanko ID:n vai nimen mukaan
             }
-            // TODO päivitä näkymä
         });
 
         varausHaku.add(new Text("Suodata päivämäärän mukaan:"), 3, 0);
@@ -834,9 +817,9 @@ public class Main extends Application {
         for (Varaus obj : varausLista) { // TODO nyt kun SQL-haku saattaa epäonnistua, voi tulla NullPointerException
             Text varausID = new Text(String.valueOf(obj.getID()));
             varausID.setFont(fontti);
-            Text varausNimi = new Text(String.valueOf(obj.getAsiakas()));
+            Text varausNimi = new Text(String.valueOf(obj.getAsiakas().getNimi(false)));
             varausNimi.setFont(fontti);
-            Text varausMokki = new Text(String.valueOf(obj.getMokki()));
+            Text varausMokki = new Text(String.valueOf(obj.getMokki().getNimi())); // TODO mökin nimi vai ID
             varausMokki.setFont(fontti);
 
 
@@ -845,7 +828,6 @@ public class Main extends Application {
             varausTaulukko.add(varausNimi, 1, rivi);
             varausTaulukko.add(varausMokki, 2, rivi);
 
-            //varausNimi.setAlignment(Pos.CENTER);
             varausNimi.setTextAlignment(TextAlignment.CENTER);
 
             Nappula poistoNappula = new Nappula(150, 30);
@@ -864,7 +846,7 @@ public class Main extends Application {
                         throw new RuntimeException(ex);
                     }
                     poistoIkkuna.getIkkuna().close();
-                    //TODO listan päivitys!!!
+                    paivitaVarausTaulukko();
                 });
             });
 
@@ -959,8 +941,8 @@ public class Main extends Application {
                 tarkasteleVarausPaneeli.add(new Text("Varauksen loppupvm: "),0,7);
 
                 tarkasteleVarausPaneeli.add(new Text(String.valueOf(obj.getID())),1,1);
-                tarkasteleVarausPaneeli.add(new Text(String.valueOf(obj.getAsiakas())),1,2);
-                tarkasteleVarausPaneeli.add(new Text(String.valueOf(obj.getMokki())),1,3);
+                tarkasteleVarausPaneeli.add(new Text(obj.getAsiakas().getNimi(false)),1,2);
+                tarkasteleVarausPaneeli.add(new Text(obj.getMokki().getNimi()),1,3); // TODO mökin nimi vai ID vai molemmat
                 tarkasteleVarausPaneeli.add(new Text(dateTimeFormat.format(obj.getVarattuPvm())),1,4);
                 tarkasteleVarausPaneeli.add(new Text(dateTimeFormat.format(obj.getVahvistusPvm())),1,5);
                 tarkasteleVarausPaneeli.add(new Text(dateTimeFormat.format(obj.getVarausAlkuPvm())),1,6);
@@ -977,10 +959,6 @@ public class Main extends Application {
         asiakasnappula.setOnAction(e -> {
             paneeli.setCenter(asiakaspaneeli);
             isoOtsikkoTeksti.setText("ASIAKKAAT");
-//            for (Nappula n : nappulat) {
-//                n.deselect();
-//            }
-//            asiakasnappula.select();
         });
 
         GridPane asiakasHaku = new GridPane();
@@ -995,6 +973,7 @@ public class Main extends Application {
         asiakasHakuKenttaLabel.setContentDisplay(ContentDisplay.RIGHT);
         asiakasHaku.add(asiakasHakuKenttaLabel, 1, 1);
         Nappula asiakasHakuNappula = new Nappula("Suorita haku", 190, 30);
+        // TODO päivitä näkymä
         asiakasHaku.add(asiakasHakuNappula, 1, 2);
 
         asiakasHaku.add(new Text("Lajittelu:"), 2, 0);
@@ -1017,7 +996,6 @@ public class Main extends Application {
                 case "A > Ö" ->
                         asiakasLista.sort(Comparator.comparing(Asiakas::getSukunimi));
             }
-            // TODO päivitä näkymä
         });
 
         ScrollPane asiakasScrollaus = new ScrollPane();
@@ -1074,8 +1052,7 @@ public class Main extends Application {
 
             Nappula tallennaAsiakasMuutokset = new Nappula("Lisää asiakas");
             tallennaAsiakasMuutokset.setOnAction( event -> {
-                //TÄHÄN DROP IF EXISTS tai UPDATE
-                //(tietokanta.insertAsiakas();)
+                // TODO päivitys
             });
 
             asiakasMuokkausPaneeli.getChildren().addAll
@@ -1128,44 +1105,17 @@ public class Main extends Application {
             poistoNappula.setGraphic(roskis);
             asiakasTaulukko.add(poistoNappula, 4, rivi);
             poistoNappula.setOnMouseClicked(e -> {
-                // poistaasiakas();                          //TODO  poistaasiakas() - metodin luominen
-                Stage poistaAsiakasIkkuna = new Stage();
-                poistaAsiakasIkkuna.show();
-                BorderPane poistaAsiakasPaneeli = new BorderPane();
-                poistaAsiakasPaneeli.setPadding(new Insets(50));
-
-                Scene poistaAsiakasKehys = new Scene(poistaAsiakasPaneeli, 600, 200);
-                poistaAsiakasIkkuna.setScene(poistaAsiakasKehys);
-                poistaAsiakasIkkuna.setTitle("Poista asiakas");
-
-                HBox poistaAsiakasNappulaPaneeli = new HBox();
-                poistaAsiakasNappulaPaneeli.setSpacing(30);
-                poistaAsiakasNappulaPaneeli.setPadding(new Insets(30));
-                Nappula poistaAsiakasNappula = new Nappula("Poista asiakas");
-                Nappula peruutaAsiakasPoistoNappula = new Nappula("Peruuta");
-                poistaAsiakasNappulaPaneeli.getChildren().addAll(poistaAsiakasNappula, peruutaAsiakasPoistoNappula);
-
-                StackPane tekstiPaneeli = new StackPane();
-                Text haluatkoPoistaaasiakasTeksti = new Text("Haluatko varmasti poistaa asiakkaan?\n" +
+                PoistoIkkuna poistoIkkuna = new PoistoIkkuna("asiakas", "asiakkaan",
                         "Kaikki asiakkaan varaukset ja laskut poistuvat samalla järjestelmästä.");
-                haluatkoPoistaaasiakasTeksti.setTextAlignment(TextAlignment.CENTER);
-                haluatkoPoistaaasiakasTeksti.setFont(Font.font(16));
-                tekstiPaneeli.getChildren().add(haluatkoPoistaaasiakasTeksti);
-                poistaAsiakasPaneeli.setTop(tekstiPaneeli);
-                poistaAsiakasPaneeli.setCenter(poistaAsiakasNappulaPaneeli);
 
-                poistaAsiakasNappula.setOnAction( event -> {
+                poistoIkkuna.getPoistoNappula().setOnAction( event -> {
                     try {
                         tietokanta.poistaAsiakas(obj.getID());
                     } catch (SQLException ex) {
                         throw new RuntimeException(ex);
                     }
-                    poistaAsiakasIkkuna.close();
+                    poistoIkkuna.getIkkuna().close();
                     //TODO listan päivitys!!!
-                });
-
-                peruutaAsiakasPoistoNappula.setOnAction( event -> {
-                    poistaAsiakasIkkuna.close();
                 });
             });
 
@@ -1223,8 +1173,7 @@ public class Main extends Application {
 
                 Nappula tallennaAsiakasMuutokset = new Nappula("Tallenna muutokset");
                 tallennaAsiakasMuutokset.setOnAction( event -> {
-                    //TÄHÄN DROP IF EXISTS tai UPDATE
-                    //(tietokanta.insertAsiakas();)
+                    // TODO muokkausmetodi
                 });
 
                 asiakasMuokkausPaneeli.getChildren().addAll
@@ -1263,7 +1212,7 @@ public class Main extends Application {
                 tarkasteleAsiakasPaneeli.add(new Text("Postinumero: "),0,6);
 
                 tarkasteleAsiakasPaneeli.add(new Text(String.valueOf(obj.getID())),1,1);
-                tarkasteleAsiakasPaneeli.add(new Text(obj.getNimi(true)),1,2);
+                tarkasteleAsiakasPaneeli.add(new Text(obj.getNimi(false)),1,2);
                 tarkasteleAsiakasPaneeli.add(new Text(obj.getEmail()),1,3);
                 tarkasteleAsiakasPaneeli.add(new Text(obj.getPuhelinNro()),1,4);
                 tarkasteleAsiakasPaneeli.add(new Text(obj.getLahiosoite()),1,5);
@@ -1279,10 +1228,6 @@ public class Main extends Application {
         laskunappula.setOnAction(e -> {
             paneeli.setCenter(laskupaneeli);
             isoOtsikkoTeksti.setText("LASKUT");
-//            for (Nappula n : nappulat) {
-//                n.deselect();
-//            }
-//            laskunappula.select();
         });
 
         GridPane laskuHaku = new GridPane();
@@ -1297,6 +1242,7 @@ public class Main extends Application {
         laskuHakuKenttaLabel.setContentDisplay(ContentDisplay.RIGHT);
         laskuHaku.add(laskuHakuKenttaLabel, 1, 1);
         Nappula laskuHakuNappula = new Nappula("Suorita haku", 190, 30);
+        // TODO päivitä näkymä
         laskuHaku.add(laskuHakuNappula, 1, 2);
 
         laskuHaku.add(new Text("Lajittelu:"), 2, 0);
@@ -1314,12 +1260,13 @@ public class Main extends Application {
             switch (laskuLajittelu.getValue()) {
                 case "Tunnuksen mukaan" ->
                         laskuLista.sort(Comparator.comparing(Lasku::getID));
-                case "Uusin > Vanhin" -> {} // TODO taas vähän monimutkaisempi
-                case "Vanhin > Uusin" -> {} // TODO sama kuin ylempänä
+                case "Uusin > Vanhin" ->
+                        laskuLista.sort(Comparator.comparing(Lasku -> Lasku.getVaraus().getVahvistusPvm())); // TODO tehdäänkö vahvistuspvm:n mukaan
+                case "Vanhin > Uusin" ->
+                        laskuLista.sort(Comparator.comparing(Lasku -> Lasku.getVaraus().getVahvistusPvm())); // TODO tämä ei jostain syystä toimi jos siihen laittaa reversed perään
                 case "Varaustunnuksen mukaan" ->
                         laskuLista.sort(Comparator.comparing(Lasku -> Lasku.getVaraus().getID()));
             }
-            // TODO päivitä näkymä
         });
 
         ScrollPane laskuScrollaus = new ScrollPane();
@@ -1354,21 +1301,13 @@ public class Main extends Application {
         laskuTaulukko.add(laskuStatusOtsikko, 3, 1);
 
 
-//        laskuLista.add(new Lasku(
-//                24, 345, BigDecimal.valueOf(240), 14,
-//                "Maksettu"));
-//        laskuLista.add(new Lasku(
-//                25, 346, BigDecimal.valueOf(380), 14,
-//                "Maksamatta"));     //TEMP
-
-
         int rivi = 2;
         for (Lasku obj : laskuLista) {
             Text laskuID = new Text(String.valueOf(obj.getID()));
             laskuID.setFont(fontti);
-            Text laskuVaraus = new Text(String.valueOf(obj.getVaraus()));
+            Text laskuVaraus = new Text(String.valueOf(obj.getVaraus().getID()));
             laskuVaraus.setFont(fontti);
-            Text laskuSumma = new Text(String.valueOf(obj.getSumma()));
+            Text laskuSumma = new Text(obj.getSumma() + " €");
             laskuSumma.setFont(fontti);
             Text laskuStatus = new Text(String.valueOf(obj.getStatus()));
             laskuStatus.setFont(fontti);
@@ -1387,43 +1326,16 @@ public class Main extends Application {
             poistoNappula.setGraphic(roskis);
             laskuTaulukko.add(poistoNappula, 4, rivi);
             poistoNappula.setOnMouseClicked(e -> {
-                // poistalasku();                          //TODO  poistalasku() - metodin luominen
-                Stage poistaLaskuIkkuna = new Stage();
-                poistaLaskuIkkuna.show();
-                BorderPane poistaLaskuPaneeli = new BorderPane();
-                poistaLaskuPaneeli.setPadding(new Insets(50));
+                PoistoIkkuna poistoIkkuna = new PoistoIkkuna("lasku", "laskun");
 
-                Scene poistaLaskuKehys = new Scene(poistaLaskuPaneeli, 600, 200);
-                poistaLaskuIkkuna.setScene(poistaLaskuKehys);
-                poistaLaskuIkkuna.setTitle("Poista lasku");
-
-                HBox poistaLaskuNappulaPaneeli = new HBox();
-                poistaLaskuNappulaPaneeli.setSpacing(30);
-                poistaLaskuNappulaPaneeli.setPadding(new Insets(30));
-                Nappula poistaLaskuNappula = new Nappula("Poista lasku");
-                Nappula peruutaLaskuPoistoNappula = new Nappula("Peruuta");
-                poistaLaskuNappulaPaneeli.getChildren().addAll(poistaLaskuNappula, peruutaLaskuPoistoNappula);
-
-                StackPane tekstiPaneeli = new StackPane();
-                Text haluatkoPoistaalaskuTeksti = new Text("Haluatko varmasti poistaa laskun?");
-                haluatkoPoistaalaskuTeksti.setTextAlignment(TextAlignment.CENTER);
-                haluatkoPoistaalaskuTeksti.setFont(Font.font(16));
-                tekstiPaneeli.getChildren().add(haluatkoPoistaalaskuTeksti);
-                poistaLaskuPaneeli.setTop(tekstiPaneeli);
-                poistaLaskuPaneeli.setCenter(poistaLaskuNappulaPaneeli);
-
-                poistaLaskuNappula.setOnAction( event -> {
+                poistoIkkuna.getPoistoNappula().setOnAction( event -> {
                     try {
                         tietokanta.poistaLasku(obj.getID());
                     } catch (SQLException ex) {
                         throw new RuntimeException(ex);
                     }
-                    poistaLaskuIkkuna.close();
+                    poistoIkkuna.getIkkuna().close();
                     //TODO listan päivitys!!!
-                });
-
-                peruutaLaskuPoistoNappula.setOnAction( event -> {
-                    poistaLaskuIkkuna.close();
                 });
             });
 
@@ -1434,7 +1346,7 @@ public class Main extends Application {
             muokkausNappula.setGraphic(muokkaus);
             laskuTaulukko.add(muokkausNappula, 5, rivi);
             muokkausNappula.setOnMouseClicked(e -> {
-                // muokkaaLasku();                          //TODO  muokkaamokki() - metodin luominen
+                // muokkaaLasku();                          //TODO  muokkaaLasku() - metodin luominen
             });
 
             Nappula tarkasteleNappula = new Nappula(170, 30);
@@ -1444,7 +1356,7 @@ public class Main extends Application {
             tarkasteleNappula.setGraphic(tarkastelu);
             laskuTaulukko.add(tarkasteleNappula, 6, rivi);
             tarkasteleNappula.setOnMouseClicked(e -> {
-                // tarkasteleLasku();                          //TODO  tarkasteleMokkia() - metodin luominen
+                // tarkasteleLasku();                          //TODO  tarkasteleLasku() - metodin luominen
             });
 
             Nappula luoLaskuNappula = new Nappula(150, 30);
@@ -1454,7 +1366,7 @@ public class Main extends Application {
             luoLaskuNappula.setGraphic(tiedostoksi);
             laskuTaulukko.add(luoLaskuNappula, 7, rivi);
             luoLaskuNappula.setOnMouseClicked(e -> {
-                // luoLasku();                          //TODO  tarkasteleMokkia() - metodin luominen
+                // luoLasku();                          //TODO  luoLasku() - metodin luominen
             });
 
             rivi++;

@@ -19,8 +19,9 @@ public class PoistoIkkuna {
      * Luo uuden poistoikkunan. Ikkunalle täytyy erikseen asettaa toiminnallisuus poistoNappulalle.
      * @param teksti Mikä poistetaan, esim. "varaus"
      * @param tekstiGen Mikä poistetaan, mutta genetiivissä, esim. "varauksen"
+     * @param tekstiEkstra Ylimääräinen teksti joka tulee varmistustekstin alle
      */
-    public PoistoIkkuna(String teksti, String tekstiGen) {
+    public PoistoIkkuna(String teksti, String tekstiGen, String tekstiEkstra) {
         ikkuna = new Stage();
         // TODO ylaIkkuna parametriksi jos haluaa lukita alemman ikkunan käytön
 //        ikkuna.initModality(Modality.WINDOW_MODAL);
@@ -42,7 +43,9 @@ public class PoistoIkkuna {
         nappulaPaneeli.getChildren().addAll(poistoNappula, peruutaNappula);
 
         StackPane tekstiPaneeli = new StackPane();
-        Text poistoTeksti = new Text("Haluatko varmasti poistaa " + tekstiGen + "?");
+        // Lisätään poistotekstin loppuun ekstrateksti jos se on annettu
+        Text poistoTeksti = new Text("Haluatko varmasti poistaa " + tekstiGen + "?" +
+                (tekstiEkstra == null ? "" : "\n" + tekstiEkstra));
         poistoTeksti.setTextAlignment(TextAlignment.CENTER);
         poistoTeksti.setFont(Font.font(16));
         tekstiPaneeli.getChildren().add(poistoTeksti);
@@ -50,6 +53,15 @@ public class PoistoIkkuna {
         paneeli.setCenter(nappulaPaneeli);
 
         peruutaNappula.setOnAction(e -> ikkuna.close());
+    }
+
+    /**
+     * Luo uuden poistoikkunan. Ikkunalle täytyy erikseen asettaa toiminnallisuus poistoNappulalle.
+     * @param teksti Mikä poistetaan, esim. "varaus"
+     * @param tekstiGen Mikä poistetaan, mutta genetiivissä, esim. "varauksen"
+     */
+    public PoistoIkkuna(String teksti, String tekstiGen) {
+        this(teksti, tekstiGen, null);
     }
 
     public Nappula getPoistoNappula() {
