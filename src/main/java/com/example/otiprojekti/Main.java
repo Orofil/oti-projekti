@@ -20,48 +20,45 @@ import javafx.scene.text.Font;
 
 import java.sql.SQLException;
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.*;
 
+import static com.example.otiprojekti.Tietokanta.dateTimeFormat;
 import static com.example.otiprojekti.Utils.etsiPostiNro;
 import static com.example.otiprojekti.Utils.imageKuvasta;
 
-
 public class Main extends Application {
-
-
     // Ikkunan mittasuhde jaettuna kahteen kenttään
-    private final double SUHDE_W = 5.5;
-    private final double SUHDE_H = 3;
+    public final double SUHDE_W = 5.5;
+    public final double SUHDE_H = 3;
     // Kuinka suuren osan näytön leveydestä tai korkeudesta ikkuna vie enintään
-    private final double MAX_OSUUS = 0.9;
+    public final double MAX_OSUUS = 0.9;
     // Ikkunan suurin sallittu koko
-    private final int MAX_LEVEYS = 1600; // TODO Näiden suhde ei ole sama kuin tuo oletussuhde mikä on vähän outoa
-    private final int MAX_KORKEUS = 800;
+    public final int MAX_LEVEYS = 1600; // TODO Näiden suhde ei ole sama kuin tuo oletussuhde mikä on vähän outoa
+    public final int MAX_KORKEUS = 800;
 
     /**
      * Fontti, jota käytetään tavalliseen tekstiin.
      */
-    private static final Font fontti = Font.font(16);
-    private static final int HAKU_PADDING = 20;
-    private static final int HAKU_HGAP = 20;
-    private static final int HAKU_VGAP = 15;
+    public static final Font fontti = Font.font(16);
+    public static final int HAKU_PADDING = 20;
+    public static final int HAKU_HGAP = 20;
+    public static final int HAKU_VGAP = 15;
 
-    private final ToggleNappula aluenappula = new ToggleNappula("Alueet");
-    private final ToggleNappula mokkinappula = new ToggleNappula("Mökit");
-    private final ToggleNappula palvelunappula = new ToggleNappula("Palvelut");
-    private final ToggleNappula varausnappula = new ToggleNappula("Varaukset");
-    private final ToggleNappula asiakasnappula = new ToggleNappula("Asiakkaat");
-    private final ToggleNappula laskunappula = new ToggleNappula("Laskut");
-    private final ToggleNappula[] nappulat = new ToggleNappula[] {
+    ToggleNappula aluenappula = new ToggleNappula("Alueet");
+    ToggleNappula mokkinappula = new ToggleNappula("Mökit");
+    ToggleNappula palvelunappula = new ToggleNappula("Palvelut");
+    ToggleNappula varausnappula = new ToggleNappula("Varaukset");
+    ToggleNappula asiakasnappula = new ToggleNappula("Asiakkaat");
+    ToggleNappula laskunappula = new ToggleNappula("Laskut");
+    ToggleNappula[] nappulat = new ToggleNappula[] {
             aluenappula, mokkinappula, palvelunappula, varausnappula, asiakasnappula, laskunappula};
-    private final ToggleGroup tgSivuvalikko = new ToggleGroup();
+    ToggleGroup tgSivuvalikko = new ToggleGroup();
 
-    private final BorderPane paneeli = new BorderPane();
-    private final IlmoitusPaneeli ilmoitusPaneeli = new IlmoitusPaneeli();
-    private final Pane ilmoitusPaneeliPaneeli = new Pane(ilmoitusPaneeli);
-    private final StackPane paneeliYlin = new StackPane(paneeli, ilmoitusPaneeliPaneeli);
-    private final Text isoOtsikkoTeksti = new Text();
+    BorderPane paneeli = new BorderPane();
+    IlmoitusPaneeli ilmoitusPaneeli = new IlmoitusPaneeli();
+    Pane ilmoitusPaneeliPaneeli = new Pane(ilmoitusPaneeli);
+    StackPane paneeliYlin = new StackPane(paneeli, ilmoitusPaneeliPaneeli);
+    Text isoOtsikkoTeksti = new Text();
 
     // Taulukon sarakkeet
     ColumnConstraints sarakeLevea = new ColumnConstraints();
@@ -70,13 +67,7 @@ public class Main extends Application {
 
 
     // Tietokantayhteys
-    private final Tietokanta tietokanta = new Tietokanta(); // TODO jos tehdään vaikka nappi uudelleen yhdistämiseen niin sitten final pitää poistaa koska olio luodaan uudelleen
-
-    /**
-     * SQL:n käyttämä muotoilu DateTime-tietotyypeissä
-     */
-    // TODO sama on Tietokanta.javassa, kannattaisi olla vain toisessa ehkä
-    private final DateTimeFormatter dateTimeFormat = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+    Tietokanta tietokanta = new Tietokanta();
 
     ArrayList<Posti> postiLista = new ArrayList<>();
     ArrayList<Alue> alueLista = new ArrayList<>();
@@ -568,6 +559,7 @@ public class Main extends Application {
         varausnappula.setOnAction(e -> {
             paneeli.setCenter(varauspaneeli);
             isoOtsikkoTeksti.setText("VARAUKSET");
+            paivitaVarausTaulukko();
         });
 
         GridPane varausHaku = new GridPane();
@@ -786,8 +778,6 @@ public class Main extends Application {
             varausLisaysStage.show();
         });
 
-        paivitaVarausTaulukko();
-
     }
 
     public void paivitaVarausTaulukko() {
@@ -852,7 +842,7 @@ public class Main extends Application {
                     try {
                         tietokanta.poistaVaraus(obj.getID());
                     } catch (SQLException ex) {
-                        throw new RuntimeException(ex);
+                        throw new RuntimeException(ex); // TODO virheiden käsittely
                     }
                     poistoIkkuna.getIkkuna().close();
                     paivitaVarausTaulukko();
@@ -986,6 +976,7 @@ public class Main extends Application {
         asiakasnappula.setOnAction(e -> {
             paneeli.setCenter(asiakaspaneeli);
             isoOtsikkoTeksti.setText("ASIAKKAAT");
+            paivitaAsiakasTaulukko();
         });
 
         GridPane asiakasHaku = new GridPane();
@@ -1108,14 +1099,9 @@ public class Main extends Application {
             asiakasLisaysIkkuna.setTitle("Lisää asiakas");
             asiakasLisaysIkkuna.show();
         });
-
-        paivitaAsiakasTaulukko();
-
     }
 
-
     public void paivitaAsiakasTaulukko() {
-
         asiakasTaulukko.setGridLinesVisible(false);
         asiakasTaulukko.getColumnConstraints().clear();
         asiakasTaulukko.getChildren().clear();
@@ -1174,7 +1160,7 @@ public class Main extends Application {
                     try {
                         tietokanta.poistaAsiakas(obj.getID());
                     } catch (SQLException ex) {
-                        throw new RuntimeException(ex);
+                        throw new RuntimeException(ex); // TODO virheiden käsittely
                     }
                     poistoIkkuna.getIkkuna().close();
                     paivitaAsiakasTaulukko();
@@ -1310,6 +1296,7 @@ public class Main extends Application {
         laskunappula.setOnAction(e -> {
             paneeli.setCenter(laskupaneeli);
             isoOtsikkoTeksti.setText("LASKUT");
+            paivitaLaskuTaulukko();
         });
 
         GridPane laskuHaku = new GridPane();
@@ -1400,7 +1387,6 @@ public class Main extends Application {
     }
     
     public void paivitaLaskuTaulukko() {
-
         laskuTaulukko.setGridLinesVisible(false);
         laskuTaulukko.getColumnConstraints().clear();
         laskuTaulukko.getChildren().clear();
@@ -1457,10 +1443,10 @@ public class Main extends Application {
                     try {
                         tietokanta.poistaLasku(obj.getID());
                     } catch (SQLException ex) {
-                        throw new RuntimeException(ex);
+                        throw new RuntimeException(ex); // TODO virheiden käsittely
                     }
                     poistoIkkuna.getIkkuna().close();
-                    //TODO listan päivitys!!!
+                    paivitaLaskuTaulukko();
                 });
             });
 
@@ -1501,6 +1487,4 @@ public class Main extends Application {
     public static void main(String[] args) {
         launch();
     }
-
-
 }

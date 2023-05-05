@@ -23,15 +23,13 @@ public class Tietokanta {
     // Salasana
     private final String PASS = "koira1";
 
-    private final String POLKU = "src/main/resources/com/example/otiprojekti/";
-
     private Connection con;
     private PreparedStatement stm;
 
     /**
      * SQL:n käyttämä muotoilu DateTime-tietotyypeissä
      */
-    private final DateTimeFormatter dateTimeFormat = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+    public static final DateTimeFormatter dateTimeFormat = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 
     public Tietokanta() {
         // Tarkistetaan löytyykö tarvittavaa luokkaa yhdistämiseen
