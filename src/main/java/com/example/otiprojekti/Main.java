@@ -788,7 +788,7 @@ public class Main extends Application {
         varausTaulukko.getColumnConstraints().clear();
         varausTaulukko.getChildren().clear();
         varausTaulukko.getColumnConstraints().addAll
-                (sarakeSemi, sarakeLevea, sarakeLyhyt, sarakeLyhyt, sarakeLyhyt, sarakeLyhyt);
+                (sarakeSemi, sarakeLevea, sarakeLevea, sarakeLyhyt, sarakeLyhyt, sarakeLyhyt);
         varausTaulukko.setGridLinesVisible(true);
 
         varausTaulukko.setPadding(new Insets(20));
@@ -866,8 +866,8 @@ public class Main extends Application {
                 GridPane varausMuokkausGridPaneeli = new GridPane();
                 varausMuokkausGridPaneeli.setVgap(5);
                 varausMuokkausGridPaneeli.add(new Text("Muokkaa varauksen tietoja:"), 0, 0);
-                TextField asiakasID = new TextField(String.valueOf(obj.getAsiakas()));
-                TextField mokkiID = new TextField(String.valueOf(obj.getMokki()));
+                TextField asiakasID = new TextField(String.valueOf(obj.getAsiakas().getID()));
+                TextField mokkiID = new TextField(String.valueOf(obj.getMokki().getID()));
                 DatePicker aloitusPvm = new DatePicker(obj.getVarausAlkuPvm().toLocalDate());
                 // Laittaa tekstiksi varausAlkuPvm:n ajan jos se ei ole null, muuten 16:00, TODO tuleeko sekunnit mukaan varausAlkuPvm:stä
                 TextField aloitusAika = new TextField(String.valueOf(Objects.requireNonNullElse(
@@ -928,25 +928,27 @@ public class Main extends Application {
                 tarkasteleVarausPaneeli.setPadding(new Insets(25));
                 tarkasteleVarausPaneeli.setVgap(15);
                 tarkasteleVarausPaneeli.setHgap(15);
-                Scene tarkasteleVarausKehys = new Scene(tarkasteleVarausPaneeli, 400, 300);
+                Scene tarkasteleVarausKehys = new Scene(tarkasteleVarausPaneeli, 400, 400);
                 tarkasteleVarausIkkuna.setScene(tarkasteleVarausKehys);
 
                 tarkasteleVarausPaneeli.add(new Text("Varauksen tiedot"),0,0);
                 tarkasteleVarausPaneeli.add(new Text("VarausID: "),0,1);
-                tarkasteleVarausPaneeli.add(new Text("AsiakasID: "),0,2);
-                tarkasteleVarausPaneeli.add(new Text("MökkiID: "),0,3);
-                tarkasteleVarausPaneeli.add(new Text("Varattu: "),0,4);
-                tarkasteleVarausPaneeli.add(new Text("Vahvistettu: "),0,5);
-                tarkasteleVarausPaneeli.add(new Text("Varauksen alkupvm: "),0,6);
-                tarkasteleVarausPaneeli.add(new Text("Varauksen loppupvm: "),0,7);
+                tarkasteleVarausPaneeli.add(new Text("Asiakkaan nimi: "),0,2);
+                tarkasteleVarausPaneeli.add(new Text("AsiakasID: "),0,3);
+                tarkasteleVarausPaneeli.add(new Text("Mökki: "),0,4);
+                tarkasteleVarausPaneeli.add(new Text("Varattu: "),0,5);
+                tarkasteleVarausPaneeli.add(new Text("Vahvistettu: "),0,6);
+                tarkasteleVarausPaneeli.add(new Text("Varauksen alkupvm: "),0,7);
+                tarkasteleVarausPaneeli.add(new Text("Varauksen loppupvm: "),0,8);
 
                 tarkasteleVarausPaneeli.add(new Text(String.valueOf(obj.getID())),1,1);
                 tarkasteleVarausPaneeli.add(new Text(obj.getAsiakas().getNimi(false)),1,2);
-                tarkasteleVarausPaneeli.add(new Text(obj.getMokki().getNimi()),1,3); // TODO mökin nimi vai ID vai molemmat
-                tarkasteleVarausPaneeli.add(new Text(dateTimeFormat.format(obj.getVarattuPvm())),1,4);
-                tarkasteleVarausPaneeli.add(new Text(dateTimeFormat.format(obj.getVahvistusPvm())),1,5);
-                tarkasteleVarausPaneeli.add(new Text(dateTimeFormat.format(obj.getVarausAlkuPvm())),1,6);
-                tarkasteleVarausPaneeli.add(new Text(dateTimeFormat.format(obj.getVarausLoppuPvm())),1,7);
+                tarkasteleVarausPaneeli.add(new Text(String.valueOf(obj.getAsiakas().getID())),1,3);
+                tarkasteleVarausPaneeli.add(new Text(obj.getMokki().getNimi()),1,4); // TODO mökin nimi vai ID vai molemmat
+                tarkasteleVarausPaneeli.add(new Text(dateTimeFormat.format(obj.getVarattuPvm())),1,5);
+                tarkasteleVarausPaneeli.add(new Text(dateTimeFormat.format(obj.getVahvistusPvm())),1,6);
+                tarkasteleVarausPaneeli.add(new Text(dateTimeFormat.format(obj.getVarausAlkuPvm())),1,7);
+                tarkasteleVarausPaneeli.add(new Text(dateTimeFormat.format(obj.getVarausLoppuPvm())),1,8);
 
             });
 
