@@ -245,7 +245,43 @@ public class Main extends Application {
         alueenLisays.setFitHeight(22);
         alueenLisaysNappula.setGraphic(alueenLisays);
         alueenLisaysNappula.setOnAction( e -> {
-            // TODO
+            Stage alueLisaysIkkuna = new Stage();
+            alueLisaysIkkuna.show();
+            alueLisaysIkkuna.setTitle("Lisää alue");
+            VBox alueLisaysPaneeli = new VBox();
+            alueLisaysPaneeli.setPadding(new Insets(25));
+            alueLisaysPaneeli.setSpacing(15);
+
+            GridPane alueLisaysGridPaneeli = new GridPane();
+            alueLisaysGridPaneeli.setVgap(15);
+            alueLisaysGridPaneeli.setHgap(15);
+
+            Text alueLisaysTeksti = new Text("Syötä alueen tiedot.");
+            alueLisaysGridPaneeli.add(alueLisaysTeksti, 0, 0);
+
+            Text alueNimiTeksti = new Text("Alueen nimi: ");
+            TextField alueNimi = new TextField();
+
+            alueLisaysGridPaneeli.add(alueNimiTeksti, 0, 1);
+            alueLisaysGridPaneeli.add(alueNimi, 1, 1);
+
+            Nappula lisaaAlueNappula = new Nappula("Lisää alue");
+
+            lisaaAlueNappula.setOnAction( event -> {
+                try {
+                    tietokanta.insertAlue(alueNimi.getText());
+                    alueLisaysIkkuna.close();
+                    paivitaAlueTaulukko();
+                } catch (SQLException ex) {
+                    alueLisaysTeksti.setText("Alueen lisääminen ei onnistunut. \n Yritä uudelleen.");
+                    alueLisaysTeksti.setFill(Color.RED);
+                }
+            });
+
+            alueLisaysPaneeli.getChildren().addAll(alueLisaysGridPaneeli, lisaaAlueNappula);
+
+            Scene alueLisaysKehys = new Scene(alueLisaysPaneeli, 400, 300);
+            alueLisaysIkkuna.setScene(alueLisaysKehys);
         });
 
         paivitaAlueTaulukko();
