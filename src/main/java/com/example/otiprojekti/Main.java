@@ -85,6 +85,8 @@ public class Main extends Application {
     Nappula laskunLisaysNappula = new Nappula(200, 30);
     GridPane alueTaulukko = new GridPane();
     Nappula alueenLisaysNappula = new Nappula(200, 30);
+    GridPane mokkiTaulukko = new GridPane();
+    Nappula mokkienLisaysNappula = new Nappula(200, 30);
 
     @Override
     public void start(Stage ikkuna) {
@@ -411,7 +413,9 @@ public class Main extends Application {
         mokkiHakuKenttaLabel.setContentDisplay(ContentDisplay.RIGHT);
         mokkiHaku.add(mokkiHakuKenttaLabel, 1, 1);
         Nappula mokkiHakuNappula = new Nappula("Suorita haku", 190, 30);
-        // TODO päivitä näkymä
+        mokkiHakuNappula.setOnAction( e -> {
+            paivitaAlueTaulukko();
+        });
         mokkiHaku.add(mokkiHakuNappula, 1, 2);
 
         mokkiHaku.add(new Text("Lajittelu:"), 2, 0);
@@ -446,19 +450,28 @@ public class Main extends Application {
 
         ScrollPane mokkiScrollaus = new ScrollPane();
         mokkipaneeli.setCenter(mokkiScrollaus);
-        GridPane mokkiTaulukko = new GridPane();
-        mokkiTaulukko.setPadding(new Insets(20));
-        mokkiTaulukko.getColumnConstraints().addAll(
-                sarakeLyhyt, sarakeLevea, sarakeLyhyt, sarakeLyhyt, sarakeLyhyt, sarakeLyhyt, sarakeLyhyt, sarakeLyhyt);
-        mokkiTaulukko.setGridLinesVisible(true);
+
         mokkiScrollaus.setContent(mokkiTaulukko);
 
-
-        Nappula mokkienLisaysNappula = new Nappula(200, 30);
         ImageView mokkienLisays = new ImageView(imageKuvasta("lisays.png"));
         mokkienLisays.setFitWidth(23);
         mokkienLisays.setFitHeight(22);
         mokkienLisaysNappula.setGraphic(mokkienLisays);
+
+        paivitaMokkiTaulukko();
+    }
+
+    public void paivitaMokkiTaulukko(){
+
+        mokkiTaulukko.setGridLinesVisible(false);
+        mokkiTaulukko.getColumnConstraints().clear();
+        mokkiTaulukko.getChildren().clear();
+        mokkiTaulukko.getColumnConstraints().addAll(
+                sarakeLyhyt, sarakeLevea, sarakeLyhyt, sarakeLyhyt, sarakeLyhyt, sarakeLyhyt, sarakeLyhyt, sarakeLyhyt);
+        mokkiTaulukko.setGridLinesVisible(true);
+
+        mokkiTaulukko.setPadding(new Insets(20));
+
         mokkiTaulukko.add(mokkienLisaysNappula, 1,0);
 
         Text mokkitunnusOtsikko = new Text("Tunnus");
@@ -528,6 +541,7 @@ public class Main extends Application {
 
             rivi++;
         }
+
     }
     
     public void luoPalvelunakyma() {
