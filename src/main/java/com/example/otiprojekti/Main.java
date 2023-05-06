@@ -347,8 +347,45 @@ public class Main extends Application {
             muokkaus.setFitHeight(22);
             muokkausNappula.setGraphic(muokkaus);
             alueTaulukko.add(muokkausNappula, 3, rivi);
-            muokkausNappula.setOnMouseClicked(e -> {
-                //
+            muokkausNappula.setOnAction(e -> {
+                Stage alueMuokkausIkkuna = new Stage();
+                alueMuokkausIkkuna.show();
+                alueMuokkausIkkuna.setTitle("Muokkaa alueen tietoja");
+                VBox alueMuokkausPaneeli = new VBox();
+                alueMuokkausPaneeli.setPadding(new Insets(25));
+                alueMuokkausPaneeli.setSpacing(15);
+
+                GridPane alueMuokkausGridPaneeli = new GridPane();
+                alueMuokkausGridPaneeli.setVgap(15);
+                alueMuokkausGridPaneeli.setHgap(15);
+
+                Text alueMuokkausTeksti = new Text("Muokkaa alueen tietoja.");
+                alueMuokkausGridPaneeli.add(alueMuokkausTeksti, 0, 0);
+
+                Text alueNimiTeksti = new Text("Alueen nimi: ");
+                TextField alueenNimi = new TextField();
+                alueenNimi.setText(obj.getNimi());
+
+                alueMuokkausGridPaneeli.add(alueNimiTeksti, 0, 1);
+                alueMuokkausGridPaneeli.add(alueenNimi, 1, 1);
+
+                Nappula muokkaaAlueNappula = new Nappula("Tallenna muutokset");
+
+                muokkaaAlueNappula.setOnAction( event -> {
+                    try {
+                        tietokanta.muokkaaAlue(obj.getID(), alueenNimi.getText());
+                        alueMuokkausIkkuna.close();
+                        paivitaAlueTaulukko();
+                    } catch (SQLException ex) {
+                        alueMuokkausTeksti.setText("Alueen tietojen muokkaaminen ei onnistunut. \n Yritä uudelleen.");
+                        alueMuokkausTeksti.setFill(Color.RED);
+                    }
+                });
+
+                alueMuokkausPaneeli.getChildren().addAll(alueMuokkausGridPaneeli, muokkaaAlueNappula);
+
+                Scene alueMuokkausKehys = new Scene(alueMuokkausPaneeli, 400, 300);
+                alueMuokkausIkkuna.setScene(alueMuokkausKehys);
             });
 
             rivi++;
