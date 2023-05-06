@@ -1164,7 +1164,7 @@ public class Main extends Application {
         asiakasnappula.setOnAction(e -> {
             paneeli.setCenter(asiakaspaneeli);
             isoOtsikkoTeksti.setText("ASIAKKAAT");
-            paivitaAsiakasTaulukko();
+            paivitaAsiakasTaulukko(asiakasLista);
         });
 
         GridPane asiakasHaku = new GridPane();
@@ -1179,7 +1179,6 @@ public class Main extends Application {
         asiakasHakuKenttaLabel.setContentDisplay(ContentDisplay.RIGHT);
         asiakasHaku.add(asiakasHakuKenttaLabel, 1, 1);
         Nappula asiakasHakuNappula = new Nappula("Suorita haku", 190, 30);
-        asiakasHakuNappula.setOnAction( e -> paivitaAsiakasTaulukko());
         asiakasHaku.add(asiakasHakuNappula, 1, 2);
 
         asiakasHaku.add(new Text("Lajittelu:"), 2, 0);
@@ -1189,19 +1188,26 @@ public class Main extends Application {
                 "Vanhin > Uusin",
                 "A > Ö"
         )));
-        asiakasLajittelu.setValue("Uusin > Vanhin"); // Oletuksena valittu vaihtoehto
+        asiakasLajittelu.setValue("Tunnuksen mukaan"); // Oletuksena valittu vaihtoehto
         asiakasHaku.add(asiakasLajittelu, 2, 1);
 
-        // Lajittelu
-        asiakasLajittelu.setOnAction(e -> {
+        asiakasHakuNappula.setOnAction( e -> {
+            ArrayList<Asiakas> asiakasTulokset = new ArrayList<>();
+
+            // Suodatus
+            // TODO
+
+            // Lajittelu
             switch (asiakasLajittelu.getValue()) {
                 case "Tunnuksen mukaan" ->
-                        asiakasLista.sort(Comparator.comparing(Asiakas::getID));
+                        asiakasTulokset.sort(Comparator.comparing(Asiakas::getID));
                 case "Uusin > Vanhin" -> {} // TODO miten tämä toimii?
                 case "Vanhin > Uusin" -> {} // TODO miten tämä toimii?
                 case "A > Ö" ->
-                        asiakasLista.sort(Comparator.comparing(Asiakas::getSukunimi));
+                        asiakasTulokset.sort(Comparator.comparing(Asiakas::getSukunimi));
             }
+
+            paivitaAsiakasTaulukko(asiakasTulokset);
         });
 
         ScrollPane asiakasScrollaus = new ScrollPane();
@@ -1269,7 +1275,7 @@ public class Main extends Application {
                     asiakasLista.add(tietokanta.insertAsiakas(postinro.getText(), enimi.getText(), snimi.getText(), lahiosoite.getText(),
                             email.getText(), puhnro.getText(), postiLista));
                     asiakasLisaysIkkuna.close();
-                    paivitaAsiakasTaulukko();
+                    paivitaAsiakasTaulukko(asiakasLista); // TODO tämä ei huomioi sitä jos asiakkaita on suodatettu haulla, mutta se olisi ehkä vaikea tehdäkin niin
                 } catch (SQLException ex) {
                     asiakasLisaysTeksti.setText("Tarkista, että syöttämäsi arvot ovat \n " +
                             "oikeaa muotoa ja yritä uudelleen.");
@@ -1287,7 +1293,7 @@ public class Main extends Application {
         });
     }
 
-    public void paivitaAsiakasTaulukko() {
+    public void paivitaAsiakasTaulukko(ArrayList<Asiakas> asiakasTulokset) {
         asiakasTaulukko.setGridLinesVisible(false);
         asiakasTaulukko.getColumnConstraints().clear();
         asiakasTaulukko.getChildren().clear();
@@ -1299,14 +1305,13 @@ public class Main extends Application {
         asiakasTaulukko.add(asiakasLisaysNappula, 1,0);
 
         Text asiakastunnusOtsikko = new Text("AsiakasID");
-        asiakastunnusOtsikko.setFont(fontti);
         Text asiakasNimiOtsikko = new Text("Asiakas");
-        asiakasNimiOtsikko.setFont(fontti);
         Text asiakasEmailOtsikko = new Text("Email");
-        asiakasEmailOtsikko.setFont(fontti);
         Text asiakasPuhNroOtsikko = new Text("Puh.nro.");
+        asiakastunnusOtsikko.setFont(fontti);
+        asiakasNimiOtsikko.setFont(fontti);
+        asiakasEmailOtsikko.setFont(fontti);
         asiakasPuhNroOtsikko.setFont(fontti);
-
 
         asiakasTaulukko.add(asiakastunnusOtsikko, 0, 1);
         asiakasTaulukko.add(asiakasNimiOtsikko, 1, 1);
@@ -1315,7 +1320,7 @@ public class Main extends Application {
 
 
         int rivi = 2;
-        for (Asiakas obj : asiakasLista) {
+        for (Asiakas obj : asiakasTulokset) {
             Text asiakasID = new Text(String.valueOf(obj.getID()));
             asiakasID.setFont(fontti);
             Text asiakasNimi = new Text(obj.getNimi(false));
@@ -1344,12 +1349,12 @@ public class Main extends Application {
 
                 poistoIkkuna.getPoistoNappula().setOnAction( event -> {
                     try {
-                        tietokanta.poistaAsiakas(obj.getID());
+                        tietokanta.poistaAsiakas(obj.getID()); // TODO asiakkaan poistaminen listalta
                     } catch (SQLException ex) {
                         throw new RuntimeException(ex); // TODO virheiden käsittely
                     }
                     poistoIkkuna.getIkkuna().close();
-                    paivitaAsiakasTaulukko();
+                    paivitaAsiakasTaulukko(asiakasTulokset);
                 });
             });
 
@@ -1420,9 +1425,9 @@ public class Main extends Application {
 
                         tietokanta.muokkaaAsiakas
                                 (obj.getID(), postinro.getText(), snimi.getText(), enimi.getText(),
-                                        email.getText(), lahiosoite.getText(), puhnro.getText());
+                                        email.getText(), lahiosoite.getText(), puhnro.getText()); // TODO tämän voi korvata Asiakas-oliolla, sitä vain pitää muokata ensin
                         asiakasMuokkausIkkuna.close();
-                        paivitaAsiakasTaulukko();
+                        paivitaAsiakasTaulukko(asiakasTulokset);
                     } catch (SQLException ex) {
                         asiakasMuokkausTeksti.setText("Varmista, että tiedot ovat oikeaa\n " +
                                 "tietotyyppiä ja yritä uudelleen.");
