@@ -727,7 +727,35 @@ public class Main extends Application {
             tarkasteleNappula.setGraphic(tarkastelu);
             mokkiTaulukko.add(tarkasteleNappula, 7, rivi);
             tarkasteleNappula.setOnMouseClicked(e -> {
-                // tarkasteleMokkia();                          //TODO  tarkasteleMokkia() - metodin luominen
+                Stage tarkasteleMokkiIkkuna = new Stage();
+                tarkasteleMokkiIkkuna.show();
+                GridPane tarkasteleMokkiPaneeli = new GridPane();
+                tarkasteleMokkiPaneeli.setPadding(new Insets(25));
+                tarkasteleMokkiPaneeli.setVgap(15);
+                tarkasteleMokkiPaneeli.setHgap(15);
+                Scene tarkasteleMokkiKehys = new Scene(tarkasteleMokkiPaneeli, 400, 400);
+                tarkasteleMokkiIkkuna.setScene(tarkasteleMokkiKehys);
+
+                tarkasteleMokkiPaneeli.add(new Text("Mökin tiedot"),0,0);
+                tarkasteleMokkiPaneeli.add(new Text("MökkiID: "),0,1);
+                tarkasteleMokkiPaneeli.add(new Text("Mökin nimi: "),0,2);
+                tarkasteleMokkiPaneeli.add(new Text("Alue: "),0,3);
+                tarkasteleMokkiPaneeli.add(new Text("Katuosoite: "),0,4);
+                tarkasteleMokkiPaneeli.add(new Text("Postinumero: "),0,5);
+                tarkasteleMokkiPaneeli.add(new Text("Hinta/vrk(€): "),0,6);
+                tarkasteleMokkiPaneeli.add(new Text("Kuvaus: "),0,7);
+                tarkasteleMokkiPaneeli.add(new Text("Henkilömäärä: "),0,8);
+                tarkasteleMokkiPaneeli.add(new Text("Varustelu: "),0,9);
+
+                tarkasteleMokkiPaneeli.add(new Text(String.valueOf(obj.getID())),1,1);
+                tarkasteleMokkiPaneeli.add(new Text(obj.getNimi()),1,2);
+                tarkasteleMokkiPaneeli.add(new Text(obj.getAlue().getNimi()),1,3);
+                tarkasteleMokkiPaneeli.add(new Text(obj.getKatuosoite()),1,4);
+                tarkasteleMokkiPaneeli.add(new Text(obj.getPostiNro().getPostiNro()),1,5);
+                tarkasteleMokkiPaneeli.add(new Text(String.valueOf(obj.getHinta())),1,6);
+                tarkasteleMokkiPaneeli.add(new Text(obj.getKuvaus()),1,7);
+                tarkasteleMokkiPaneeli.add(new Text(String.valueOf(obj.getHloMaara())),1,8);
+                tarkasteleMokkiPaneeli.add(new Text(obj.getVarustelu()),1,9);
             });
 
             rivi++;
