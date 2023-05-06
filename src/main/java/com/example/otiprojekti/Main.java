@@ -611,8 +611,20 @@ public class Main extends Application {
             poistoNappula.setGraphic(roskis);
             mokkiTaulukko.add(poistoNappula, 5, rivi);
             poistoNappula.setOnMouseClicked(e -> {
-                // poistamokki();                          //TODO  poistamokki() - metodin luominen
+                PoistoIkkuna poistaMokkiIkkuna = new PoistoIkkuna("mökki", "mökin",
+                        "Kaikki mökkeihin kuuluvat varaukset \npoistetaan samalla.");
+
+                poistaMokkiIkkuna.getPoistoNappula().setOnAction( event -> {
+                    try {
+                        tietokanta.poistaMokki(obj.getID());
+                    } catch (SQLException ex) {
+                        throw new RuntimeException(ex); // TODO virheiden käsittely
+                    }
+                    poistaMokkiIkkuna.getIkkuna().close();
+                    paivitaMokkiTaulukko();
+                });
             });
+
             Nappula muokkausNappula = new Nappula(100, 30);
             ImageView muokkaus = new ImageView(imageKuvasta("muokkaus.png"));
             muokkaus.setFitWidth(23);
