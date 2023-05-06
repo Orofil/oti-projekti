@@ -83,6 +83,8 @@ public class Main extends Application {
     Nappula asiakasLisaysNappula = new Nappula(200, 30);
     GridPane laskuTaulukko = new GridPane();
     Nappula laskunLisaysNappula = new Nappula(200, 30);
+    GridPane alueTaulukko = new GridPane();
+    Nappula alueenLisaysNappula = new Nappula(200, 30);
 
     @Override
     public void start(Stage ikkuna) {
@@ -203,6 +205,9 @@ public class Main extends Application {
         alueHakuKenttaLabel.setContentDisplay(ContentDisplay.RIGHT);
         alueHaku.add(alueHakuKenttaLabel, 1, 1);
         Nappula alueHakuNappula = new Nappula("Suorita haku", 190, 30);
+        alueHakuNappula.setOnAction( e -> {
+            paivitaAlueTaulukko();
+        });
         alueHaku.add(alueHakuNappula, 1, 2);
 
         alueHaku.add(new Text("Lajittelu:"), 2, 0);
@@ -230,18 +235,32 @@ public class Main extends Application {
 
         ScrollPane alueScrollaus = new ScrollPane();
         aluepaneeli.setCenter(alueScrollaus);
-        GridPane alueTaulukko = new GridPane();
-        alueTaulukko.setPadding(new Insets(20));
-        alueTaulukko.getColumnConstraints().addAll(sarakeLevea, sarakeLevea, sarakeLyhyt);
-        alueTaulukko.setGridLinesVisible(true);
+        
         alueScrollaus.setContent(alueTaulukko);
 
 
-        Nappula alueenLisaysNappula = new Nappula(200, 30);
+        
         ImageView alueenLisays = new ImageView(imageKuvasta("lisays.png"));
         alueenLisays.setFitWidth(23);
         alueenLisays.setFitHeight(22);
         alueenLisaysNappula.setGraphic(alueenLisays);
+        alueenLisaysNappula.setOnAction( e -> {
+            // TODO
+        });
+
+        paivitaAlueTaulukko();
+    }
+
+    public void paivitaAlueTaulukko() {
+
+        alueTaulukko.setGridLinesVisible(false);
+        alueTaulukko.getColumnConstraints().clear();
+        alueTaulukko.getChildren().clear();
+        alueTaulukko.getColumnConstraints().addAll(sarakeLevea, sarakeLevea, sarakeLyhyt, sarakeLyhyt);
+        alueTaulukko.setGridLinesVisible(true);
+
+        alueTaulukko.setPadding(new Insets(20));
+        
         alueTaulukko.add(alueenLisaysNappula, 1,0);
 
         Text aluetunnusOtsikko = new Text("Aluetunnus");
@@ -250,10 +269,6 @@ public class Main extends Application {
         alueennimiOtsikko.setFont(fontti);
         alueTaulukko.add(aluetunnusOtsikko, 0, 1);
         alueTaulukko.add(alueennimiOtsikko, 1, 1);
-
-
-        alueLista.add(new Alue(1, "Ylläs"));       //TEMP
-        alueLista.add(new Alue(2, "Levi"));        //TEMP
 
 
         int rivi = 2;
@@ -276,7 +291,28 @@ public class Main extends Application {
             poistoNappula.setGraphic(roskis);
             alueTaulukko.add(poistoNappula, 2, rivi);
             poistoNappula.setOnMouseClicked(e -> {
-                // poistaAlue();                          //TODO  poistaAlue() - metodin luominen
+                PoistoIkkuna poistaAlueIkkuna = new PoistoIkkuna("alue", "alueen",
+                        "Kaikki alueeseen kuuluvat mökit ja \n palvelut poistetaan samalla.");
+
+                poistaAlueIkkuna.getPoistoNappula().setOnAction( event -> {
+                    try {
+                        tietokanta.poistaAlue(obj.getID());
+                    } catch (SQLException ex) {
+                        throw new RuntimeException(ex); // TODO virheiden käsittely
+                    }
+                    poistaAlueIkkuna.getIkkuna().close();
+                    paivitaAlueTaulukko();
+                });
+            });
+
+            Nappula muokkausNappula = new Nappula(150, 30);
+            ImageView muokkaus = new ImageView(imageKuvasta("muokkaus.png"));
+            muokkaus.setFitWidth(22);
+            muokkaus.setFitHeight(22);
+            muokkausNappula.setGraphic(muokkaus);
+            alueTaulukko.add(muokkausNappula, 3, rivi);
+            muokkausNappula.setOnMouseClicked(e -> {
+                //
             });
 
             rivi++;
