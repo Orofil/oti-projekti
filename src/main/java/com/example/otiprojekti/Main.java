@@ -22,7 +22,7 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.text.Font;
 
-import java.sql.Array;
+import java.math.BigDecimal;
 import java.sql.SQLException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -111,6 +111,8 @@ public class Main extends Application {
             ilmoitusPaneeli.lisaaIlmoitus(IlmoitusTyyppi.VAROITUS, String.valueOf(e));
             throw new RuntimeException(e); // TEMP
         }
+
+        //  System.out.print(postiLista);
 
 
         // Vasen valikko
@@ -463,6 +465,91 @@ public class Main extends Application {
         mokkienLisays.setFitWidth(23);
         mokkienLisays.setFitHeight(22);
         mokkienLisaysNappula.setGraphic(mokkienLisays);
+        mokkienLisaysNappula.setOnAction( e -> {
+            Stage mokkiLisaysIkkuna = new Stage();
+            mokkiLisaysIkkuna.show();
+            mokkiLisaysIkkuna.setTitle("Lisää mökki");
+            VBox mokkiLisaysPaneeli = new VBox();
+            mokkiLisaysPaneeli.setPadding(new Insets(25));
+            mokkiLisaysPaneeli.setSpacing(15);
+
+            GridPane mokkiLisaysGridPaneeli = new GridPane();
+            mokkiLisaysGridPaneeli.setVgap(15);
+            mokkiLisaysGridPaneeli.setHgap(15);
+
+            Text mokkiLisaysTeksti = new Text("Syötä mökin tiedot.");
+            mokkiLisaysGridPaneeli.add(mokkiLisaysTeksti, 0, 0);
+
+            Text mokkiNimiTeksti = new Text("Mökin nimi: ");
+            TextField mokkiNimi = new TextField();
+            Text mokkiAlueTeksti = new Text("AlueID: ");
+            TextField mokkiAlue = new TextField();
+            Text mokkiOsoiteTeksti = new Text("Katuosoite: ");
+            TextField mokkiOsoite = new TextField();
+            Text mokkiPostinroTeksti = new Text("Postinro: ");
+            TextField mokkiPostinro = new TextField();
+            Text mokkiPostitoimipaikkaTeksti = new Text("Postitoimipaikka: ");
+            TextField mokkiPostitoimipaikka = new TextField();
+            Text mokkiHintaTeksti = new Text("Hinta/vrk(€): ");
+            TextField mokkiHinta = new TextField();
+            Text mokkiKuvausTeksti = new Text("Kuvaus: ");
+            TextArea mokkiKuvaus = new TextArea();
+            Text mokkiHlomaaraTeksti = new Text("Henkilömäärä: ");
+            TextField mokkiHlomaara = new TextField();
+            Text mokkiVarusteluTeksti = new Text("Varustelu: ");
+            TextField mokkiVarustelu = new TextField();
+
+            mokkiLisaysGridPaneeli.add(mokkiNimiTeksti, 0, 1);
+            mokkiLisaysGridPaneeli.add(mokkiNimi, 1, 1);
+            mokkiLisaysGridPaneeli.add(mokkiAlueTeksti, 0, 2);
+            mokkiLisaysGridPaneeli.add(mokkiAlue, 1, 2);
+            mokkiLisaysGridPaneeli.add(mokkiOsoiteTeksti, 0, 3);
+            mokkiLisaysGridPaneeli.add(mokkiOsoite, 1, 3);
+            mokkiLisaysGridPaneeli.add(mokkiPostinroTeksti, 0, 4);
+            mokkiLisaysGridPaneeli.add(mokkiPostinro, 1, 4);
+            mokkiLisaysGridPaneeli.add(mokkiPostitoimipaikkaTeksti, 0, 5);
+            mokkiLisaysGridPaneeli.add(mokkiPostitoimipaikka, 1, 5);
+            mokkiLisaysGridPaneeli.add(mokkiHintaTeksti, 0, 6);
+            mokkiLisaysGridPaneeli.add(mokkiHinta, 1, 6);
+            mokkiLisaysGridPaneeli.add(mokkiKuvausTeksti, 0, 7);
+            mokkiLisaysGridPaneeli.add(mokkiKuvaus, 1, 7);
+            mokkiLisaysGridPaneeli.add(mokkiHlomaaraTeksti, 0, 8);
+            mokkiLisaysGridPaneeli.add(mokkiHlomaara, 1, 8);
+            mokkiLisaysGridPaneeli.add(mokkiVarusteluTeksti, 0, 9);
+            mokkiLisaysGridPaneeli.add(mokkiVarustelu, 1, 9);
+
+            Nappula lisaaMokkiNappula = new Nappula("Lisää mökki");
+
+            lisaaMokkiNappula.setOnAction( event -> {
+                try {
+                    if (etsiPostiNro(postiLista, String.valueOf(mokkiPostinro)) == null) {
+                        tietokanta.insertPosti(mokkiPostinro.getText(), mokkiPostitoimipaikka.getText());
+                    }
+
+                    tietokanta.insertMokki(
+                            Integer.parseInt(mokkiAlue.getText()),
+                            mokkiPostinro.getText(),
+                            mokkiNimi.getText(),
+                            mokkiOsoite.getText(),
+                            BigDecimal.valueOf(Long.parseLong(mokkiHinta.getText())),
+                            mokkiKuvaus.getText(),
+                            Integer.parseInt(mokkiHlomaara.getText()),
+                            mokkiVarustelu.getText()
+                            );
+                    mokkiLisaysIkkuna.close();
+                    paivitaMokkiTaulukko();
+                } catch (SQLException ex) {
+                    mokkiLisaysTeksti.setText("Mökin lisääminen ei onnistunut. \n " +
+                            "Tarkista syötteet ja yritä uudelleen.");
+                    mokkiLisaysTeksti.setFill(Color.RED);
+                }
+            });
+
+            mokkiLisaysPaneeli.getChildren().addAll(mokkiLisaysGridPaneeli, lisaaMokkiNappula);
+
+            Scene mokkiLisaysKehys = new Scene(mokkiLisaysPaneeli, 400, 550);
+            mokkiLisaysIkkuna.setScene(mokkiLisaysKehys);
+        });
 
         paivitaMokkiTaulukko();
     }
@@ -532,8 +619,94 @@ public class Main extends Application {
             muokkaus.setFitHeight(22);
             muokkausNappula.setGraphic(muokkaus);
             mokkiTaulukko.add(muokkausNappula, 6, rivi);
+
             muokkausNappula.setOnMouseClicked(e -> {
-                // muokkaaMokki();                          //TODO  muokkaamokki() - metodin luominen
+                Stage mokkiMuokkausIkkuna = new Stage();
+                mokkiMuokkausIkkuna.show();
+                mokkiMuokkausIkkuna.setTitle("Muokkaa mökkiä");
+                VBox mokkiMuokkausPaneeli = new VBox();
+                mokkiMuokkausPaneeli.setPadding(new Insets(25));
+                mokkiMuokkausPaneeli.setSpacing(15);
+
+                GridPane mokkiMuokkausGridPaneeli = new GridPane();
+                mokkiMuokkausGridPaneeli.setVgap(15);
+                mokkiMuokkausGridPaneeli.setHgap(15);
+
+                Text mokkiMuokkausTeksti = new Text("Syötä mökin tiedot.");
+                mokkiMuokkausGridPaneeli.add(mokkiMuokkausTeksti, 0, 0);
+
+                Text mokkiNimiTeksti = new Text("Mökin nimi: ");
+                TextField mokinNimi = new TextField(obj.getNimi());
+                Text mokkiAlueTeksti = new Text("AlueID: ");
+                TextField mokinAlue = new TextField(String.valueOf(obj.getAlue().getID()));
+                Text mokkiOsoiteTeksti = new Text("Katuosoite: ");
+                TextField mokkiOsoite = new TextField(obj.getKatuosoite());
+                Text mokkiPostinroTeksti = new Text("Postinro: ");
+                TextField mokkiPostinro = new TextField(obj.getPostiNro().getPostiNro());
+                Text mokkiPostitoimipaikkaTeksti = new Text("Postitoimipaikka: ");
+                TextField mokkiPostitoimipaikka = new TextField(obj.getPostiNro().getToimipaikka());
+                Text mokkiHintaTeksti = new Text("Hinta/vrk(€): ");
+                TextField mokinHinta = new TextField(String.valueOf(obj.getHinta()));
+                Text mokkiKuvausTeksti = new Text("Kuvaus: ");
+                TextArea mokkiKuvaus = new TextArea(obj.getKuvaus());
+                Text mokkiHlomaaraTeksti = new Text("Henkilömäärä: ");
+                TextField mokkiHlomaara = new TextField(String.valueOf(obj.getHloMaara()));
+                Text mokkiVarusteluTeksti = new Text("Varustelu: ");
+                TextField mokkiVarustelu = new TextField(obj.getVarustelu());
+
+                mokkiMuokkausGridPaneeli.add(mokkiNimiTeksti, 0, 1);
+                mokkiMuokkausGridPaneeli.add(mokinNimi, 1, 1);
+                mokkiMuokkausGridPaneeli.add(mokkiAlueTeksti, 0, 2);
+                mokkiMuokkausGridPaneeli.add(mokinAlue, 1, 2);
+                mokkiMuokkausGridPaneeli.add(mokkiOsoiteTeksti, 0, 3);
+                mokkiMuokkausGridPaneeli.add(mokkiOsoite, 1, 3);
+                mokkiMuokkausGridPaneeli.add(mokkiPostinroTeksti, 0, 4);
+                mokkiMuokkausGridPaneeli.add(mokkiPostinro, 1, 4);
+                mokkiMuokkausGridPaneeli.add(mokkiPostitoimipaikkaTeksti, 0, 5);
+                mokkiMuokkausGridPaneeli.add(mokkiPostitoimipaikka, 1, 5);
+                mokkiMuokkausGridPaneeli.add(mokkiHintaTeksti, 0, 6);
+                mokkiMuokkausGridPaneeli.add(mokinHinta, 1, 6);
+                mokkiMuokkausGridPaneeli.add(mokkiKuvausTeksti, 0, 7);
+                mokkiMuokkausGridPaneeli.add(mokkiKuvaus, 1, 7);
+                mokkiMuokkausGridPaneeli.add(mokkiHlomaaraTeksti, 0, 8);
+                mokkiMuokkausGridPaneeli.add(mokkiHlomaara, 1, 8);
+                mokkiMuokkausGridPaneeli.add(mokkiVarusteluTeksti, 0, 9);
+                mokkiMuokkausGridPaneeli.add(mokkiVarustelu, 1, 9);
+
+                Nappula muokkaaMokkiNappula = new Nappula("Tallenna muutokset");
+
+                muokkaaMokkiNappula.setOnAction( event -> {
+                    try {
+                        if (etsiPostiNro(postiLista, String.valueOf(mokkiPostinro)) == null) {
+                            tietokanta.insertPosti(mokkiPostinro.getText(), mokkiPostitoimipaikka.getText());
+                        }
+
+                        tietokanta.muokkaaMokki(
+                                obj.getID(),
+                                Integer.parseInt(mokinAlue.getText()),
+                                mokkiPostinro.getText(),
+                                mokinNimi.getText(),
+                                mokkiOsoite.getText(),
+                                BigDecimal.valueOf(Long.parseLong(String.valueOf(mokinHinta.getText()))),
+                                mokkiKuvaus.getText(),
+                                Integer.parseInt(mokkiHlomaara.getText()),
+                                mokkiVarustelu.getText()
+                        );
+                        mokkiMuokkausIkkuna.close();
+                        paivitaMokkiTaulukko();
+                    } catch (SQLException ex) {
+
+                        mokkiMuokkausTeksti.setText("Mökin muokkaaminen ei onnistunut. \n " +
+                                "Tarkista syötteet ja yritä uudelleen.");
+                        mokkiMuokkausTeksti.setFill(Color.RED);
+
+                    }
+                });
+
+                mokkiMuokkausPaneeli.getChildren().addAll(mokkiMuokkausGridPaneeli, muokkaaMokkiNappula);
+
+                Scene mokkiMuokkausKehys = new Scene(mokkiMuokkausPaneeli, 400, 550);
+                mokkiMuokkausIkkuna.setScene(mokkiMuokkausKehys);                          //TODO  muokkaamokki() - metodin luominen
             });
             Nappula tarkasteleNappula = new Nappula(170, 30);
             ImageView tarkastelu = new ImageView(imageKuvasta("tarkastelu.png"));
@@ -719,7 +892,7 @@ public class Main extends Application {
         Text pvmSuodatusTeksti = new Text("Varauksen ajankohta");
         pvmSuodatusTeksti.setFont(Font.font("", FontWeight.BOLD, 14));
         varausHaku.add(pvmSuodatusTeksti, 2, 0);
-        
+
         DatePicker varausPvmAlku = new DatePicker();
         DatePicker varausPvmLoppu = new DatePicker();
         varausPvmAlku.setPrefWidth(120);
@@ -792,7 +965,7 @@ public class Main extends Application {
                 LocalDateTime vAlkuAika = v.getVarausAlkuPvm();
                 if ((vAlkuAika.isAfter(valittuAikaAlku) || vAlkuAika.isEqual(valittuAikaAlku)) &&
                         (vAlkuAika.isBefore(valittuAikaLoppu) || vAlkuAika.isEqual(valittuAikaAlku)) && // TODO onko näin tämä
-                        v.getMokki().getAlue().equals(alueSuodatus.getValue())) { 
+                        v.getMokki().getAlue().equals(alueSuodatus.getValue())) {
                     varausTulokset.add(v);
                 }
             }

@@ -364,7 +364,7 @@ public class Tietokanta {
     public void muokkaaMokki(int mokki_id, int alue_id, String postinro, String mokkinimi, String katuosoite,
                              BigDecimal hinta, String kuvaus, int henkilomaara, String varustelu) throws SQLException {
         stm = con.prepareStatement(
-                "UPDATE mökki " +
+                "UPDATE mokki " +
                     "SET alue_id = ?," +
                         "postinro = ?," +
                         "mokkinimi = ?," +
@@ -389,7 +389,7 @@ public class Tietokanta {
 
     public void muokkaaMokki(Mokki mokki) throws SQLException {
         stm = con.prepareStatement(
-                "UPDATE mökki " +
+                "UPDATE mokki " +
                         "SET alue_id = ?," +
                         "postinro = ?," +
                         "mokkinimi = ?," +
