@@ -98,22 +98,8 @@ public class Main extends Application {
     @Override
     public void start(Stage ikkuna) {
 
-        // Haetaan tiedot tietokannasta olioiksi
-        try {
-            // Tiedot täytyy hakea tietyssä järjestyksessä, koska osa luokista viittaa toisiinsa
-            postiLista = tietokanta.haePosti();
-            alueLista = tietokanta.haeAlue();
-            asiakasLista = tietokanta.haeAsiakas(postiLista);
-            mokkiLista = tietokanta.haeMokki(alueLista, postiLista);
-            palveluLista = tietokanta.haePalvelu(alueLista);
-            varausLista = tietokanta.haeVaraus(asiakasLista, mokkiLista, palveluLista);
-            laskuLista = tietokanta.haeLasku(varausLista);
-        } catch (SQLException | NullPointerException e) {
-            ilmoitusPaneeli.lisaaIlmoitus(IlmoitusTyyppi.VAROITUS,
-                    "Virhe tietojen hakemisessa. Tietokantaa ei ole ehkä käynnistetty.");
-        }
-
-        //  System.out.print(postiLista);
+        // Haetaan tiedot tietokannasta
+        haeKaikkiTiedot();
 
 
         // Vasen valikko
@@ -196,8 +182,6 @@ public class Main extends Application {
         aluenappula.setOnAction(e -> {
             paneeli.setCenter(aluepaneeli);
             isoOtsikkoTeksti.setText("ALUEET");
-            ilmoitusPaneeli.lisaaIlmoitus(IlmoitusTyyppi.ILMOITUS,
-                    "Alueet valittu! Vähän lisää tekstiä tähän vielä ihan testiksi."); // TEMP
         });
 
         GridPane alueHaku = new GridPane();
@@ -341,11 +325,13 @@ public class Main extends Application {
                 poistaAlueIkkuna.getPoistoNappula().setOnAction( event -> {
                     try {
                         tietokanta.poistaAlue(obj.getID());
+                        alueLista.remove(etsiAlueID(alueLista, obj.getID()));
+                        poistaAlueIkkuna.getIkkuna().close();
+                        paivitaAlueTaulukko();
                     } catch (SQLException ex) {
-                        throw new RuntimeException(ex); // TODO virheiden käsittely
+                        ilmoitusPaneeli.lisaaIlmoitus(IlmoitusTyyppi.VAROITUS, "Virhe alueen poistamisessa.");
+                        throw new RuntimeException(ex); // TEMP
                     }
-                    poistaAlueIkkuna.getIkkuna().close();
-                    paivitaAlueTaulukko();
                 });
             });
 
@@ -595,7 +581,7 @@ public class Main extends Application {
             mokkiNimi.setFont(fonttiIsompi);
             Text mokkiAlue = new Text(String.valueOf(obj.getAlue().getNimi()));
             mokkiAlue.setFont(fonttiIsompi);
-            Text mokkiHinta = new Text(obj.getHinta() + " €"); // TODO lisätäänkö €
+            Text mokkiHinta = new Text(obj.getHinta() + " €");
             mokkiHinta.setFont(fonttiIsompi);
             Text mokkiHloMaara = new Text(String.valueOf(obj.getHloMaara()));
             mokkiHloMaara.setFont(fonttiIsompi);
@@ -619,11 +605,13 @@ public class Main extends Application {
                 poistaMokkiIkkuna.getPoistoNappula().setOnAction( event -> {
                     try {
                         tietokanta.poistaMokki(obj.getID());
+                        mokkiLista.remove(etsiMokkiID(mokkiLista, obj.getID()));
+                        poistaMokkiIkkuna.getIkkuna().close();
+                        paivitaMokkiTaulukko();
                     } catch (SQLException ex) {
-                        throw new RuntimeException(ex); // TODO virheiden käsittely
+                        ilmoitusPaneeli.lisaaIlmoitus(IlmoitusTyyppi.VAROITUS, "Virhe mökin poistamisessa.");
+                        throw new RuntimeException(ex); // TEMP
                     }
-                    poistaMokkiIkkuna.getIkkuna().close();
-                    paivitaMokkiTaulukko();
                 });
             });
 
@@ -970,11 +958,14 @@ public class Main extends Application {
                 poistaPalveluIkkuna.getPoistoNappula().setOnAction( event -> {
                     try {
                         tietokanta.poistaPalvelu(obj.getID());
+                        palveluLista.remove(etsiPalveluID(palveluLista, obj.getID()));
+                        poistaPalveluIkkuna.getIkkuna().close();
+                        paivitaPalveluTaulukko();
                     } catch (SQLException ex) {
-                        throw new RuntimeException(ex); // TODO virheiden käsittely
+                        ilmoitusPaneeli.lisaaIlmoitus(IlmoitusTyyppi.VAROITUS, "Virhe palvelun poistamisessa");
+                        throw new RuntimeException(ex); // TEMP
                     }
-                    poistaPalveluIkkuna.getIkkuna().close();
-                    paivitaPalveluTaulukko();
+
                 });            
             });
 
@@ -1447,7 +1438,8 @@ public class Main extends Application {
                     try {
                         tietokanta.poistaVaraus(obj.getID()); // TODO varaus pitää poistaa myös täältä varausLista- ja varausTulokset-listoista
                     } catch (SQLException ex) {
-                        throw new RuntimeException(ex); // TODO virheiden käsittely
+                        ilmoitusPaneeli.lisaaIlmoitus(IlmoitusTyyppi.VAROITUS, "Virhe varauksen poistamisessa.");
+                        throw new RuntimeException(ex); // TEMP
                     }
                     poistoIkkuna.getIkkuna().close();
                     paivitaVarausTaulukko(varausTulokset);
@@ -1768,9 +1760,11 @@ public class Main extends Application {
 
                 poistoIkkuna.getPoistoNappula().setOnAction( event -> {
                     try {
-                        tietokanta.poistaAsiakas(obj.getID()); // TODO asiakkaan poistaminen listalta
+                        tietokanta.poistaAsiakas(obj.getID());
+                        asiakasLista.remove(etsiAsiakasID(asiakasLista, obj.getID()));
                     } catch (SQLException ex) {
-                        throw new RuntimeException(ex); // TODO virheiden käsittely
+                        ilmoitusPaneeli.lisaaIlmoitus(IlmoitusTyyppi.VAROITUS, "Virhe asiakkaan poistamisessa.");
+                        throw new RuntimeException(ex); // TEMP
                     }
                     poistoIkkuna.getIkkuna().close();
                     paivitaAsiakasTaulukko(asiakasTulokset);
@@ -2095,6 +2089,23 @@ public class Main extends Application {
             });
 
             rivi++;
+        }
+    }
+
+    public void haeKaikkiTiedot() {
+        // Haetaan tiedot tietokannasta olioiksi
+        try {
+            // Tiedot täytyy hakea tietyssä järjestyksessä, koska osa luokista viittaa toisiinsa
+            postiLista = tietokanta.haePosti();
+            alueLista = tietokanta.haeAlue();
+            asiakasLista = tietokanta.haeAsiakas(postiLista);
+            mokkiLista = tietokanta.haeMokki(alueLista, postiLista);
+            palveluLista = tietokanta.haePalvelu(alueLista);
+            varausLista = tietokanta.haeVaraus(asiakasLista, mokkiLista, palveluLista);
+            laskuLista = tietokanta.haeLasku(varausLista);
+        } catch (SQLException | NullPointerException e) {
+            ilmoitusPaneeli.lisaaIlmoitus(IlmoitusTyyppi.VAROITUS,
+                    "Virhe tietojen hakemisessa. Tietokantaa ei ole ehkä käynnistetty.");
         }
     }
 
