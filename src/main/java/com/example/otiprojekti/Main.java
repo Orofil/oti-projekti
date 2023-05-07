@@ -6,11 +6,9 @@ import javafx.application.Application;
 import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
-import javafx.event.EventType;
 import javafx.geometry.*;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.text.FontWeight;
@@ -34,18 +32,16 @@ import static com.example.otiprojekti.Utils.*;
 
 public class Main extends Application {
     // Ikkunan mittasuhde jaettuna kahteen kenttään
-    public final double SUHDE_W = 5.5;
-    public final double SUHDE_H = 3;
+    public final double SUHDE_W = 2;
+    public final double SUHDE_H = 1;
     // Kuinka suuren osan näytön leveydestä tai korkeudesta ikkuna vie enintään
     public final double MAX_OSUUS = 0.9;
     // Ikkunan suurin sallittu koko
-    public final int MAX_LEVEYS = 1600; // TODO Näiden suhde ei ole sama kuin tuo oletussuhde mikä on vähän outoa
+    public final int MAX_LEVEYS = 1600;
     public final int MAX_KORKEUS = 800;
-
-    /**
-     * Fontti, jota käytetään tavalliseen tekstiin.
-     */
-    public static final Font fontti = Font.font(16);
+    
+    public static final Font fonttiIsompi = Font.font(16);
+    public static final Font fonttiPaksu = Font.font("", FontWeight.BOLD, 14);
     public static final int HAKU_PADDING = 20;
     public static final int HAKU_HGAP = 20;
     public static final int HAKU_VGAP = 15;
@@ -62,7 +58,7 @@ public class Main extends Application {
 
     BorderPane paneeli = new BorderPane();
     IlmoitusPaneeli ilmoitusPaneeli = new IlmoitusPaneeli();
-    Pane ilmoitusPaneeliPaneeli = new Pane(ilmoitusPaneeli);
+    BorderPane ilmoitusPaneeliPaneeli = new BorderPane();
     StackPane paneeliYlin = new StackPane(paneeli, ilmoitusPaneeliPaneeli);
     Text isoOtsikkoTeksti = new Text();
 
@@ -84,17 +80,19 @@ public class Main extends Application {
     ArrayList<Lasku> laskuLista = new ArrayList<>();
 
     GridPane varausTaulukko = new GridPane();
-    Nappula varausLisaysNappula = new Nappula(200, 30);
     GridPane asiakasTaulukko = new GridPane();
-    Nappula asiakasLisaysNappula = new Nappula(200, 30);
     GridPane laskuTaulukko = new GridPane();
-    Nappula laskunLisaysNappula = new Nappula(200, 30);
     GridPane alueTaulukko = new GridPane();
-    Nappula alueenLisaysNappula = new Nappula(200, 30);
     GridPane mokkiTaulukko = new GridPane();
-    Nappula mokkienLisaysNappula = new Nappula(200, 30);
     GridPane palveluTaulukko = new GridPane();
-    Nappula palvelunLisaysNappula = new Nappula(200, 30);
+    final int LISAYS_NAPPULA_LEVEYS = 200;
+    final int LISAYS_NAPPULA_KORKEUS = 30;
+    Nappula varausLisaysNappula = new Nappula(LISAYS_NAPPULA_LEVEYS, LISAYS_NAPPULA_KORKEUS);
+    Nappula asiakasLisaysNappula = new Nappula(LISAYS_NAPPULA_LEVEYS, LISAYS_NAPPULA_KORKEUS);
+    Nappula laskunLisaysNappula = new Nappula(LISAYS_NAPPULA_LEVEYS, LISAYS_NAPPULA_KORKEUS);
+    Nappula alueenLisaysNappula = new Nappula(LISAYS_NAPPULA_LEVEYS, LISAYS_NAPPULA_KORKEUS);
+    Nappula mokkienLisaysNappula = new Nappula(LISAYS_NAPPULA_LEVEYS, LISAYS_NAPPULA_KORKEUS);
+    Nappula palvelunLisaysNappula = new Nappula(LISAYS_NAPPULA_LEVEYS, LISAYS_NAPPULA_KORKEUS);
 
 
     @Override
@@ -110,9 +108,9 @@ public class Main extends Application {
             palveluLista = tietokanta.haePalvelu(alueLista);
             varausLista = tietokanta.haeVaraus(asiakasLista, mokkiLista, palveluLista);
             laskuLista = tietokanta.haeLasku(varausLista);
-        } catch (SQLException e) {
-            ilmoitusPaneeli.lisaaIlmoitus(IlmoitusTyyppi.VAROITUS, String.valueOf(e));
-            throw new RuntimeException(e); // TEMP
+        } catch (SQLException | NullPointerException e) {
+            ilmoitusPaneeli.lisaaIlmoitus(IlmoitusTyyppi.VAROITUS,
+                    "Virhe tietojen hakemisessa. Tietokantaa ei ole ehkä käynnistetty.");
         }
 
         //  System.out.print(postiLista);
@@ -155,12 +153,8 @@ public class Main extends Application {
         isoOtsikkoTeksti.setY(85);
 
         // Ilmoituspaneeli
-        ilmoitusPaneeliPaneeli.setMouseTransparent(true); // TODO tämä pitää tehdä jos haluaa käyttää ilmoitusten alla olevaa ohjelmaa, mutta nyt ilmoitukset eivät jää pidemmäksi aikaa jos kursoria pitää päällä
-        // TODO ilmoituspaneeli pitäisi saada oikeaan yläkulmaan
-        ilmoitusPaneeli.lisaaIlmoitus(IlmoitusTyyppi.ILMOITUS, "Tämä on testi!"); // TEMP
-
-
-        //aluepaneeli.setTop(new Nappula("Paina tästä!")); // TEMP
+        ilmoitusPaneeliPaneeli.setRight(ilmoitusPaneeli);
+        ilmoitusPaneeliPaneeli.setMouseTransparent(true); // Mahdollistaa ilmoituspaneelin alla olevan ohjelman käytön, mutta ilmoitukset eivät tottele hiirtä
 
         // Sarakkeet taulukkoihin
         sarakeLevea.setHalignment(HPos.CENTER);
@@ -214,16 +208,15 @@ public class Main extends Application {
 
         TextField alueHakuKentta = new TextField();
         Label alueHakuKenttaLabel = new Label("Hae aluetta: ", alueHakuKentta);
-        alueHakuKenttaLabel.setFont(fontti);
+        alueHakuKenttaLabel.setFont(fonttiIsompi);
         alueHakuKenttaLabel.setContentDisplay(ContentDisplay.RIGHT);
         alueHaku.add(alueHakuKenttaLabel, 1, 1);
         Nappula alueHakuNappula = new Nappula("Suorita haku", 190, 30);
-        alueHakuNappula.setOnAction( e -> {
-            paivitaAlueTaulukko();
-        });
         alueHaku.add(alueHakuNappula, 1, 2);
 
-        alueHaku.add(new Text("Lajittelu:"), 2, 0);
+        Text alueLajitteluTeksti = new Text("Lajittelu");
+        alueLajitteluTeksti.setFont(fonttiPaksu);
+        alueHaku.add(alueLajitteluTeksti, 2, 0);
         ComboBox<String> alueLajittelu = new ComboBox<>(FXCollections.observableList(Arrays.asList(
                 "Tunnuksen mukaan",
                 "Uusin > Vanhin",
@@ -233,17 +226,19 @@ public class Main extends Application {
         alueLajittelu.setValue("Uusin > Vanhin"); // Oletuksena valittu vaihtoehto
         alueHaku.add(alueLajittelu, 2, 1);
 
-        // Lajittelu
-        alueLajittelu.setOnAction(e -> {
+        alueHakuNappula.setOnAction( e -> {
+            // Suodatus
+            // TODO
+
+            // Lajittelu
             switch (alueLajittelu.getValue()) {
                 case "Tunnuksen mukaan" ->
-                    alueLista.sort(Comparator.comparing(Alue::getID));
-                case "Uusin > Vanhin" -> {} // TODO miten tämä toimii?
-                case "Vanhin > Uusin" -> {} // TODO miten tämä toimii?
+                        alueLista.sort(Comparator.comparing(Alue::getID));
                 case "A > Ö" ->
-                    alueLista.sort(Comparator.comparing(Alue::getNimi));
+                        alueLista.sort(Comparator.comparing(Alue::getNimi));
             }
-            // TODO päivitä näkymä
+
+            paivitaAlueTaulukko();
         });
 
         ScrollPane alueScrollaus = new ScrollPane();
@@ -313,9 +308,9 @@ public class Main extends Application {
         alueTaulukko.add(alueenLisaysNappula, 1,0);
 
         Text aluetunnusOtsikko = new Text("Aluetunnus");
-        aluetunnusOtsikko.setFont(fontti);
+        aluetunnusOtsikko.setFont(fonttiIsompi);
         Text alueennimiOtsikko = new Text("Alueen nimi");
-        alueennimiOtsikko.setFont(fontti);
+        alueennimiOtsikko.setFont(fonttiIsompi);
         alueTaulukko.add(aluetunnusOtsikko, 0, 1);
         alueTaulukko.add(alueennimiOtsikko, 1, 1);
 
@@ -323,9 +318,9 @@ public class Main extends Application {
         int rivi = 2;
         for (Alue obj : alueLista) {
             Text alueID = new Text(String.valueOf(obj.getID()));
-            alueID.setFont(fontti);
+            alueID.setFont(fonttiIsompi);
             Text alueNimi = new Text(String.valueOf(obj.getNimi()));
-            alueNimi.setFont(fontti);
+            alueNimi.setFont(fonttiIsompi);
             alueTaulukko.add(alueID, 0, rivi);
 
             alueID.setTextAlignment(TextAlignment.CENTER);
@@ -420,16 +415,15 @@ public class Main extends Application {
 
         TextField mokkiHakuKentta = new TextField();
         Label mokkiHakuKenttaLabel = new Label("Hae mökkiä: ", mokkiHakuKentta);
-        mokkiHakuKenttaLabel.setFont(fontti);
+        mokkiHakuKenttaLabel.setFont(fonttiIsompi);
         mokkiHakuKenttaLabel.setContentDisplay(ContentDisplay.RIGHT);
         mokkiHaku.add(mokkiHakuKenttaLabel, 1, 1);
         Nappula mokkiHakuNappula = new Nappula("Suorita haku", 190, 30);
-        mokkiHakuNappula.setOnAction( e -> {
-            paivitaAlueTaulukko();
-        });
         mokkiHaku.add(mokkiHakuNappula, 1, 2);
 
-        mokkiHaku.add(new Text("Lajittelu:"), 2, 0);
+        Text mokkiLajitteluTeksti = new Text("Lajittelu");
+        mokkiLajitteluTeksti.setFont(fonttiPaksu);
+        mokkiHaku.add(mokkiLajitteluTeksti, 2, 0);
         ComboBox<String> mokkiLajittelu = new ComboBox<>(FXCollections.observableList(Arrays.asList(
                 "Tunnuksen mukaan",
                 "Edullisin > Kallein",
@@ -441,22 +435,27 @@ public class Main extends Application {
         mokkiLajittelu.setValue("Tunnuksen mukaan"); // Oletuksena valittu vaihtoehto
         mokkiHaku.add(mokkiLajittelu, 2, 1);
 
-        // Lajittelu
-        mokkiLajittelu.setOnAction(e -> {
+        mokkiHakuNappula.setOnAction( e -> {
+            // Suodatus
+            // TODO
+
+            // Lajittelu
             switch (mokkiLajittelu.getValue()) {
                 case "Tunnuksen mukaan" ->
                         mokkiLista.sort(Comparator.comparing(Mokki::getID));
-                case "Edullisin > Kallein" -> 
+                case "Edullisin > Kallein" ->
                         mokkiLista.sort(Comparator.comparing(Mokki::getHinta));
-                case "Kallein > Edullisin" -> 
+                case "Kallein > Edullisin" ->
                         mokkiLista.sort(Comparator.comparing(Mokki::getHinta).reversed());
                 case "A > Ö" ->
                         mokkiLista.sort(Comparator.comparing(Mokki::getNimi));
-                case "Henkilömäärän mukaan" -> 
+                case "Henkilömäärän mukaan" ->
                         mokkiLista.sort(Comparator.comparing(Mokki::getHloMaara));
-                case "Alueittain" -> 
+                case "Alueittain" ->
                         mokkiLista.sort(Comparator.comparing(Mokki -> Mokki.getAlue().getID())); // TODO onko alueen ID:n vai nimen mukaan
             }
+
+            paivitaAlueTaulukko();
         });
 
         ScrollPane mokkiScrollaus = new ScrollPane();
@@ -571,15 +570,15 @@ public class Main extends Application {
         mokkiTaulukko.add(mokkienLisaysNappula, 1,0);
 
         Text mokkitunnusOtsikko = new Text("Tunnus");
-        mokkitunnusOtsikko.setFont(fontti);
+        mokkitunnusOtsikko.setFont(fonttiIsompi);
         Text mokinnimiOtsikko = new Text("Mökki");
-        mokinnimiOtsikko.setFont(fontti);
+        mokinnimiOtsikko.setFont(fonttiIsompi);
         Text mokinAlueOtsikko = new Text("Alue");
-        mokinAlueOtsikko.setFont(fontti);
+        mokinAlueOtsikko.setFont(fonttiIsompi);
         Text mokinHintaOtsikko = new Text("Hinta/vrk");
-        mokinHintaOtsikko.setFont(fontti);
+        mokinHintaOtsikko.setFont(fonttiIsompi);
         Text mokinHloMaaraOtsikko = new Text("Hlö.määrä");
-        mokinHloMaaraOtsikko.setFont(fontti);
+        mokinHloMaaraOtsikko.setFont(fonttiIsompi);
 
         mokkiTaulukko.add(mokkitunnusOtsikko, 0, 1);
         mokkiTaulukko.add(mokinnimiOtsikko, 1, 1);
@@ -591,15 +590,15 @@ public class Main extends Application {
         int rivi = 2;
         for (Mokki obj : mokkiLista) {
             Text mokkiID = new Text(String.valueOf(obj.getID()));
-            mokkiID.setFont(fontti);
+            mokkiID.setFont(fonttiIsompi);
             Text mokkiNimi = new Text(String.valueOf(obj.getNimi()));
-            mokkiNimi.setFont(fontti);
+            mokkiNimi.setFont(fonttiIsompi);
             Text mokkiAlue = new Text(String.valueOf(obj.getAlue().getNimi()));
-            mokkiAlue.setFont(fontti);
+            mokkiAlue.setFont(fonttiIsompi);
             Text mokkiHinta = new Text(obj.getHinta() + " €"); // TODO lisätäänkö €
-            mokkiHinta.setFont(fontti);
+            mokkiHinta.setFont(fonttiIsompi);
             Text mokkiHloMaara = new Text(String.valueOf(obj.getHloMaara()));
-            mokkiHloMaara.setFont(fontti);
+            mokkiHloMaara.setFont(fonttiIsompi);
 
             mokkiTaulukko.add(mokkiID, 0, rivi);
             mokkiTaulukko.add(mokkiNimi, 1, rivi);
@@ -781,16 +780,15 @@ public class Main extends Application {
 
         TextField palveluHakuKentta = new TextField();
         Label palveluHakuKenttaLabel = new Label("Hae palveluita: ", palveluHakuKentta);
-        palveluHakuKenttaLabel.setFont(fontti);
+        palveluHakuKenttaLabel.setFont(fonttiIsompi);
         palveluHakuKenttaLabel.setContentDisplay(ContentDisplay.RIGHT);
         palveluHaku.add(palveluHakuKenttaLabel, 1, 1);
         Nappula palveluHakuNappula = new Nappula("Suorita haku", 190, 30);
-        palveluHakuNappula.setOnAction( e -> {
-            paivitaPalveluTaulukko();
-        });
         palveluHaku.add(palveluHakuNappula, 1, 2);
 
-        palveluHaku.add(new Text("Lajittelu:"), 2, 0);
+        Text palveluLajitteluTeksti = new Text("Lajittelu");
+        palveluLajitteluTeksti.setFont(fonttiPaksu);
+        palveluHaku.add(palveluLajitteluTeksti, 2, 0);
         ComboBox<String> palveluLajittelu = new ComboBox<>(FXCollections.observableList(Arrays.asList(
                 "Tunnuksen mukaan",
                 "Uusin > Vanhin",
@@ -798,11 +796,14 @@ public class Main extends Application {
                 "A > Ö",
                 "Alueittain"
         )));
-        palveluLajittelu.setValue("Uusin > Vanhin"); // Oletuksena valittu vaihtoehto
+        palveluLajittelu.setValue("Tunnuksen mukaan"); // Oletuksena valittu vaihtoehto
         palveluHaku.add(palveluLajittelu, 2, 1);
 
-        // Lajittelu
-        palveluLajittelu.setOnAction(e -> {
+        palveluHakuNappula.setOnAction( e -> {
+            // Suodatus
+            // TODO
+
+            // Lajittelu
             switch (palveluLajittelu.getValue()) {
                 case "Tunnuksen mukaan" ->
                         palveluLista.sort(Comparator.comparing(Palvelu::getID));
@@ -813,7 +814,8 @@ public class Main extends Application {
                 case "Alueittain" ->
                         palveluLista.sort(Comparator.comparing(Palvelu -> Palvelu.getAlue().getID())); // TODO onko alueen ID:n vai nimen mukaan
             }
-            // TODO päivitä näkymä
+
+            paivitaPalveluTaulukko();
         });
 
         ScrollPane palveluScrollaus = new ScrollPane();
@@ -919,13 +921,13 @@ public class Main extends Application {
         palveluTaulukko.add(palvelunLisaysNappula, 1,0);
 
         Text palvelutunnusOtsikko = new Text("Tunnus");
-        palvelutunnusOtsikko.setFont(fontti);
+        palvelutunnusOtsikko.setFont(fonttiIsompi);
         Text palvelunnimiOtsikko = new Text("Palvelu");
-        palvelunnimiOtsikko.setFont(fontti);
+        palvelunnimiOtsikko.setFont(fonttiIsompi);
         Text palveluAlueOtsikko = new Text("Alue");
-        palveluAlueOtsikko.setFont(fontti);
+        palveluAlueOtsikko.setFont(fonttiIsompi);
         Text palvelunHintaOtsikko = new Text("Hinta");
-        palvelunHintaOtsikko.setFont(fontti);
+        palvelunHintaOtsikko.setFont(fonttiIsompi);
 
         palveluTaulukko.add(palvelutunnusOtsikko, 0, 1);
         palveluTaulukko.add(palvelunnimiOtsikko, 1, 1);
@@ -936,13 +938,13 @@ public class Main extends Application {
         int rivi = 2;
         for (Palvelu obj : palveluLista) {
             Text palveluID = new Text(String.valueOf(obj.getID()));
-            palveluID.setFont(fontti);
+            palveluID.setFont(fonttiIsompi);
             Text palveluNimi = new Text(String.valueOf(obj.getNimi()));
-            palveluNimi.setFont(fontti);
+            palveluNimi.setFont(fonttiIsompi);
             Text palveluAlue = new Text(String.valueOf(obj.getAlue().getNimi()));
-            palveluAlue.setFont(fontti);
+            palveluAlue.setFont(fonttiIsompi);
             Text palveluHinta = new Text(obj.getHinta() + " €");
-            palveluHinta.setFont(fontti);
+            palveluHinta.setFont(fonttiIsompi);
 
 
             palveluID.setTextAlignment(TextAlignment.CENTER);
@@ -1112,13 +1114,15 @@ public class Main extends Application {
 
         TextField varausHakuKentta = new TextField();
         Label varausHakuKenttaLabel = new Label("Hae varausta: ", varausHakuKentta); // TODO tarvitaanko tätä?
-        varausHakuKenttaLabel.setFont(fontti);
+        varausHakuKenttaLabel.setFont(fonttiIsompi);
         varausHakuKenttaLabel.setContentDisplay(ContentDisplay.RIGHT);
         varausHaku.add(varausHakuKenttaLabel, 0, 1);
         Nappula varausHakuNappula = new Nappula("Suorita haku", 190, 30);
         varausHaku.add(varausHakuNappula, 0, 2);
 
-        varausHaku.add(new Text("Lajittelu:"), 1, 0);
+        Text varausLajitteluTeksti = new Text("Lajittelu");
+        varausLajitteluTeksti.setFont(fonttiPaksu);
+        varausHaku.add(varausLajitteluTeksti, 1, 0);
         ComboBox<String> varausLajittelu = new ComboBox<>(FXCollections.observableList(Arrays.asList(
                 "Tunnuksen mukaan",
                 "Uusin > Vanhin",
@@ -1130,7 +1134,7 @@ public class Main extends Application {
         varausHaku.add(varausLajittelu, 1, 1);
 
         Text pvmSuodatusTeksti = new Text("Varauksen ajankohta");
-        pvmSuodatusTeksti.setFont(Font.font("", FontWeight.BOLD, 14));
+        pvmSuodatusTeksti.setFont(fonttiPaksu);
         varausHaku.add(pvmSuodatusTeksti, 2, 0);
 
         DatePicker varausPvmAlku = new DatePicker();
@@ -1159,7 +1163,7 @@ public class Main extends Application {
         varausHaku.add(varausAikaLoppuLabel, 4, 2);
 
         Text alueSuodatusTeksti = new Text("Varauksen alue");
-        alueSuodatusTeksti.setFont(Font.font("", FontWeight.BOLD, 14));
+        alueSuodatusTeksti.setFont(fonttiPaksu);
         ComboBox<Alue> alueSuodatus = new ComboBox<>(FXCollections.observableArrayList(alueLista)); // TODO nämä tekstit jotenkin paremmin ja alueiden päivittyminen jos niitä muutetaan
         varausHaku.add(alueSuodatusTeksti, 5, 0);
         varausHaku.add(alueSuodatus, 5, 1);
@@ -1397,17 +1401,17 @@ public class Main extends Application {
         varausTaulukko.add(varausLisaysNappula, 1, 0);
 
         Text varaustunnusOtsikko = new Text("Varaustunnus");
-        varaustunnusOtsikko.setFont(fontti);
+        varaustunnusOtsikko.setFont(fonttiIsompi);
         Text varausAsiakasOtsikko = new Text("Asiakas");
-        varausAsiakasOtsikko.setFont(fontti);
+        varausAsiakasOtsikko.setFont(fonttiIsompi);
         Text varausAlueOtsikko = new Text("Alue");
-        varausAlueOtsikko.setFont(fontti);
+        varausAlueOtsikko.setFont(fonttiIsompi);
         Text varausSummaOtsikko = new Text("Summa");
-        varausSummaOtsikko.setFont(fontti);
+        varausSummaOtsikko.setFont(fonttiIsompi);
         Text varausMokkiOtsikko = new Text("Mökki");
-        varausMokkiOtsikko.setFont(fontti);
+        varausMokkiOtsikko.setFont(fonttiIsompi);
         Text varausPalvelutOtsikko = new Text("Palvelut");
-        varausPalvelutOtsikko.setFont(fontti);
+        varausPalvelutOtsikko.setFont(fonttiIsompi);
 
         varausTaulukko.add(varaustunnusOtsikko, 0, 1);
         varausTaulukko.add(varausAsiakasOtsikko, 1, 1);
@@ -1416,11 +1420,11 @@ public class Main extends Application {
         int rivi = 2;
         for (Varaus obj : varausTulokset) { // TODO nyt kun SQL-haku saattaa epäonnistua, voi tulla NullPointerException
             Text varausID = new Text(String.valueOf(obj.getID()));
-            varausID.setFont(fontti);
+            varausID.setFont(fonttiIsompi);
             Text varausNimi = new Text(String.valueOf(obj.getAsiakas().getNimi(false)));
-            varausNimi.setFont(fontti);
+            varausNimi.setFont(fonttiIsompi);
             Text varausMokki = new Text(String.valueOf(obj.getMokki().getNimi())); // TODO mökin nimi vai ID
-            varausMokki.setFont(fontti);
+            varausMokki.setFont(fonttiIsompi);
 
 
             varausID.setTextAlignment(TextAlignment.CENTER);
@@ -1588,13 +1592,15 @@ public class Main extends Application {
 
         TextField asiakasHakuKentta = new TextField();
         Label asiakasHakuKenttaLabel = new Label("Hae asiakasta: ", asiakasHakuKentta);
-        asiakasHakuKenttaLabel.setFont(fontti);
+        asiakasHakuKenttaLabel.setFont(fonttiIsompi);
         asiakasHakuKenttaLabel.setContentDisplay(ContentDisplay.RIGHT);
         asiakasHaku.add(asiakasHakuKenttaLabel, 1, 1);
         Nappula asiakasHakuNappula = new Nappula("Suorita haku", 190, 30);
         asiakasHaku.add(asiakasHakuNappula, 1, 2);
 
-        asiakasHaku.add(new Text("Lajittelu:"), 2, 0);
+        Text asiakasLajitteluTeksti = new Text("Lajittelu");
+        asiakasLajitteluTeksti.setFont(fonttiPaksu);
+        asiakasHaku.add(asiakasLajitteluTeksti, 2, 0);
         ComboBox<String> asiakasLajittelu = new ComboBox<>(FXCollections.observableList(Arrays.asList(
                 "Tunnuksen mukaan",
                 "Uusin > Vanhin",
@@ -1721,10 +1727,10 @@ public class Main extends Application {
         Text asiakasNimiOtsikko = new Text("Asiakas");
         Text asiakasEmailOtsikko = new Text("Email");
         Text asiakasPuhNroOtsikko = new Text("Puh.nro.");
-        asiakastunnusOtsikko.setFont(fontti);
-        asiakasNimiOtsikko.setFont(fontti);
-        asiakasEmailOtsikko.setFont(fontti);
-        asiakasPuhNroOtsikko.setFont(fontti);
+        asiakastunnusOtsikko.setFont(fonttiIsompi);
+        asiakasNimiOtsikko.setFont(fonttiIsompi);
+        asiakasEmailOtsikko.setFont(fonttiIsompi);
+        asiakasPuhNroOtsikko.setFont(fonttiIsompi);
 
         asiakasTaulukko.add(asiakastunnusOtsikko, 0, 1);
         asiakasTaulukko.add(asiakasNimiOtsikko, 1, 1);
@@ -1735,13 +1741,13 @@ public class Main extends Application {
         int rivi = 2;
         for (Asiakas obj : asiakasTulokset) {
             Text asiakasID = new Text(String.valueOf(obj.getID()));
-            asiakasID.setFont(fontti);
+            asiakasID.setFont(fonttiIsompi);
             Text asiakasNimi = new Text(obj.getNimi(false));
-            asiakasNimi.setFont(fontti);
+            asiakasNimi.setFont(fonttiIsompi);
             Text asiakasEmail = new Text(String.valueOf(obj.getEmail()));
-            asiakasEmail.setFont(fontti);
+            asiakasEmail.setFont(fonttiIsompi);
             Text asiakasPuhNro = new Text(String.valueOf(obj.getPuhelinNro()));
-            asiakasPuhNro.setFont(fontti);
+            asiakasPuhNro.setFont(fonttiIsompi);
 
 
             asiakasTaulukko.add(asiakasID, 0, rivi);
@@ -1911,25 +1917,29 @@ public class Main extends Application {
 
         TextField laskuHakuKentta = new TextField();
         Label laskuHakuKenttaLabel = new Label("Hae laskuja: ", laskuHakuKentta);
-        laskuHakuKenttaLabel.setFont(fontti);
+        laskuHakuKenttaLabel.setFont(fonttiIsompi);
         laskuHakuKenttaLabel.setContentDisplay(ContentDisplay.RIGHT);
         laskuHaku.add(laskuHakuKenttaLabel, 1, 1);
         Nappula laskuHakuNappula = new Nappula("Suorita haku", 190, 30);
-        laskuHakuNappula.setOnAction(e -> paivitaLaskuTaulukko());
         laskuHaku.add(laskuHakuNappula, 1, 2);
 
-        laskuHaku.add(new Text("Lajittelu:"), 2, 0);
+        Text laskuLajitteluTeksti = new Text("Lajittelu:");
+        laskuLajitteluTeksti.setFont(fonttiPaksu);
+        laskuHaku.add(laskuLajitteluTeksti, 2, 0);
         ComboBox<String> laskuLajittelu = new ComboBox<>(FXCollections.observableList(Arrays.asList(
                 "Tunnuksen mukaan",
                 "Uusin > Vanhin",
                 "Vanhin > Uusin",
                 "Varaustunnuksen mukaan"
         )));
-        laskuLajittelu.setValue("Uusin > Vanhin"); // Oletuksena valittu vaihtoehto
+        laskuLajittelu.setValue("Tunnuksen mukaan"); // Oletuksena valittu vaihtoehto
         laskuHaku.add(laskuLajittelu, 2, 1);
 
-        // Lajittelu
-        laskuLajittelu.setOnAction(e -> {
+        laskuHakuNappula.setOnAction(e -> {
+            // Suodatus
+            // TODO
+
+            // Lajittelu
             switch (laskuLajittelu.getValue()) {
                 case "Tunnuksen mukaan" ->
                         laskuLista.sort(Comparator.comparing(Lasku::getID));
@@ -1940,6 +1950,8 @@ public class Main extends Application {
                 case "Varaustunnuksen mukaan" ->
                         laskuLista.sort(Comparator.comparing(Lasku -> Lasku.getVaraus().getID()));
             }
+
+            paivitaLaskuTaulukko();
         });
 
         ScrollPane laskuScrollaus = new ScrollPane();
@@ -2000,13 +2012,13 @@ public class Main extends Application {
         laskuTaulukko.add(laskunLisaysNappula, 1,0);
 
         Text laskuTunnusOtsikko = new Text("Laskunro.");
-        laskuTunnusOtsikko.setFont(fontti);
+        laskuTunnusOtsikko.setFont(fonttiIsompi);
         Text laskuVarausOtsikko = new Text("Varaus");
-        laskuVarausOtsikko.setFont(fontti);
+        laskuVarausOtsikko.setFont(fonttiIsompi);
         Text laskuSummaOtsikko = new Text("Summa");
-        laskuSummaOtsikko.setFont(fontti);
+        laskuSummaOtsikko.setFont(fonttiIsompi);
         Text laskuStatusOtsikko = new Text("Status");
-        laskuStatusOtsikko.setFont(fontti);
+        laskuStatusOtsikko.setFont(fonttiIsompi);
         
         laskuTaulukko.add(laskuTunnusOtsikko, 0, 1);
         laskuTaulukko.add(laskuVarausOtsikko, 1, 1);
@@ -2017,13 +2029,13 @@ public class Main extends Application {
         int rivi = 2;
         for (Lasku obj : laskuLista) {
             Text laskuID = new Text(String.valueOf(obj.getID()));
-            laskuID.setFont(fontti);
+            laskuID.setFont(fonttiIsompi);
             Text laskuVaraus = new Text(String.valueOf(obj.getVaraus().getID()));
-            laskuVaraus.setFont(fontti);
+            laskuVaraus.setFont(fonttiIsompi);
             Text laskuSumma = new Text(obj.getSumma() + " €");
-            laskuSumma.setFont(fontti);
+            laskuSumma.setFont(fonttiIsompi);
             Text laskuStatus = new Text(String.valueOf(obj.getStatus()));
-            laskuStatus.setFont(fontti);
+            laskuStatus.setFont(fonttiIsompi);
 
 
             laskuTaulukko.add(laskuID, 0, rivi);

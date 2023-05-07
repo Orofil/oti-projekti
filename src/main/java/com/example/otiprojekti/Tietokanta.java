@@ -36,10 +36,10 @@ public class Tietokanta {
         try {
             Class.forName("com.mysql.cj.jdbc.Driver");
         } catch (ClassNotFoundException e) {
-            // TODO ehkä joku parempi ilmoitus
             System.out.println("Tietokantaan yhdistämiseen tarvittavaa pakkausta ei löytynyt.\nVirhe: " + e);
         }
 
+        // Yhdistetään tietokantaan
         try {
             con = DriverManager.getConnection(DB_URL, USER, PASS);
         } catch (SQLException e) {
