@@ -93,6 +93,9 @@ public class Main extends Application {
     Nappula alueenLisaysNappula = new Nappula(200, 30);
     GridPane mokkiTaulukko = new GridPane();
     Nappula mokkienLisaysNappula = new Nappula(200, 30);
+    GridPane palveluTaulukko = new GridPane();
+    Nappula palvelunLisaysNappula = new Nappula(200, 30);
+
 
     @Override
     public void start(Stage ikkuna) {
@@ -782,6 +785,9 @@ public class Main extends Application {
         palveluHakuKenttaLabel.setContentDisplay(ContentDisplay.RIGHT);
         palveluHaku.add(palveluHakuKenttaLabel, 1, 1);
         Nappula palveluHakuNappula = new Nappula("Suorita haku", 190, 30);
+        palveluHakuNappula.setOnAction( e -> {
+            paivitaPalveluTaulukko();
+        });
         palveluHaku.add(palveluHakuNappula, 1, 2);
 
         palveluHaku.add(new Text("Lajittelu:"), 2, 0);
@@ -812,19 +818,33 @@ public class Main extends Application {
 
         ScrollPane palveluScrollaus = new ScrollPane();
         palvelupaneeli.setCenter(palveluScrollaus);
-        GridPane palveluTaulukko = new GridPane();
-        palveluTaulukko.setPadding(new Insets(20));
-        palveluTaulukko.getColumnConstraints().addAll(sarakeSemi, sarakeLevea, sarakeLyhyt, sarakeLyhyt, sarakeLyhyt, sarakeLyhyt, sarakeLyhyt);
-        palveluTaulukko.setGridLinesVisible(true);
+
+
         palveluScrollaus.setContent(palveluTaulukko);
 
 
         
-        Nappula palvelunLisaysNappula = new Nappula(200, 30);
         ImageView palvelunLisays = new ImageView(imageKuvasta("lisays.png"));
         palvelunLisays.setFitWidth(23);
         palvelunLisays.setFitHeight(22);
         palvelunLisaysNappula.setGraphic(palvelunLisays);
+
+
+
+
+        paivitaPalveluTaulukko();
+    }
+
+    public void paivitaPalveluTaulukko() {
+
+        palveluTaulukko.setGridLinesVisible(false);
+        palveluTaulukko.getColumnConstraints().clear();
+        palveluTaulukko.getChildren().clear();
+        palveluTaulukko.getColumnConstraints().addAll(sarakeSemi, sarakeLevea, sarakeLyhyt, sarakeLyhyt, sarakeLyhyt, sarakeLyhyt, sarakeLyhyt);
+        palveluTaulukko.setGridLinesVisible(true);
+
+        palveluTaulukko.setPadding(new Insets(20));
+
         palveluTaulukko.add(palvelunLisaysNappula, 1,0);
 
         Text palvelutunnusOtsikko = new Text("Tunnus");
@@ -894,6 +914,7 @@ public class Main extends Application {
 
             rivi++;
         }
+
     }
 
     public void luoVarausnakyma() {
