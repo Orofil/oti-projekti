@@ -534,7 +534,7 @@ public class Main extends Application {
                             mokkiPostinro.getText(),
                             mokkiNimi.getText(),
                             mokkiOsoite.getText(),
-                            BigDecimal.valueOf(Long.parseLong(mokkiHinta.getText())),
+                            BigDecimal.valueOf(Double.parseDouble(mokkiHinta.getText())),
                             mokkiKuvaus.getText(),
                             Integer.parseInt(mokkiHlomaara.getText()),
                             mokkiVarustelu.getText()
@@ -702,7 +702,7 @@ public class Main extends Application {
                                 mokkiPostinro.getText(),
                                 mokinNimi.getText(),
                                 mokkiOsoite.getText(),
-                                BigDecimal.valueOf(Long.parseLong(String.valueOf(mokinHinta.getText()))),
+                                BigDecimal.valueOf(Double.parseDouble(String.valueOf(mokinHinta.getText()))),
                                 mokkiKuvaus.getText(),
                                 Integer.parseInt(mokkiHlomaara.getText()),
                                 mokkiVarustelu.getText()
@@ -880,7 +880,7 @@ public class Main extends Application {
                             palveluNimi.getText(),
                             Integer.parseInt(palveluTyyppi.getText()),
                             palveluKuvaus.getText(),
-                            BigDecimal.valueOf(Long.parseLong(palveluHinta.getText())),
+                            BigDecimal.valueOf(Double.parseDouble(palveluHinta.getText())),
                             Integer.parseInt(palveluAlv.getText())
                     );
                     palveluLisaysIkkuna.close();
@@ -970,9 +970,79 @@ public class Main extends Application {
             muokkaus.setFitHeight(22);
             muokkausNappula.setGraphic(muokkaus);
             palveluTaulukko.add(muokkausNappula, 5, rivi);
+            
             muokkausNappula.setOnMouseClicked(e -> {
-                // muokkaaMokki();                          //TODO  muokkaamokki() - metodin luominen
+                Stage palveluMuokkausIkkuna = new Stage();
+                palveluMuokkausIkkuna.show();
+                palveluMuokkausIkkuna.setTitle("Muokkaa palvelun tietoja");
+                VBox palveluMuokkausPaneeli = new VBox();
+                palveluMuokkausPaneeli.setPadding(new Insets(25));
+                palveluMuokkausPaneeli.setSpacing(15);
+
+                GridPane palveluMuokkausGridPaneeli = new GridPane();
+                palveluMuokkausGridPaneeli.setVgap(15);
+                palveluMuokkausGridPaneeli.setHgap(15);
+
+                Text palveluMuokkausTeksti = new Text("Muokkaa palvelun tietoja.");
+                palveluMuokkausGridPaneeli.add(palveluMuokkausTeksti, 0, 0);
+
+
+                Text palveluAlueTeksti = new Text("AlueID: ");
+                TextField palvelunAlue = new TextField(String.valueOf(obj.getAlue().getID()));
+                Text palveluNimiTeksti = new Text("Palvelun nimi: ");
+                TextField palvelunNimi = new TextField(obj.getNimi());
+                Text palveluTyyppiTeksti = new Text("Palvelun tyyppi: ");
+                TextField palveluTyyppi = new TextField(String.valueOf(obj.getTyyppi()));
+                Text palveluKuvausTeksti = new Text("Kuvaus: ");
+                TextArea palveluKuvaus = new TextArea(obj.getKuvaus());
+                Text palveluHintaTeksti = new Text("Hinta(€): ");
+                TextField palvelunHinta = new TextField(String.valueOf(obj.getHinta()));
+                Text palveluAlvTeksti = new Text("Alv(%): ");
+                TextField palveluAlv = new TextField(String.valueOf(obj.getAlv()));
+
+                palveluMuokkausGridPaneeli.add(palveluAlueTeksti, 0, 1);
+                palveluMuokkausGridPaneeli.add(palvelunAlue, 1, 1);
+                palveluMuokkausGridPaneeli.add(palveluNimiTeksti, 0, 2);
+                palveluMuokkausGridPaneeli.add(palvelunNimi, 1, 2);
+                palveluMuokkausGridPaneeli.add(palveluTyyppiTeksti, 0, 3);
+                palveluMuokkausGridPaneeli.add(palveluTyyppi, 1, 3);
+                palveluMuokkausGridPaneeli.add(palveluKuvausTeksti, 0, 4);
+                palveluMuokkausGridPaneeli.add(palveluKuvaus, 1, 4);
+                palveluMuokkausGridPaneeli.add(palveluHintaTeksti, 0, 5);
+                palveluMuokkausGridPaneeli.add(palvelunHinta, 1, 5);
+                palveluMuokkausGridPaneeli.add(palveluAlvTeksti, 0, 6);
+                palveluMuokkausGridPaneeli.add(palveluAlv, 1, 6);
+
+                Nappula lisaaPalveluNappula = new Nappula("Tallenna muutokset");
+
+                lisaaPalveluNappula.setOnAction( event -> {
+
+                    try {
+                        tietokanta.muokkaaPalvelu(
+                                obj.getID(),
+                                Integer.parseInt(palvelunAlue.getText()),
+                                palvelunNimi.getText(),
+                                Integer.parseInt(palveluTyyppi.getText()),
+                                palveluKuvaus.getText(),
+                                BigDecimal.valueOf(Double.parseDouble(palvelunHinta.getText())),
+                                Integer.parseInt(palveluAlv.getText())
+                        );
+                        palveluMuokkausIkkuna.close();
+                        paivitaPalveluTaulukko();
+                    } catch (SQLException ex) {
+                        //throw new RuntimeException(ex);
+                        palveluMuokkausTeksti.setText("Muutosten tallentaminen ei onnistunut. \n " +
+                                "Tarkista syötteet ja yritä uudelleen.");
+                        palveluMuokkausTeksti.setFill(Color.RED);
+                    }
+                });
+
+                palveluMuokkausPaneeli.getChildren().addAll(palveluMuokkausGridPaneeli, lisaaPalveluNappula);
+
+                Scene palveluMuokkausKehys = new Scene(palveluMuokkausPaneeli, 400, 400);
+                palveluMuokkausIkkuna.setScene(palveluMuokkausKehys);
             });
+            
             Nappula tarkasteleNappula = new Nappula(170, 30);
             ImageView tarkastelu = new ImageView(imageKuvasta("tarkastelu.png"));
             tarkastelu.setFitWidth(23);
