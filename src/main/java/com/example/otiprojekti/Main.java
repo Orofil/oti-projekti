@@ -325,7 +325,7 @@ public class Main extends Application {
                 poistaAlueIkkuna.getPoistoNappula().setOnAction( event -> {
                     try {
                         tietokanta.poistaAlue(obj.getID());
-                        alueLista.remove(etsiAlueID(alueLista, obj.getID()));
+                        haeKaikkiTiedot();
                         poistaAlueIkkuna.getIkkuna().close();
                         paivitaAlueTaulukko();
                     } catch (SQLException ex) {
@@ -605,7 +605,7 @@ public class Main extends Application {
                 poistaMokkiIkkuna.getPoistoNappula().setOnAction( event -> {
                     try {
                         tietokanta.poistaMokki(obj.getID());
-                        mokkiLista.remove(etsiMokkiID(mokkiLista, obj.getID()));
+                        haeKaikkiTiedot();
                         poistaMokkiIkkuna.getIkkuna().close();
                         paivitaMokkiTaulukko();
                     } catch (SQLException ex) {
@@ -958,7 +958,7 @@ public class Main extends Application {
                 poistaPalveluIkkuna.getPoistoNappula().setOnAction( event -> {
                     try {
                         tietokanta.poistaPalvelu(obj.getID());
-                        palveluLista.remove(etsiPalveluID(palveluLista, obj.getID()));
+                        haeKaikkiTiedot();
                         poistaPalveluIkkuna.getIkkuna().close();
                         paivitaPalveluTaulukko();
                     } catch (SQLException ex) {
@@ -1436,13 +1436,14 @@ public class Main extends Application {
 
                 poistoIkkuna.getPoistoNappula().setOnAction( event -> {
                     try {
-                        tietokanta.poistaVaraus(obj.getID()); // TODO varaus pitää poistaa myös täältä varausLista- ja varausTulokset-listoista
+                        tietokanta.poistaVaraus(obj.getID());
+                        haeKaikkiTiedot();
+                        poistoIkkuna.getIkkuna().close();
+                        paivitaVarausTaulukko(varausTulokset); // TODO päivitetäänkö varausTulokset vai tehdäänkö vaan aina niin että hakuvalinnat menee pois kun tekee tällaisen päivityksen
                     } catch (SQLException ex) {
                         ilmoitusPaneeli.lisaaIlmoitus(IlmoitusTyyppi.VAROITUS, "Virhe varauksen poistamisessa.");
                         throw new RuntimeException(ex); // TEMP
                     }
-                    poistoIkkuna.getIkkuna().close();
-                    paivitaVarausTaulukko(varausTulokset);
                 });
             });
 
@@ -1761,7 +1762,7 @@ public class Main extends Application {
                 poistoIkkuna.getPoistoNappula().setOnAction( event -> {
                     try {
                         tietokanta.poistaAsiakas(obj.getID());
-                        asiakasLista.remove(etsiAsiakasID(asiakasLista, obj.getID()));
+                        haeKaikkiTiedot();
                     } catch (SQLException ex) {
                         ilmoitusPaneeli.lisaaIlmoitus(IlmoitusTyyppi.VAROITUS, "Virhe asiakkaan poistamisessa.");
                         throw new RuntimeException(ex); // TEMP
@@ -2050,11 +2051,13 @@ public class Main extends Application {
                 poistoIkkuna.getPoistoNappula().setOnAction( event -> {
                     try {
                         tietokanta.poistaLasku(obj.getID());
+                        haeKaikkiTiedot();
+                        poistoIkkuna.getIkkuna().close();
+                        paivitaLaskuTaulukko();
                     } catch (SQLException ex) {
-                        throw new RuntimeException(ex); // TODO virheiden käsittely
+                        ilmoitusPaneeli.lisaaIlmoitus(IlmoitusTyyppi.VAROITUS, "Virhe laskun poistamisessa.");
+                        throw new RuntimeException(ex); // TEMP
                     }
-                    poistoIkkuna.getIkkuna().close();
-                    paivitaLaskuTaulukko();
                 });
             });
 
