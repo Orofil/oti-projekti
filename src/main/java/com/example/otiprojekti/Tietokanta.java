@@ -148,16 +148,16 @@ public class Tietokanta {
      * @param alv Tyyppiä int
      */
     public void insertPalvelu(int alue_id, String nimi, int tyyppi, String kuvaus,
-                              BigDecimal hinta, BigDecimal alv) throws SQLException {
+                              BigDecimal hinta, int alv) throws SQLException {
         stm = con.prepareStatement(
-                "INSERT INTO palvelu(palvelu_id,alue_id,nimi,tyyppi,kuvaus,hinta,alv)" +
-                        "VALUES (?,?,?,?,?,?,?)");
+                "INSERT INTO palvelu(alue_id,nimi,tyyppi,kuvaus,hinta,alv)" +
+                        "VALUES (?,?,?,?,?,?)");
         stm.setInt(1, alue_id);
         stm.setString(2, nimi);
         stm.setInt(3, tyyppi);
         stm.setString(4, kuvaus);
         stm.setBigDecimal(5, hinta);
-        stm.setBigDecimal(6, alv);
+        stm.setInt(6, alv);
         stm.executeUpdate();
         stm.close();
     }

@@ -828,6 +828,77 @@ public class Main extends Application {
         palvelunLisays.setFitWidth(23);
         palvelunLisays.setFitHeight(22);
         palvelunLisaysNappula.setGraphic(palvelunLisays);
+        palvelunLisaysNappula.setOnAction( e -> {
+
+            Stage palveluLisaysIkkuna = new Stage();
+            palveluLisaysIkkuna.show();
+            palveluLisaysIkkuna.setTitle("Lisää palvelu");
+            VBox palveluLisaysPaneeli = new VBox();
+            palveluLisaysPaneeli.setPadding(new Insets(25));
+            palveluLisaysPaneeli.setSpacing(15);
+
+            GridPane palveluLisaysGridPaneeli = new GridPane();
+            palveluLisaysGridPaneeli.setVgap(15);
+            palveluLisaysGridPaneeli.setHgap(15);
+
+            Text palveluLisaysTeksti = new Text("Syötä palvelun tiedot.");
+            palveluLisaysGridPaneeli.add(palveluLisaysTeksti, 0, 0);
+
+            Text palveluAlueTeksti = new Text("AlueID: ");
+            TextField palveluAlue = new TextField();
+            Text palveluNimiTeksti = new Text("Palvelun nimi: ");
+            TextField palveluNimi = new TextField();
+            Text palveluTyyppiTeksti = new Text("Palvelun tyyppi: ");
+            TextField palveluTyyppi = new TextField();
+            Text palveluKuvausTeksti = new Text("Kuvaus: ");
+            TextArea palveluKuvaus = new TextArea();
+            Text palveluHintaTeksti = new Text("Hinta(€): ");
+            TextField palveluHinta = new TextField();
+            Text palveluAlvTeksti = new Text("Alv(%): ");
+            TextField palveluAlv = new TextField();
+
+            palveluLisaysGridPaneeli.add(palveluAlueTeksti, 0, 1);
+            palveluLisaysGridPaneeli.add(palveluAlue, 1, 1);
+            palveluLisaysGridPaneeli.add(palveluNimiTeksti, 0, 2);
+            palveluLisaysGridPaneeli.add(palveluNimi, 1, 2);
+            palveluLisaysGridPaneeli.add(palveluTyyppiTeksti, 0, 3);
+            palveluLisaysGridPaneeli.add(palveluTyyppi, 1, 3);
+            palveluLisaysGridPaneeli.add(palveluKuvausTeksti, 0, 4);
+            palveluLisaysGridPaneeli.add(palveluKuvaus, 1, 4);
+            palveluLisaysGridPaneeli.add(palveluHintaTeksti, 0, 5);
+            palveluLisaysGridPaneeli.add(palveluHinta, 1, 5);
+            palveluLisaysGridPaneeli.add(palveluAlvTeksti, 0, 6);
+            palveluLisaysGridPaneeli.add(palveluAlv, 1, 6);
+
+            Nappula lisaaPalveluNappula = new Nappula("Lisää palvelu");
+
+            lisaaPalveluNappula.setOnAction( event -> {
+                
+                try {
+                    tietokanta.insertPalvelu(
+                            Integer.parseInt(palveluAlue.getText()),
+                            palveluNimi.getText(),
+                            Integer.parseInt(palveluTyyppi.getText()),
+                            palveluKuvaus.getText(),
+                            BigDecimal.valueOf(Long.parseLong(palveluHinta.getText())),
+                            Integer.parseInt(palveluAlv.getText())
+                    );
+                    palveluLisaysIkkuna.close();
+                    paivitaPalveluTaulukko();
+                } catch (SQLException ex) {
+                    //throw new RuntimeException(ex);
+                    palveluLisaysTeksti.setText("Palvelun lisääminen ei onnistunut. \n " +
+                            "Tarkista syötteet ja yritä uudelleen.");
+                    palveluLisaysTeksti.setFill(Color.RED);
+                }
+            });
+
+            palveluLisaysPaneeli.getChildren().addAll(palveluLisaysGridPaneeli, lisaaPalveluNappula);
+
+            Scene palveluLisaysKehys = new Scene(palveluLisaysPaneeli, 400, 400);
+            palveluLisaysIkkuna.setScene(palveluLisaysKehys);
+            
+        });
 
 
 
