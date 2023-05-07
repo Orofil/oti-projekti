@@ -960,8 +960,20 @@ public class Main extends Application {
             roskis.setFitHeight(22);
             poistoNappula.setGraphic(roskis);
             palveluTaulukko.add(poistoNappula, 4, rivi);
+            
             poistoNappula.setOnMouseClicked(e -> {
-                // poistapalvelu();                          //TODO  poistapalvelu() - metodin luominen
+                PoistoIkkuna poistaPalveluIkkuna = new PoistoIkkuna("palvelu", "palvelun",
+                        "Kaikki palvelun varaustiedot poistetaan samalla.");
+
+                poistaPalveluIkkuna.getPoistoNappula().setOnAction( event -> {
+                    try {
+                        tietokanta.poistaPalvelu(obj.getID());
+                    } catch (SQLException ex) {
+                        throw new RuntimeException(ex); // TODO virheiden käsittely
+                    }
+                    poistaPalveluIkkuna.getIkkuna().close();
+                    paivitaPalveluTaulukko();
+                });            
             });
 
             Nappula muokkausNappula = new Nappula(100, 30);
