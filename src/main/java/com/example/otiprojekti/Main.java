@@ -1049,8 +1049,34 @@ public class Main extends Application {
             tarkastelu.setFitHeight(22);
             tarkasteleNappula.setGraphic(tarkastelu);
             palveluTaulukko.add(tarkasteleNappula, 6, rivi);
+            
             tarkasteleNappula.setOnMouseClicked(e -> {
-                // tarkasteleMokkia();                          //TODO  tarkasteleMokkia() - metodin luominen
+                
+                Stage tarkastelePalveluIkkuna = new Stage();
+                tarkastelePalveluIkkuna.show();
+                GridPane tarkastelePalveluPaneeli = new GridPane();
+                tarkastelePalveluPaneeli.setPadding(new Insets(25));
+                tarkastelePalveluPaneeli.setVgap(15);
+                tarkastelePalveluPaneeli.setHgap(15);
+                Scene tarkastelePalveluKehys = new Scene(tarkastelePalveluPaneeli, 400, 300);
+                tarkastelePalveluIkkuna.setScene(tarkastelePalveluKehys);
+
+                tarkastelePalveluPaneeli.add(new Text("Palvelun tiedot"),0,0);
+                tarkastelePalveluPaneeli.add(new Text("PalveluID: "),0,1);
+                tarkastelePalveluPaneeli.add(new Text("Palvelun nimi: "),0,2);
+                tarkastelePalveluPaneeli.add(new Text("Alue: "),0,3);
+                tarkastelePalveluPaneeli.add(new Text("Tyyppi: "),0,4);
+                tarkastelePalveluPaneeli.add(new Text("Kuvaus: "),0,5);
+                tarkastelePalveluPaneeli.add(new Text("Hinta(€): "),0,6);
+                tarkastelePalveluPaneeli.add(new Text("Alv: "),0,7);
+
+                tarkastelePalveluPaneeli.add(new Text(String.valueOf(obj.getID())),1,1);
+                tarkastelePalveluPaneeli.add(new Text(obj.getNimi()),1,2);
+                tarkastelePalveluPaneeli.add(new Text(obj.getAlue().getNimi()),1,3);
+                tarkastelePalveluPaneeli.add(new Text(String.valueOf(obj.getTyyppi())),1,4);
+                tarkastelePalveluPaneeli.add(new Text(obj.getKuvaus()),1,5);
+                tarkastelePalveluPaneeli.add(new Text(String.valueOf(obj.getHinta())),1,6);
+                tarkastelePalveluPaneeli.add(new Text(String.valueOf(obj.getAlv())),1,7);
             });
 
             rivi++;
