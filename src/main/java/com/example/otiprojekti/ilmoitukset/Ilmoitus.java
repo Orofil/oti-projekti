@@ -6,7 +6,7 @@ import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
 
 public class Ilmoitus extends StackPane {
-    private static int leveys = 150;
+    private static int leveys = 200;
     private static int korkeus = 70;
     private static int kulmaSade = 20;
 
@@ -27,11 +27,11 @@ public class Ilmoitus extends StackPane {
 
         Color vari = null;
         switch (tyyppi) {
-            case ILMOITUS -> vari = Color.rgb(127, 127, 255);
+            case ILMOITUS -> vari = Color.rgb(140, 170, 255);
             case VAROITUS -> vari = Color.rgb(255, 127, 127);
         }
         rect.setFill(vari);
-        rect.setOpacity(0.7);
+        rect.setOpacity(0.8);
 
         getChildren().addAll(rect, text);
 

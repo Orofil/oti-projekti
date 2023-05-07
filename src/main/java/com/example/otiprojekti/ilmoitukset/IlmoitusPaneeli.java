@@ -14,7 +14,7 @@ public class IlmoitusPaneeli extends VBox {
     // Onko hiiri jonkin ilmoituksen päällä
     private boolean hiiriPaalla;
     // Oletuskesto ilmoitukselle
-    private int kesto = 8;
+    private int kesto = 10;
 
     public IlmoitusPaneeli() {
         super(15);
@@ -30,7 +30,6 @@ public class IlmoitusPaneeli extends VBox {
         // Timeline laskee ajan, jonka kuluttua loppuun ilmoitus katoaa
         Timeline t = new Timeline(new KeyFrame(Duration.seconds(1), e -> {
             i.setKesto(i.getKesto() - 1);
-//            System.out.println("Kesto: " + i.getKesto()); // TEMP
             if (i.getKesto() <= 0) {
                 /*
                 Jos hiiri on jonkun ilmoituksen päällä, tehdään muista
