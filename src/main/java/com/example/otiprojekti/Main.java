@@ -424,6 +424,20 @@ public class Main extends Application {
         mokkiLajittelu.setValue("Tunnuksen mukaan"); // Oletuksena valittu vaihtoehto
         mokkiHaku.add(mokkiLajittelu, 2, 1);
 
+        mokkiHaku.add(new Text("Onko varattu päivänä"), 3, 0); // TODO paremmin tämä
+        DatePicker varattuPaivana = new DatePicker();
+        mokkiHaku.add(varattuPaivana, 3, 1);
+        varattuPaivana.setOnAction(e -> {
+            LocalDate valittuPaiva = varattuPaivana.getValue();
+            for (Varaus v : varausLista) {
+                if (v.getVarausAlkuPvm().isBefore(valittuPaiva.plusDays(1).atStartOfDay()) &&
+                        v.getVarausLoppuPvm().isAfter(valittuPaiva.atStartOfDay())) {
+                    // TODO aseta jotenkin mökkitaulukkoon esim. Paneja soluihin ja sitten väritetään ne jotka on varattu
+                    v.getMokki(); // Tällä tieto mökistä, sitten vaan muokataan taulukkoa jotenkin hienosti
+                }
+            }
+        });
+
         mokkiHakuNappula.setOnAction( e -> {
             // Suodatus
             // TODO
@@ -1159,19 +1173,6 @@ public class Main extends Application {
         ComboBox<Alue> alueSuodatus = new ComboBox<>(FXCollections.observableArrayList(alueLista)); // TODO nämä tekstit jotenkin paremmin ja alueiden päivittyminen jos niitä muutetaan
         varausHaku.add(alueSuodatusTeksti, 5, 0);
         varausHaku.add(alueSuodatus, 5, 1);
-
-        varausHaku.add(new Text("Onko varattu päivänä"), 6, 0); // TODO paremmin tämä
-        DatePicker varattuPaivana = new DatePicker();
-        varausHaku.add(varattuPaivana, 6, 1);
-        varattuPaivana.setOnAction(e -> {
-            LocalDate valittuPaiva = varattuPaivana.getValue();
-            for (Varaus v : varausLista) {
-                if (v.getVarausAlkuPvm().isBefore(valittuPaiva.plusDays(1).atStartOfDay()) &&
-                        v.getVarausLoppuPvm().isAfter(valittuPaiva.atStartOfDay())) {
-                    // TODO aseta jotenkin varausTaulukkoon esim. Paneja soluihin ja sitten väritetään ne jotka on varattu
-                }
-            }
-        });
 
         // Virheiden käsittely. Jos virheitä on, hakunappula on poistettu käytöstä.
         EventHandler<ActionEvent> tarkistaSyotteet = event -> {
