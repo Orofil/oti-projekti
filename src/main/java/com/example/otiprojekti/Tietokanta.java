@@ -781,8 +781,8 @@ public class Tietokanta {
                     etsiPostiNro(postit, rs.getString("postinro")),
                     rs.getString("sukunimi"),
                     rs.getString("etunimi"),
-                    rs.getString("lahiosoite"),
                     rs.getString("email"),
+                    rs.getString("lahiosoite"),
                     rs.getString("puhelinnro")));
         }
         return asiakkaat;

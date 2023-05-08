@@ -1786,8 +1786,6 @@ public class Main extends Application {
             muokkausNappula.setGraphic(muokkaus);
             asiakasTaulukko.add(muokkausNappula, 5, rivi);
             muokkausNappula.setOnMouseClicked(e -> {
-                // muokkaaAsiakas();                          //TODO  muokkaaAsiakas() - metodin luominen
-
                 Stage asiakasMuokkausIkkuna = new Stage();
 
                 VBox asiakasMuokkausPaneeli = new VBox(10);
