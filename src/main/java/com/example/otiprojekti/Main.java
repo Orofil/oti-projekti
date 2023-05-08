@@ -2044,7 +2044,7 @@ public class Main extends Application {
                             Integer.parseInt(varausID.getText()),
                             BigDecimal.valueOf(summa),
                             Integer.parseInt(alv.getText()),
-                            LaskuStatus.EI_LAHETETTY.id // TODO onko laskun status aina tämä sama kun se tehdään
+                            LaskuStatus.EI_LAHETETTY.id // TODO onko laskun status aina tämä sama kun se tehdään? JOO
                     );
                     haeKaikkiTiedot();
                     laskuLisaysIkkuna.close();
@@ -2167,6 +2167,10 @@ public class Main extends Application {
                 Text mokkiHintaText = new Text("Mökin hinta/vrk (€)");
                 Text palvelutHintaText = new Text("Lisäpalveluiden yhteishinta (€)");
                 Text alvText = new Text("Alv(%)");
+                Text statusText = new Text("Laskun tila \n" +
+                        "'0': Ei lähetetty \n" +
+                        "'1': Lähetetty \n" +
+                        "'2': Maksettu ");
 
                 TextField asiakkaanNimi = new TextField();
                 TextField mokki = new TextField();
@@ -2176,6 +2180,7 @@ public class Main extends Application {
                 TextField mokkiHinta = new TextField();
                 TextField palvelutHinta = new TextField("0");
                 TextField alv = new TextField("14");
+                TextField status = new TextField();
 
                 laskunMuokkausGridPaneeli.add( asiakkaanNimiText, 0, 0);
                 laskunMuokkausGridPaneeli.add( asiakkaanNimi, 1, 0);
@@ -2193,6 +2198,8 @@ public class Main extends Application {
                 laskunMuokkausGridPaneeli.add( palvelutHinta, 1, 6);
                 laskunMuokkausGridPaneeli.add( alvText, 0, 7);
                 laskunMuokkausGridPaneeli.add( alv, 1, 7);
+                laskunMuokkausGridPaneeli.add( statusText, 0, 8);
+                laskunMuokkausGridPaneeli.add( status, 1, 8);
 
 
 
@@ -2225,16 +2232,17 @@ public class Main extends Application {
                                 obj.getVaraus().getID(),
                                 BigDecimal.valueOf(summa),
                                 Integer.parseInt(alv.getText()),
-                                obj.getStatus().id // TODO statuksen muuttaminen
+                                Integer.parseInt(status.getText()) // TODO statuksen muuttaminen
                         );
                         haeKaikkiTiedot();
                         laskuMuokkausIkkuna.close();
                         paivitaLaskuTaulukko();
                         
                     } catch (SQLException ex) {
-                        laskuMuokkausTeksti.setFill(Color.RED);
-                        laskuMuokkausTeksti.setText("Muutosten tallentaminen ei onnistunut. \n" +
-                                "Tarkista syötteet ja yritä uudelleen.");
+                        throw new RuntimeException(ex);
+                        //laskuMuokkausTeksti.setFill(Color.RED);
+                        //laskuMuokkausTeksti.setText("Muutosten tallentaminen ei onnistunut. \n" +
+                        //        "Tarkista syötteet ja yritä uudelleen.");
                     }
                 });
 
@@ -2242,7 +2250,7 @@ public class Main extends Application {
                         laskuMuokkausTeksti,
                         laskunMuokkausGridPaneeli,
                         laskunMuokkausNappula);
-                Scene laskuMuokkausKehys = new Scene(laskuMuokkausPaneeli, 400, 550);
+                Scene laskuMuokkausKehys = new Scene(laskuMuokkausPaneeli, 400, 600);
                 laskuMuokkausIkkuna.setScene(laskuMuokkausKehys);
                 laskuMuokkausIkkuna.setTitle("Tallenna muutokset");
                 laskuMuokkausIkkuna.show();

@@ -333,7 +333,7 @@ public class Tietokanta {
     public void muokkaaLasku(int lasku_id, int varaus_id, BigDecimal summa, int alv, int status) throws SQLException {
         stm = con.prepareStatement(
                 "UPDATE lasku " +
-                        "SET varaus_id = ?" +
+                        "SET varaus_id = ?," +
                         "summa = ?," +
                         "alv = ?," +
                         "status = ? " +
