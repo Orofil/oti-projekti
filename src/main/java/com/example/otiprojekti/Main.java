@@ -2,21 +2,39 @@ package com.example.otiprojekti;
 
 import com.example.otiprojekti.ilmoitukset.IlmoitusPaneeli;
 import com.example.otiprojekti.ilmoitukset.IlmoitusTyyppi;
+import com.itextpdf.text.Document;
+import com.itextpdf.text.DocumentException;
+import com.itextpdf.text.Paragraph;
+import com.itextpdf.text.pdf.PdfPCell;
+import com.itextpdf.text.pdf.PdfPTable;
+import com.itextpdf.text.pdf.PdfWriter;
 import javafx.application.Application;
 import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.*;
+import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.control.Label;
+import javafx.scene.control.ScrollPane;
+import javafx.scene.control.TextArea;
+import javafx.scene.control.TextField;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.text.*;
+import javafx.scene.text.Font;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 
+import javax.swing.*;
+import java.awt.*;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.math.BigDecimal;
 import java.sql.SQLException;
 import java.time.Duration;
@@ -1133,6 +1151,59 @@ public class Main extends Application {
         Nappula varausHakuNappula = new Nappula("Suorita haku", 190, 30);
         varausHaku.add(varausHakuNappula, 0, 2);
 
+
+        Nappula varausRaporttiNappula= new Nappula("Luo varausraportti", 190, 30);
+        varausHaku.add(varausRaporttiNappula, 6, 2);
+
+        varausRaporttiNappula.setOnAction( event -> {
+            String tiedostonNimi = "Varausraportti.pdf"; // PDF-tiedoston nimi
+            Document dokumentti = new Document();
+
+            try {
+                // Luodaan PdfWriter osoittamaan tiedostoon
+                PdfWriter.getInstance(dokumentti, new FileOutputStream(tiedostonNimi));
+
+                // Avataan dokumentti
+                dokumentti.open();
+
+                PdfPTable varausTaulukko = new PdfPTable(6);
+                varausTaulukko.setWidths(new int[]{3, 3, 3,3,3,3});
+
+                // Lisää taulukon otsikkorivi
+                varausTaulukko.addCell(new PdfPCell(new Paragraph("Varaus ID")));
+                varausTaulukko.addCell(new PdfPCell(new Paragraph("Asiakkaan nimi")));
+                varausTaulukko.addCell(new PdfPCell(new Paragraph("Mökin nimi")));
+                varausTaulukko.addCell(new PdfPCell(new Paragraph("Varauksen alku")));
+                varausTaulukko.addCell(new PdfPCell(new Paragraph("Varauksen loppu")));
+                varausTaulukko.addCell(new PdfPCell(new Paragraph("Varauksen alue")));
+
+
+
+                // Lisää ArrayListin tiedot taulukkoon
+                for (Varaus v : varausLista) { //Tämä ei toimi vielä
+                    varausTaulukko.addCell(new PdfPCell(new Paragraph(String.valueOf(v.getID()))));
+                    varausTaulukko.addCell(new PdfPCell(new Paragraph(String.valueOf(v.getAsiakas().getNimi(false)))));
+                    varausTaulukko.addCell(new PdfPCell(new Paragraph(String.valueOf(v.getMokki().getNimi()))));
+                }
+
+                dokumentti.add(varausTaulukko);
+
+                // Suljetaan dokumentti
+                dokumentti.close();
+
+                System.out.println("Raportti luotu onnistuneesti!");
+
+            } catch (DocumentException | FileNotFoundException i) {
+                System.out.println("Virhe raportin generoimisessa: " + i.getMessage());
+            }
+            try {
+                // Avataan dokumentti oletusohjelmalla
+                Desktop.getDesktop().open(new File(tiedostonNimi));
+            } catch (IOException i) {
+                System.out.println("Virhe tiedoston avaamisessa: " + i.getMessage());
+            }
+        });
+
         Text varausLajitteluTeksti = new Text("Lajittelu");
         varausLajitteluTeksti.setFont(fonttiPaksu);
         varausHaku.add(varausLajitteluTeksti, 1, 0);
@@ -1213,6 +1284,8 @@ public class Main extends Application {
                     varausTulokset.add(v);
                 }
             }
+
+
 
             // Lajittelu
             switch (varausLajittelu.getValue()) {
@@ -1456,6 +1529,8 @@ public class Main extends Application {
                     }
                 });
             });
+
+
 
             Nappula muokkausNappula = new Nappula(100, 30);
             ImageView muokkaus = new ImageView(imageKuvasta("muokkaus.png"));
