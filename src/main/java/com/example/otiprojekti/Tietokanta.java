@@ -519,6 +519,22 @@ public class Tietokanta {
     }
 
 
+    public void muokkaaLasku(int lasku_id, int varaus_id, BigDecimal summa, int alv) throws SQLException {
+        stm = con.prepareStatement(
+                "UPDATE lasku " +
+                        "SET summa = ?," +
+                        "alv = ? " +
+                        "WHERE lasku_id = ? " +
+                        "AND varaus_id = ?");
+        stm.setBigDecimal(1, summa);
+        stm.setInt(2, alv);
+        stm.setInt(3, varaus_id);
+        stm.setInt(4, lasku_id);
+        stm.executeUpdate();
+        stm.close();
+    }
+
+
 
     ///// Tietokannan tietojen poistamiset
 
@@ -718,6 +734,16 @@ public class Tietokanta {
 
     public HashMap<Integer, HashMap<Palvelu, Integer>> haeVarauksenPalvelut(ArrayList<Palvelu> palvelut) throws SQLException {
         stm = con.prepareStatement("SELECT * FROM varauksen_palvelut");
+        ResultSet rs = stm.executeQuery();
+        HashMap<Integer, HashMap<Palvelu, Integer>> tulokset = varauksenPalvelutLuokaksi(rs, palvelut);
+        stm.close();
+        return tulokset;
+    }
+
+    public HashMap<Integer, HashMap<Palvelu, Integer>> haeTietynVarauksenPalvelut(ArrayList<Palvelu> palvelut, int varausID) throws SQLException {
+        stm = con.prepareStatement("SELECT * FROM varauksen_palvelut " +
+                "WHERE varaus_id = ?");
+        stm.setInt(1, varausID);
         ResultSet rs = stm.executeQuery();
         HashMap<Integer, HashMap<Palvelu, Integer>> tulokset = varauksenPalvelutLuokaksi(rs, palvelut);
         stm.close();

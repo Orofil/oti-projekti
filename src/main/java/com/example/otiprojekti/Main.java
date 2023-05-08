@@ -22,6 +22,7 @@ import javafx.scene.text.Font;
 
 import java.math.BigDecimal;
 import java.sql.SQLException;
+import java.time.Duration;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeParseException;
@@ -1964,7 +1965,7 @@ public class Main extends Application {
         laskunLisays.setFitHeight(22);
         laskunLisaysNappula.setGraphic(laskunLisays);
         laskunLisaysNappula.setOnAction( e -> {
-            /*Stage laskuLisaysIkkuna = new Stage();
+            Stage laskuLisaysIkkuna = new Stage();
 
             VBox laskuLisaysPaneeli = new VBox(10);
             laskuLisaysPaneeli.setPadding(new Insets(25));
@@ -1972,9 +1973,6 @@ public class Main extends Application {
             Text laskuLisaysTeksti = new Text("Syötä sen varauksen ID, josta haluat muodostaa laskun.");
             TextField varausID = new TextField();
             Nappula haeLaskulleTiedotNappula = new Nappula("Hae varauksen tiedot laskulle");
-            haeLaskulleTiedotNappula.setOnAction( event -> {
-                //TODO tähän toiminto joka hakee laskulle tarvittavat tiedot varauksesta
-            });
 
             GridPane laskunLisaysGridPaneeli = new GridPane();
             laskunLisaysGridPaneeli.setPadding(new Insets(25));
@@ -1983,18 +1981,92 @@ public class Main extends Application {
 
             Text asiakkaanNimiText = new Text("Asiakkaan nimi");
             Text mokkiText = new Text("Mökki");
-            Text varausAlkupvmText = new Text("Varauksen alkamispvm.");
-            Text varausLoppupvmText = new Text("Varauksen loppumispvm.");
+            Text varausAlkuPvmText = new Text("Varauksen alkamispvm.");
+            Text varausLoppuPvmText = new Text("Varauksen loppumispvm.");
+            Text varattujaPaiviaYhteensaText = new Text("Varattuja päiviä yhteensä");
             Text mokkiHintaText = new Text("Mökin hinta/vrk (€)");
-            // keskeneräinen
+            Text palvelutHintaText = new Text("Lisäpalveluiden yhteishinta (€)");
+            Text alvText = new Text("Alv(%)");
 
-            laskuLisaysPaneeli.getChildren().addAll(laskuLisaysTeksti, varausID);
-            Scene laskuLisaysKehys = new Scene(laskuLisaysPaneeli, 400, 350);
+            TextField asiakkaanNimi = new TextField();
+            TextField mokki = new TextField();
+            TextField varausAlkuPvm = new TextField();
+            TextField varausLoppuPvm = new TextField();
+            TextField varattujaPaiviaYhteensa = new TextField();
+            TextField mokkiHinta = new TextField();
+            TextField palvelutHinta = new TextField("0");
+            TextField alv = new TextField("14");
+
+            laskunLisaysGridPaneeli.add( asiakkaanNimiText, 0, 0);
+            laskunLisaysGridPaneeli.add( asiakkaanNimi, 1, 0);
+            laskunLisaysGridPaneeli.add( mokkiText, 0, 1);
+            laskunLisaysGridPaneeli.add( mokki, 1, 1);
+            laskunLisaysGridPaneeli.add( varausAlkuPvmText, 0, 2);
+            laskunLisaysGridPaneeli.add( varausAlkuPvm, 1, 2);
+            laskunLisaysGridPaneeli.add( varausLoppuPvmText, 0, 3);
+            laskunLisaysGridPaneeli.add( varausLoppuPvm, 1, 3);
+            laskunLisaysGridPaneeli.add( varattujaPaiviaYhteensaText, 0, 4);
+            laskunLisaysGridPaneeli.add( varattujaPaiviaYhteensa, 1, 4);
+            laskunLisaysGridPaneeli.add( mokkiHintaText, 0, 5);
+            laskunLisaysGridPaneeli.add( mokkiHinta, 1, 5);
+            laskunLisaysGridPaneeli.add( palvelutHintaText, 0, 6);
+            laskunLisaysGridPaneeli.add( palvelutHinta, 1, 6);
+            laskunLisaysGridPaneeli.add( alvText, 0, 7);
+            laskunLisaysGridPaneeli.add( alv, 1, 7);
+            
+
+            haeLaskulleTiedotNappula.setOnAction( event -> {
+                Varaus varaus = etsiVarausID(varausLista, Integer.parseInt(varausID.getText()));
+
+                LocalDateTime pvm1 = varaus.getVarausAlkuPvm();
+                LocalDateTime pvm2 = varaus.getVarausLoppuPvm();
+                int daysBetween = (int) Duration.between(pvm1, pvm2).toDays();
+
+                asiakkaanNimi.setText(varaus.getAsiakas().getNimi(false));
+                mokki.setText(varaus.getMokki().getNimi());
+                varausAlkuPvm.setText(String.valueOf(varaus.getVarausAlkuPvm()));
+                varausLoppuPvm.setText(String.valueOf(varaus.getVarausLoppuPvm()));
+                varattujaPaiviaYhteensa.setText(String.valueOf(daysBetween));
+                mokkiHinta.setText(String.valueOf(varaus.getMokki().getHinta()));
+                //palvelutHinta.setText();   TODO tähän pitäisi hakea varaukseen liittyvät palvelut ja niiden yhteishinta
+            });
+
+            Nappula laskunLisaysNappula = new Nappula("Lisää lasku");
+            laskunLisaysNappula.setOnAction( event -> {
+
+                double summa =
+                        (Double.parseDouble(varattujaPaiviaYhteensa.getText()) *
+                        Double.parseDouble(mokkiHinta.getText()) +
+                        Double.parseDouble(palvelutHinta.getText())) *
+                                ((Double.parseDouble(alv.getText()) / 100)+1);
+                try {
+                    tietokanta.insertLasku(
+                            Integer.parseInt(varausID.getText()),
+                            BigDecimal.valueOf(summa),
+                            Integer.parseInt(alv.getText())
+                            );
+                    haeKaikkiTiedot();
+                    laskuLisaysIkkuna.close();
+                    paivitaLaskuTaulukko();
+                } catch (SQLException ex) {
+                    //throw new RuntimeException(ex);
+                    laskuLisaysTeksti.setFill(Color.RED);
+                    laskuLisaysTeksti.setText("Laskun lisääminen ei onnistunut. \n" +
+                            "Tarkista syötteet ja yritä uudelleen.");
+                }
+            });
+
+            laskuLisaysPaneeli.getChildren().addAll(
+                    laskuLisaysTeksti,
+                    varausID,
+                    haeLaskulleTiedotNappula,
+                    laskunLisaysGridPaneeli,
+                    laskunLisaysNappula);
+            Scene laskuLisaysKehys = new Scene(laskuLisaysPaneeli, 400, 550);
             laskuLisaysIkkuna.setScene(laskuLisaysKehys);
             laskuLisaysIkkuna.setTitle("Luo lasku");
             laskuLisaysIkkuna.show();
 
-             */
         });
     }
     
@@ -2070,8 +2142,108 @@ public class Main extends Application {
             muokkaus.setFitHeight(22);
             muokkausNappula.setGraphic(muokkaus);
             laskuTaulukko.add(muokkausNappula, 5, rivi);
+
             muokkausNappula.setOnMouseClicked(e -> {
-                // muokkaaLasku();                          //TODO  muokkaaLasku() - metodin luominen
+
+                Stage laskuMuokkausIkkuna = new Stage();
+
+                VBox laskuMuokkausPaneeli = new VBox(10);
+                laskuMuokkausPaneeli.setPadding(new Insets(25));
+
+                Text laskuMuokkausTeksti = new Text("Muokkaa laskun tietoja:");
+
+                GridPane laskunMuokkausGridPaneeli = new GridPane();
+                laskunMuokkausGridPaneeli.setPadding(new Insets(25));
+                laskunMuokkausGridPaneeli.setHgap(15);
+                laskunMuokkausGridPaneeli.setVgap(15);
+
+                Text asiakkaanNimiText = new Text("Asiakkaan nimi");
+                Text mokkiText = new Text("Mökki");
+                Text varausAlkuPvmText = new Text("Varauksen alkamispvm.");
+                Text varausLoppuPvmText = new Text("Varauksen loppumispvm.");
+                Text varattujaPaiviaYhteensaText = new Text("Varattuja päiviä yhteensä");
+                Text mokkiHintaText = new Text("Mökin hinta/vrk (€)");
+                Text palvelutHintaText = new Text("Lisäpalveluiden yhteishinta (€)");
+                Text alvText = new Text("Alv(%)");
+
+                TextField asiakkaanNimi = new TextField();
+                TextField mokki = new TextField();
+                TextField varausAlkuPvm = new TextField();
+                TextField varausLoppuPvm = new TextField();
+                TextField varattujaPaiviaYhteensa = new TextField();
+                TextField mokkiHinta = new TextField();
+                TextField palvelutHinta = new TextField("0");
+                TextField alv = new TextField("14");
+
+                laskunMuokkausGridPaneeli.add( asiakkaanNimiText, 0, 0);
+                laskunMuokkausGridPaneeli.add( asiakkaanNimi, 1, 0);
+                laskunMuokkausGridPaneeli.add( mokkiText, 0, 1);
+                laskunMuokkausGridPaneeli.add( mokki, 1, 1);
+                laskunMuokkausGridPaneeli.add( varausAlkuPvmText, 0, 2);
+                laskunMuokkausGridPaneeli.add( varausAlkuPvm, 1, 2);
+                laskunMuokkausGridPaneeli.add( varausLoppuPvmText, 0, 3);
+                laskunMuokkausGridPaneeli.add( varausLoppuPvm, 1, 3);
+                laskunMuokkausGridPaneeli.add( varattujaPaiviaYhteensaText, 0, 4);
+                laskunMuokkausGridPaneeli.add( varattujaPaiviaYhteensa, 1, 4);
+                laskunMuokkausGridPaneeli.add( mokkiHintaText, 0, 5);
+                laskunMuokkausGridPaneeli.add( mokkiHinta, 1, 5);
+                laskunMuokkausGridPaneeli.add( palvelutHintaText, 0, 6);
+                laskunMuokkausGridPaneeli.add( palvelutHinta, 1, 6);
+                laskunMuokkausGridPaneeli.add( alvText, 0, 7);
+                laskunMuokkausGridPaneeli.add( alv, 1, 7);
+
+
+
+                Varaus varaus = etsiVarausID(varausLista, obj.getVaraus().getID());
+
+                LocalDateTime pvm1 = varaus.getVarausAlkuPvm();
+                LocalDateTime pvm2 = varaus.getVarausLoppuPvm();
+                int daysBetween = (int) Duration.between(pvm1, pvm2).toDays();
+
+                asiakkaanNimi.setText(varaus.getAsiakas().getNimi(false));
+                mokki.setText(varaus.getMokki().getNimi());
+                varausAlkuPvm.setText(String.valueOf(varaus.getVarausAlkuPvm()));
+                varausLoppuPvm.setText(String.valueOf(varaus.getVarausLoppuPvm()));
+                varattujaPaiviaYhteensa.setText(String.valueOf(daysBetween));
+                mokkiHinta.setText(String.valueOf(varaus.getMokki().getHinta()));
+                //palvelutHinta.setText();   TODO tähän pitäisi hakea varaukseen liittyvät palvelut ja niiden yhteishinta
+
+
+                Nappula laskunMuokkausNappula = new Nappula("Tallenna muutokset");
+                laskunMuokkausNappula.setOnAction( event -> {
+
+                    double summa =
+                            (Double.parseDouble(varattujaPaiviaYhteensa.getText()) *
+                                    Double.parseDouble(mokkiHinta.getText()) +
+                                    Double.parseDouble(palvelutHinta.getText())) *
+                                    ((Double.parseDouble(alv.getText()) / 100)+1);
+                    try {
+                        tietokanta.muokkaaLasku(
+                                obj.getID(),
+                                obj.getVaraus().getID(),
+                                BigDecimal.valueOf(summa),
+                                Integer.parseInt(alv.getText())
+                        );
+                        haeKaikkiTiedot();
+                        laskuMuokkausIkkuna.close();
+                        paivitaLaskuTaulukko();
+                    } catch (SQLException ex) {
+
+                        laskuMuokkausTeksti.setFill(Color.RED);
+                        laskuMuokkausTeksti.setText("Muutosten tallentaminen ei onnistunut. \n" +
+                                "Tarkista syötteet ja yritä uudelleen.");
+                    }
+                });
+
+                laskuMuokkausPaneeli.getChildren().addAll(
+                        laskuMuokkausTeksti,
+                        laskunMuokkausGridPaneeli,
+                        laskunMuokkausNappula);
+                Scene laskuMuokkausKehys = new Scene(laskuMuokkausPaneeli, 400, 550);
+                laskuMuokkausIkkuna.setScene(laskuMuokkausKehys);
+                laskuMuokkausIkkuna.setTitle("Tallenna muutokset");
+                laskuMuokkausIkkuna.show();
+
             });
 
             Nappula tarkasteleNappula = new Nappula(170, 30);
