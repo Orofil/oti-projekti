@@ -512,7 +512,7 @@ public class Main extends Application {
 
             lisaaMokkiNappula.setOnAction( event -> {
                 try {
-                    if (etsiPostiNro(postiLista, String.valueOf(mokkiPostinro)) == null) {
+                    if (etsiPostiNro(postiLista, mokkiPostinro.getText()) == null) {
                         tietokanta.insertPosti(mokkiPostinro.getText(), mokkiPostitoimipaikka.getText());
                     }
 
@@ -1360,6 +1360,7 @@ public class Main extends Application {
                             asiakasLista,
                             mokkiLista,
                             palveluLista));
+                    paivitaVarausTaulukko(varausLista);
                     varausLisaysStage.close();
                 } catch (SQLException ex) {
                     ilmoitusPaneeli.lisaaIlmoitus(IlmoitusTyyppi.VAROITUS, String.valueOf(ex));
@@ -1513,6 +1514,8 @@ public class Main extends Application {
                                 varausAlkuAika,
                                 varausLoppuAika);
                         varausMuokkausIkkuna.close();
+                        haeKaikkiTiedot();
+                        paivitaVarausTaulukko(varausLista);
                     } catch (SQLException ex) {
                         ilmoitusPaneeli.lisaaIlmoitus(IlmoitusTyyppi.VAROITUS, String.valueOf(ex));
                         throw new RuntimeException(ex); // TEMP
@@ -1681,7 +1684,7 @@ public class Main extends Application {
             Nappula tallennaAsiakas = new Nappula("Lisää asiakas");
             tallennaAsiakas.setOnAction( event -> {
                 try {
-                    if (etsiPostiNro(postiLista, String.valueOf(postinro)) == null) {
+                    if (etsiPostiNro(postiLista, postinro.getText()) == null) {
                         tietokanta.insertPosti(postinro.getText(), postitoimipaikka.getText());
                     }
 
@@ -1834,7 +1837,7 @@ public class Main extends Application {
                 Nappula tallennaAsiakasMuutokset = new Nappula("Tallenna muutokset");
                 tallennaAsiakasMuutokset.setOnAction( event -> {
                     try {
-                        if (etsiPostiNro(postiLista, String.valueOf(postinro)) == null) {
+                        if (etsiPostiNro(postiLista, postinro.getText()) == null) {
                             tietokanta.insertPosti(postinro.getText(), postitoimipaikka.getText());
                         }
 
