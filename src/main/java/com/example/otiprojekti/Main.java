@@ -2043,8 +2043,9 @@ public class Main extends Application {
                     tietokanta.insertLasku(
                             Integer.parseInt(varausID.getText()),
                             BigDecimal.valueOf(summa),
-                            Integer.parseInt(alv.getText())
-                            );
+                            Integer.parseInt(alv.getText()),
+                            LaskuStatus.EI_LAHETETTY.id // TODO onko laskun status aina tämä sama kun se tehdään
+                    );
                     haeKaikkiTiedot();
                     laskuLisaysIkkuna.close();
                     paivitaLaskuTaulukko();
@@ -2222,7 +2223,8 @@ public class Main extends Application {
                                 obj.getID(),
                                 obj.getVaraus().getID(),
                                 BigDecimal.valueOf(summa),
-                                Integer.parseInt(alv.getText())
+                                Integer.parseInt(alv.getText()),
+                                obj.getStatus().id // TODO statuksen muuttaminen
                         );
                         haeKaikkiTiedot();
                         laskuMuokkausIkkuna.close();
