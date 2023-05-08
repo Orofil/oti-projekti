@@ -680,7 +680,7 @@ public class Main extends Application {
 
                 muokkaaMokkiNappula.setOnAction( event -> {
                     try {
-                        if (etsiPostiNro(postiLista, String.valueOf(mokkiPostinro)) == null) {
+                        if (etsiPostiNro(postiLista, mokkiPostinro.getText()) == null) {
                             tietokanta.insertPosti(mokkiPostinro.getText(), mokkiPostitoimipaikka.getText());
                         }
 
