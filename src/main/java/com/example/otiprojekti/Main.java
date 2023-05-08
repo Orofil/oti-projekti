@@ -1692,6 +1692,7 @@ public class Main extends Application {
 
                     asiakasLista.add(tietokanta.insertAsiakas(postinro.getText(), enimi.getText(), snimi.getText(), lahiosoite.getText(),
                             email.getText(), puhnro.getText(), postiLista));
+                    haeKaikkiTiedot();
                     asiakasLisaysIkkuna.close();
                     paivitaAsiakasTaulukko(asiakasLista); // TODO tämä ei huomioi sitä jos asiakkaita on suodatettu haulla, mutta se olisi ehkä vaikea tehdäkin niin
                 } catch (SQLException ex) {
@@ -1774,7 +1775,7 @@ public class Main extends Application {
                         throw new RuntimeException(ex); // TEMP
                     }
                     poistoIkkuna.getIkkuna().close();
-                    paivitaAsiakasTaulukko(asiakasTulokset);
+                    paivitaAsiakasTaulukko(asiakasLista);
                 });
             });
 
@@ -1846,8 +1847,9 @@ public class Main extends Application {
                         tietokanta.muokkaaAsiakas
                                 (obj.getID(), postinro.getText(), snimi.getText(), enimi.getText(),
                                         email.getText(), lahiosoite.getText(), puhnro.getText()); // TODO tämän voi korvata Asiakas-oliolla, sitä vain pitää muokata ensin
+                        haeKaikkiTiedot();
                         asiakasMuokkausIkkuna.close();
-                        paivitaAsiakasTaulukko(asiakasTulokset);
+                        paivitaAsiakasTaulukko(asiakasLista);
                     } catch (SQLException ex) {
                         asiakasMuokkausTeksti.setText("Varmista, että tiedot ovat oikeaa\n " +
                                 "tietotyyppiä ja yritä uudelleen.");
