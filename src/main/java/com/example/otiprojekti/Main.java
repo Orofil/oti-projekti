@@ -1443,7 +1443,7 @@ public class Main extends Application {
                         tietokanta.poistaVaraus(obj.getID());
                         haeKaikkiTiedot();
                         poistoIkkuna.getIkkuna().close();
-                        paivitaVarausTaulukko(varausTulokset); // TODO päivitetäänkö varausTulokset vai tehdäänkö vaan aina niin että hakuvalinnat menee pois kun tekee tällaisen päivityksen
+                        paivitaVarausTaulukko(varausLista); // TODO päivitetäänkö varausTulokset vai tehdäänkö vaan aina niin että hakuvalinnat menee pois kun tekee tällaisen päivityksen
                     } catch (SQLException ex) {
                         ilmoitusPaneeli.lisaaIlmoitus(IlmoitusTyyppi.VAROITUS, "Virhe varauksen poistamisessa.");
                         throw new RuntimeException(ex); // TEMP
@@ -1565,7 +1565,12 @@ public class Main extends Application {
                 tarkasteleVarausPaneeli.add(new Text(String.valueOf(obj.getAsiakas().getID())),1,3);
                 tarkasteleVarausPaneeli.add(new Text(obj.getMokki().getNimi()),1,4);
                 tarkasteleVarausPaneeli.add(new Text(dateTimeFormat.format(obj.getVarattuPvm())),1,5);
-                tarkasteleVarausPaneeli.add(new Text(dateTimeFormat.format(obj.getVahvistusPvm())),1,6); // TODO tämä ei kirjoita päivämääriä
+                try {
+                    tarkasteleVarausPaneeli.add(new Text(dateTimeFormat.format(obj.getVahvistusPvm())),1,6);
+                }
+                catch (RuntimeException ex){
+                    tarkasteleVarausPaneeli.add(new Text("Varausta ei ole vielä vahvistettu. "),1,6);
+                }
                 tarkasteleVarausPaneeli.add(new Text(dateTimeFormat.format(obj.getVarausAlkuPvm())),1,7);
                 tarkasteleVarausPaneeli.add(new Text(dateTimeFormat.format(obj.getVarausLoppuPvm())),1,8);
 
