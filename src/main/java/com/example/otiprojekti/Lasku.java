@@ -13,7 +13,7 @@ public class Lasku {
     private Varaus varaus;
     private BigDecimal summa;
     private int alv;
-    private String status;
+    private LaskuStatus status;
 
     /**
      * @param ID
@@ -22,7 +22,7 @@ public class Lasku {
      * @param alv
      * @param status
      */
-    public Lasku(int ID, Varaus varaus, BigDecimal summa, int alv, String status) {
+    public Lasku(int ID, Varaus varaus, BigDecimal summa, int alv, LaskuStatus status) {
         this.ID = ID;
         this.varaus = varaus;
         this.summa = summa;
@@ -61,11 +61,11 @@ public class Lasku {
         this.alv = alv;
     }
 
-    public String getStatus() {
+    public LaskuStatus getStatus() {
         return status;
     }
 
-    public void setStatus(String status) {
+    public void setStatus(LaskuStatus status) {
         this.status = status;
     }
 

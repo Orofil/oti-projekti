@@ -98,14 +98,16 @@ public class Tietokanta {
      * @param varaus_id Tyyppiä int. Oltava taulussa varaus.
      * @param summa Tyyppiä double(8,2)
      * @param alv Tyyppiä int
+     * @param status Tyyppiä int
      */
-    public void insertLasku(int varaus_id, BigDecimal summa, int alv) throws SQLException {
+    public void insertLasku(int varaus_id, BigDecimal summa, int alv, int status) throws SQLException {
         stm = con.prepareStatement(
-                "INSERT INTO lasku(varaus_id,summa,alv)" +
-                "VALUES (?,?,?)");
+                "INSERT INTO lasku(varaus_id,summa,alv,status)" +
+                "VALUES (?,?,?,?)");
         stm.setInt(1, varaus_id);
         stm.setBigDecimal(2, summa);
         stm.setInt(3, alv);
+        stm.setInt(4, status);
         stm.executeUpdate();
         stm.close();
     }
@@ -321,6 +323,48 @@ public class Tietokanta {
     }
 
     /**
+     * Muokkaa laskua tietokannassa.
+     * @param lasku_id Tyyppiä int. Oltava taulussa lasku.
+     * @param varaus_id Tyyppiä int. Oltava taulussa varaus.
+     * @param summa Tyyppiä double(8,2).
+     * @param alv Tyyppiä int.
+     * @param status Tyyppiä int.
+     */
+    public void muokkaaLasku(int lasku_id, int varaus_id, BigDecimal summa, int alv, int status) throws SQLException {
+        stm = con.prepareStatement(
+                "UPDATE lasku " +
+                        "SET varaus_id = ?" +
+                        "summa = ?," +
+                        "alv = ?," +
+                        "status = ? " +
+                        "WHERE lasku_id = ?");
+        stm.setInt(1, varaus_id);
+        stm.setBigDecimal(2, summa);
+        stm.setInt(3, alv);
+        stm.setInt(4, status);
+        stm.setInt(5, lasku_id);
+        stm.executeUpdate();
+        stm.close();
+    }
+
+    public void muokkaaLasku(Lasku lasku) throws SQLException {
+        stm = con.prepareStatement(
+                "UPDATE lasku " +
+                        "SET varaus_id = ?" +
+                        "summa = ?," +
+                        "alv = ?," +
+                        "status = ? " +
+                        "WHERE lasku_id = ?");
+        stm.setInt(1, lasku.getVaraus().getID());
+        stm.setBigDecimal(2, lasku.getSumma());
+        stm.setInt(3, lasku.getAlv());
+        stm.setInt(4, lasku.getStatus().id);
+        stm.setInt(5, lasku.getID());
+        stm.executeUpdate();
+        stm.close();
+    }
+
+    /**
      * Muokkaa mökkiä tietokannassa.
      * @param mokki_id Tyyppiä int. Oltava taulussa mokki.
      * @param alue_id Tyyppiä int. Oltava taulussa alue.
@@ -518,21 +562,6 @@ public class Tietokanta {
         }
     }
 
-
-    public void muokkaaLasku(int lasku_id, int varaus_id, BigDecimal summa, int alv) throws SQLException {
-        stm = con.prepareStatement(
-                "UPDATE lasku " +
-                        "SET summa = ?," +
-                        "alv = ? " +
-                        "WHERE lasku_id = ? " +
-                        "AND varaus_id = ?");
-        stm.setBigDecimal(1, summa);
-        stm.setInt(2, alv);
-        stm.setInt(3, varaus_id);
-        stm.setInt(4, lasku_id);
-        stm.executeUpdate();
-        stm.close();
-    }
 
 
 
@@ -822,7 +851,7 @@ public class Tietokanta {
                     etsiVarausID(varaukset, rs.getInt("varaus_id")),
                     rs.getBigDecimal("summa"),
                     rs.getInt("alv"),
-                    null)); // TODO mikä asetetaan laskun statukseksi, sitä ei ole tietokannassa
+                    LaskuStatus.valueOf(rs.getInt("status"))));
         }
         return laskut;
     }

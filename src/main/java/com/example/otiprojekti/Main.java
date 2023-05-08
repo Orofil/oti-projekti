@@ -99,10 +99,6 @@ public class Main extends Application {
     @Override
     public void start(Stage ikkuna) {
 
-        // Haetaan tiedot tietokannasta
-        haeKaikkiTiedot();
-
-
         // Vasen valikko
         for (ToggleNappula n : nappulat) {
             n.setToggleGroup(tgSivuvalikko);
@@ -150,6 +146,9 @@ public class Main extends Application {
         sarakeSemi.setPrefWidth(120);
         sarakeLyhyt.setHalignment(HPos.CENTER);
         sarakeLyhyt.setPrefWidth(80);
+
+        // Haetaan tiedot tietokannasta
+        haeKaikkiTiedot();
 
         // Luodaan eri paneelit
         luoAluenakyma();
@@ -2044,8 +2043,9 @@ public class Main extends Application {
                     tietokanta.insertLasku(
                             Integer.parseInt(varausID.getText()),
                             BigDecimal.valueOf(summa),
-                            Integer.parseInt(alv.getText())
-                            );
+                            Integer.parseInt(alv.getText()),
+                            LaskuStatus.EI_LAHETETTY.id // TODO onko laskun status aina tämä sama kun se tehdään
+                    );
                     haeKaikkiTiedot();
                     laskuLisaysIkkuna.close();
                     paivitaLaskuTaulukko();
@@ -2224,7 +2224,8 @@ public class Main extends Application {
                                 obj.getID(),
                                 obj.getVaraus().getID(),
                                 BigDecimal.valueOf(summa),
-                                Integer.parseInt(alv.getText())
+                                Integer.parseInt(alv.getText()),
+                                obj.getStatus().id // TODO statuksen muuttaminen
                         );
                         haeKaikkiTiedot();
                         laskuMuokkausIkkuna.close();
