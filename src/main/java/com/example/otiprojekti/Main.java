@@ -880,6 +880,7 @@ public class Main extends Application {
                             Integer.parseInt(palveluAlv.getText())
                     );
                     palveluLisaysIkkuna.close();
+                    haeKaikkiTiedot();
                     paivitaPalveluTaulukko();
                 } catch (SQLException ex) {
                     //throw new RuntimeException(ex);
@@ -1039,6 +1040,7 @@ public class Main extends Application {
                                 Integer.parseInt(palveluAlv.getText())
                         );
                         palveluMuokkausIkkuna.close();
+                        haeKaikkiTiedot();
                         paivitaPalveluTaulukko();
                     } catch (SQLException ex) {
                         //throw new RuntimeException(ex);
