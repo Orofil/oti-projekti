@@ -293,8 +293,8 @@ public class Main extends Application {
         alueTaulukko.add(alueenLisaysNappula, 1,0);
 
         Text aluetunnusOtsikko = new Text("Tunnus");
-        aluetunnusOtsikko.setFont(fonttiIsompi);
         Text alueennimiOtsikko = new Text("Alueen nimi");
+        aluetunnusOtsikko.setFont(fonttiIsompi);
         alueennimiOtsikko.setFont(fonttiIsompi);
         alueTaulukko.add(aluetunnusOtsikko, 0, 1);
         alueTaulukko.add(alueennimiOtsikko, 1, 1);
@@ -558,14 +558,14 @@ public class Main extends Application {
         mokkiTaulukko.add(mokkienLisaysNappula, 1,0);
 
         Text mokkitunnusOtsikko = new Text("Tunnus");
-        mokkitunnusOtsikko.setFont(fonttiIsompi);
         Text mokinnimiOtsikko = new Text("Mökki");
-        mokinnimiOtsikko.setFont(fonttiIsompi);
         Text mokinAlueOtsikko = new Text("Alue");
-        mokinAlueOtsikko.setFont(fonttiIsompi);
         Text mokinHintaOtsikko = new Text("Hinta/vrk");
-        mokinHintaOtsikko.setFont(fonttiIsompi);
         Text mokinHloMaaraOtsikko = new Text("Hlö.määrä");
+        mokkitunnusOtsikko.setFont(fonttiIsompi);
+        mokinnimiOtsikko.setFont(fonttiIsompi);
+        mokinAlueOtsikko.setFont(fonttiIsompi);
+        mokinHintaOtsikko.setFont(fonttiIsompi);
         mokinHloMaaraOtsikko.setFont(fonttiIsompi);
 
         mokkiTaulukko.add(mokkitunnusOtsikko, 0, 1);
@@ -911,12 +911,12 @@ public class Main extends Application {
         palveluTaulukko.add(palvelunLisaysNappula, 1,0);
 
         Text palvelutunnusOtsikko = new Text("Tunnus");
-        palvelutunnusOtsikko.setFont(fonttiIsompi);
         Text palvelunnimiOtsikko = new Text("Palvelu");
-        palvelunnimiOtsikko.setFont(fonttiIsompi);
         Text palveluAlueOtsikko = new Text("Alue");
-        palveluAlueOtsikko.setFont(fonttiIsompi);
         Text palvelunHintaOtsikko = new Text("Hinta");
+        palvelutunnusOtsikko.setFont(fonttiIsompi);
+        palvelunnimiOtsikko.setFont(fonttiIsompi);
+        palveluAlueOtsikko.setFont(fonttiIsompi);
         palvelunHintaOtsikko.setFont(fonttiIsompi);
 
         palveluTaulukko.add(palvelutunnusOtsikko, 0, 1);
@@ -928,23 +928,21 @@ public class Main extends Application {
         int rivi = 2;
         for (Palvelu obj : palveluLista) {
             Text palveluID = new Text(String.valueOf(obj.getID()));
-            palveluID.setFont(fonttiIsompi);
             Text palveluNimi = new Text(String.valueOf(obj.getNimi()));
-            palveluNimi.setFont(fonttiIsompi);
             Text palveluAlue = new Text(String.valueOf(obj.getAlue().getNimi()));
-            palveluAlue.setFont(fonttiIsompi);
             Text palveluHinta = new Text(obj.getHinta() + " €");
+            palveluID.setFont(fonttiIsompi);
+            palveluNimi.setFont(fonttiIsompi);
+            palveluAlue.setFont(fonttiIsompi);
             palveluHinta.setFont(fonttiIsompi);
-
-
             palveluID.setTextAlignment(TextAlignment.CENTER);
+            palveluNimi.setTextAlignment(TextAlignment.CENTER);
+
             palveluTaulukko.add(palveluID, 0, rivi);
             palveluTaulukko.add(palveluNimi, 1, rivi);
             palveluTaulukko.add(palveluAlue, 2, rivi);
             palveluTaulukko.add(palveluHinta, 3, rivi);
 
-            //palveluNimi.setAlignment(Pos.CENTER);
-            palveluNimi.setTextAlignment(TextAlignment.CENTER);
 
             Nappula poistoNappula = new Nappula(150, 30);
             ImageView roskis = new ImageView(imageKuvasta("roskis.png"));
@@ -1396,16 +1394,16 @@ public class Main extends Application {
         varausTaulukko.add(varausLisaysNappula, 1, 0);
 
         Text varaustunnusOtsikko = new Text("Tunnus");
-        varaustunnusOtsikko.setFont(fonttiIsompi);
         Text varausAsiakasOtsikko = new Text("Asiakas");
-        varausAsiakasOtsikko.setFont(fonttiIsompi);
         Text varausAlueOtsikko = new Text("Alue");
-        varausAlueOtsikko.setFont(fonttiIsompi);
         Text varausSummaOtsikko = new Text("Summa");
-        varausSummaOtsikko.setFont(fonttiIsompi);
         Text varausMokkiOtsikko = new Text("Mökki");
-        varausMokkiOtsikko.setFont(fonttiIsompi);
         Text varausPalvelutOtsikko = new Text("Palvelut");
+        varaustunnusOtsikko.setFont(fonttiIsompi);
+        varausAsiakasOtsikko.setFont(fonttiIsompi);
+        varausAlueOtsikko.setFont(fonttiIsompi);
+        varausSummaOtsikko.setFont(fonttiIsompi);
+        varausMokkiOtsikko.setFont(fonttiIsompi);
         varausPalvelutOtsikko.setFont(fonttiIsompi);
 
         varausTaulukko.add(varaustunnusOtsikko, 0, 1);
@@ -1413,21 +1411,20 @@ public class Main extends Application {
         varausTaulukko.add(varausMokkiOtsikko, 2, 1);
 
         int rivi = 2;
-        for (Varaus obj : varausTulokset) { // TODO nyt kun SQL-haku saattaa epäonnistua, voi tulla NullPointerException
+        for (Varaus obj : varausTulokset) {
             Text varausID = new Text(String.valueOf(obj.getID()));
-            varausID.setFont(fonttiIsompi);
             Text varausNimi = new Text(String.valueOf(obj.getAsiakas().getNimi(false)));
+            Text varausMokki = new Text(String.valueOf(obj.getMokki().getNimi()));
+            varausID.setFont(fonttiIsompi);
             varausNimi.setFont(fonttiIsompi);
-            Text varausMokki = new Text(String.valueOf(obj.getMokki().getNimi())); // TODO mökin nimi vai ID
             varausMokki.setFont(fonttiIsompi);
-
-
             varausID.setTextAlignment(TextAlignment.CENTER);
+            varausNimi.setTextAlignment(TextAlignment.CENTER);
+
             varausTaulukko.add(varausID, 0, rivi);
             varausTaulukko.add(varausNimi, 1, rivi);
             varausTaulukko.add(varausMokki, 2, rivi);
 
-            varausNimi.setTextAlignment(TextAlignment.CENTER);
 
             Nappula poistoNappula = new Nappula(150, 30);
             ImageView roskis = new ImageView(imageKuvasta("roskis.png"));
@@ -1635,10 +1632,7 @@ public class Main extends Application {
 
         ScrollPane asiakasScrollaus = new ScrollPane();
         asiakaspaneeli.setCenter(asiakasScrollaus);
-
-
         asiakasScrollaus.setContent(asiakasTaulukko);
-
 
 
         ImageView asiakasLisays = new ImageView(imageKuvasta("lisays.png"));
@@ -1746,14 +1740,13 @@ public class Main extends Application {
         int rivi = 2;
         for (Asiakas obj : asiakasTulokset) {
             Text asiakasID = new Text(String.valueOf(obj.getID()));
-            asiakasID.setFont(fonttiIsompi);
             Text asiakasNimi = new Text(obj.getNimi(false));
-            asiakasNimi.setFont(fonttiIsompi);
             Text asiakasEmail = new Text(String.valueOf(obj.getEmail()));
-            asiakasEmail.setFont(fonttiIsompi);
             Text asiakasPuhNro = new Text(String.valueOf(obj.getPuhelinNro()));
+            asiakasID.setFont(fonttiIsompi);
+            asiakasNimi.setFont(fonttiIsompi);
+            asiakasEmail.setFont(fonttiIsompi);
             asiakasPuhNro.setFont(fonttiIsompi);
-
 
             asiakasTaulukko.add(asiakasID, 0, rivi);
             asiakasTaulukko.add(asiakasNimi, 1, rivi);
@@ -1963,7 +1956,6 @@ public class Main extends Application {
 
         ScrollPane laskuScrollaus = new ScrollPane();
         laskupaneeli.setCenter(laskuScrollaus);
-        
         laskuScrollaus.setContent(laskuTaulukko);
         
         ImageView laskunLisays = new ImageView(imageKuvasta("lisays.png"));
@@ -2003,8 +1995,6 @@ public class Main extends Application {
 
              */
         });
-        
-        paivitaLaskuTaulukko();
     }
     
     public void paivitaLaskuTaulukko() {
@@ -2020,12 +2010,12 @@ public class Main extends Application {
         laskuTaulukko.add(laskunLisaysNappula, 1,0);
 
         Text laskuTunnusOtsikko = new Text("Tunnus");
-        laskuTunnusOtsikko.setFont(fonttiIsompi);
         Text laskuVarausOtsikko = new Text("Varaus");
-        laskuVarausOtsikko.setFont(fonttiIsompi);
         Text laskuSummaOtsikko = new Text("Summa");
-        laskuSummaOtsikko.setFont(fonttiIsompi);
         Text laskuStatusOtsikko = new Text("Status");
+        laskuTunnusOtsikko.setFont(fonttiIsompi);
+        laskuVarausOtsikko.setFont(fonttiIsompi);
+        laskuSummaOtsikko.setFont(fonttiIsompi);
         laskuStatusOtsikko.setFont(fonttiIsompi);
         
         laskuTaulukko.add(laskuTunnusOtsikko, 0, 1);
@@ -2037,14 +2027,13 @@ public class Main extends Application {
         int rivi = 2;
         for (Lasku obj : laskuLista) {
             Text laskuID = new Text(String.valueOf(obj.getID()));
-            laskuID.setFont(fonttiIsompi);
             Text laskuVaraus = new Text(String.valueOf(obj.getVaraus().getID()));
-            laskuVaraus.setFont(fonttiIsompi);
             Text laskuSumma = new Text(obj.getSumma() + " €");
-            laskuSumma.setFont(fonttiIsompi);
             Text laskuStatus = new Text(String.valueOf(obj.getStatus()));
+            laskuID.setFont(fonttiIsompi);
+            laskuVaraus.setFont(fonttiIsompi);
+            laskuSumma.setFont(fonttiIsompi);
             laskuStatus.setFont(fonttiIsompi);
-
 
             laskuTaulukko.add(laskuID, 0, rivi);
             laskuTaulukko.add(laskuVaraus, 1, rivi);
