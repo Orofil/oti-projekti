@@ -11,14 +11,11 @@ import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
-import javafx.scene.text.FontWeight;
-import javafx.scene.text.Text;
-import javafx.scene.text.TextAlignment;
+import javafx.scene.text.*;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.text.Font;
 
 import java.math.BigDecimal;
 import java.sql.SQLException;
@@ -43,6 +40,7 @@ public class Main extends Application {
     
     public static final Font fonttiIsompi = Font.font(16);
     public static final Font fonttiPaksu = Font.font("", FontWeight.BOLD, 14);
+    public static final Font fonttiKursiivi = Font.font("", FontPosture.ITALIC, 12);
     public static final int HAKU_PADDING = 20;
     public static final int HAKU_HGAP = 20;
     public static final int HAKU_VGAP = 15;
@@ -86,6 +84,7 @@ public class Main extends Application {
     GridPane alueTaulukko = new GridPane();
     GridPane mokkiTaulukko = new GridPane();
     GridPane palveluTaulukko = new GridPane();
+
     final int LISAYS_NAPPULA_LEVEYS = 200;
     final int LISAYS_NAPPULA_KORKEUS = 30;
     Nappula varausLisaysNappula = new Nappula(LISAYS_NAPPULA_LEVEYS, LISAYS_NAPPULA_KORKEUS);
@@ -94,7 +93,6 @@ public class Main extends Application {
     Nappula alueenLisaysNappula = new Nappula(LISAYS_NAPPULA_LEVEYS, LISAYS_NAPPULA_KORKEUS);
     Nappula mokkienLisaysNappula = new Nappula(LISAYS_NAPPULA_LEVEYS, LISAYS_NAPPULA_KORKEUS);
     Nappula palvelunLisaysNappula = new Nappula(LISAYS_NAPPULA_LEVEYS, LISAYS_NAPPULA_KORKEUS);
-
 
     @Override
     public void start(Stage ikkuna) {
@@ -237,6 +235,8 @@ public class Main extends Application {
         alueenLisays.setFitWidth(23);
         alueenLisays.setFitHeight(22);
         alueenLisaysNappula.setGraphic(alueenLisays);
+
+        // Ikkuna alueen lisäämiseen
         alueenLisaysNappula.setOnAction( e -> {
             Stage alueLisaysIkkuna = new Stage();
             alueLisaysIkkuna.show();
@@ -319,6 +319,7 @@ public class Main extends Application {
             roskis.setFitHeight(22);
             poistoNappula.setGraphic(roskis);
             alueTaulukko.add(poistoNappula, 2, rivi);
+            // Ikkuna alueen poistamiseen
             poistoNappula.setOnMouseClicked(e -> {
                 PoistoIkkuna poistaAlueIkkuna = new PoistoIkkuna("alue", "alueen",
                         "Kaikki alueeseen kuuluvat mökit ja \n palvelut poistetaan samalla.");
@@ -342,6 +343,7 @@ public class Main extends Application {
             muokkaus.setFitHeight(22);
             muokkausNappula.setGraphic(muokkaus);
             alueTaulukko.add(muokkausNappula, 3, rivi);
+            // Ikkuna alueen muokkaamiseen
             muokkausNappula.setOnAction(e -> {
                 Stage alueMuokkausIkkuna = new Stage();
                 alueMuokkausIkkuna.show();
@@ -470,6 +472,7 @@ public class Main extends Application {
         mokkienLisays.setFitWidth(23);
         mokkienLisays.setFitHeight(22);
         mokkienLisaysNappula.setGraphic(mokkienLisays);
+        // Ikkuna mökkien lisäämiseen
         mokkienLisaysNappula.setOnAction( e -> {
             Stage mokkiLisaysIkkuna = new Stage();
             mokkiLisaysIkkuna.show();
@@ -558,7 +561,7 @@ public class Main extends Application {
         });
     }
 
-    public void paivitaMokkiTaulukko(){
+    public void paivitaMokkiTaulukko() {
 
         mokkiTaulukko.setGridLinesVisible(false);
         mokkiTaulukko.getColumnConstraints().clear();
@@ -614,6 +617,7 @@ public class Main extends Application {
             roskis.setFitHeight(22);
             poistoNappula.setGraphic(roskis);
             mokkiTaulukko.add(poistoNappula, 5, rivi);
+            // Ikkuna mökin poistamiseen
             poistoNappula.setOnMouseClicked(e -> {
                 PoistoIkkuna poistaMokkiIkkuna = new PoistoIkkuna("mökki", "mökin",
                         "Kaikki mökkeihin kuuluvat varaukset \npoistetaan samalla.");
@@ -637,7 +641,7 @@ public class Main extends Application {
             muokkaus.setFitHeight(22);
             muokkausNappula.setGraphic(muokkaus);
             mokkiTaulukko.add(muokkausNappula, 6, rivi);
-
+            // Ikkuna mökin muokkaamiseen
             muokkausNappula.setOnMouseClicked(e -> {
                 Stage mokkiMuokkausIkkuna = new Stage();
                 mokkiMuokkausIkkuna.show();
@@ -715,7 +719,7 @@ public class Main extends Application {
                         paivitaMokkiTaulukko();
                     } catch (SQLException ex) {
 
-                        throw new RuntimeException(ex);
+                        throw new RuntimeException(ex); // TEMP
                         //mokkiMuokkausTeksti.setText("Mökin muokkaaminen ei onnistunut. \n " +
                         //        "Tarkista syötteet ja yritä uudelleen.");
                         //mokkiMuokkausTeksti.setFill(Color.RED);
@@ -735,6 +739,7 @@ public class Main extends Application {
             tarkastelu.setFitHeight(22);
             tarkasteleNappula.setGraphic(tarkastelu);
             mokkiTaulukko.add(tarkasteleNappula, 7, rivi);
+            // Ikkuna mökin tarkasteluun
             tarkasteleNappula.setOnMouseClicked(e -> {
                 Stage tarkasteleMokkiIkkuna = new Stage();
                 tarkasteleMokkiIkkuna.show();
@@ -745,7 +750,9 @@ public class Main extends Application {
                 Scene tarkasteleMokkiKehys = new Scene(tarkasteleMokkiPaneeli, 400, 400);
                 tarkasteleMokkiIkkuna.setScene(tarkasteleMokkiKehys);
 
-                tarkasteleMokkiPaneeli.add(new Text("Mökin tiedot"),0,0);
+                Text mokinTiedot = new Text("Mökin tiedot");
+                mokinTiedot.setFont(fonttiPaksu);
+                tarkasteleMokkiPaneeli.add(mokinTiedot,0,0);
                 tarkasteleMokkiPaneeli.add(new Text("MökkiID: "),0,1);
                 tarkasteleMokkiPaneeli.add(new Text("Mökin nimi: "),0,2);
                 tarkasteleMokkiPaneeli.add(new Text("Alue: "),0,3);
@@ -827,16 +834,14 @@ public class Main extends Application {
 
         ScrollPane palveluScrollaus = new ScrollPane();
         palvelupaneeli.setCenter(palveluScrollaus);
-
-
         palveluScrollaus.setContent(palveluTaulukko);
 
 
-        
         ImageView palvelunLisays = new ImageView(imageKuvasta("lisays.png"));
         palvelunLisays.setFitWidth(23);
         palvelunLisays.setFitHeight(22);
         palvelunLisaysNappula.setGraphic(palvelunLisays);
+        // Ikkuna palvelun lisäämiseen
         palvelunLisaysNappula.setOnAction( e -> {
 
             Stage palveluLisaysIkkuna = new Stage();
@@ -882,7 +887,6 @@ public class Main extends Application {
             Nappula lisaaPalveluNappula = new Nappula("Lisää palvelu");
 
             lisaaPalveluNappula.setOnAction( event -> {
-                
                 try {
                     tietokanta.insertPalvelu(
                             Integer.parseInt(palveluAlue.getText()),
@@ -964,7 +968,8 @@ public class Main extends Application {
             roskis.setFitHeight(22);
             poistoNappula.setGraphic(roskis);
             palveluTaulukko.add(poistoNappula, 4, rivi);
-            
+
+            // Ikkuna palvelun poistamiseen
             poistoNappula.setOnMouseClicked(e -> {
                 PoistoIkkuna poistaPalveluIkkuna = new PoistoIkkuna("palvelu", "palvelun",
                         "Kaikki palvelun varaustiedot poistetaan samalla.");
@@ -989,7 +994,8 @@ public class Main extends Application {
             muokkaus.setFitHeight(22);
             muokkausNappula.setGraphic(muokkaus);
             palveluTaulukko.add(muokkausNappula, 5, rivi);
-            
+
+            // Ikkuna palvelun muokkaamiseen
             muokkausNappula.setOnMouseClicked(e -> {
                 Stage palveluMuokkausIkkuna = new Stage();
                 palveluMuokkausIkkuna.show();
@@ -1035,7 +1041,6 @@ public class Main extends Application {
                 Nappula lisaaPalveluNappula = new Nappula("Tallenna muutokset");
 
                 lisaaPalveluNappula.setOnAction( event -> {
-
                     try {
                         tietokanta.muokkaaPalvelu(
                                 obj.getID(),
@@ -1069,7 +1074,8 @@ public class Main extends Application {
             tarkastelu.setFitHeight(22);
             tarkasteleNappula.setGraphic(tarkastelu);
             palveluTaulukko.add(tarkasteleNappula, 6, rivi);
-            
+
+            // Ikkuna palvelun tarkasteluun
             tarkasteleNappula.setOnMouseClicked(e -> {
                 
                 Stage tarkastelePalveluIkkuna = new Stage();
@@ -1081,7 +1087,9 @@ public class Main extends Application {
                 Scene tarkastelePalveluKehys = new Scene(tarkastelePalveluPaneeli, 400, 300);
                 tarkastelePalveluIkkuna.setScene(tarkastelePalveluKehys);
 
-                tarkastelePalveluPaneeli.add(new Text("Palvelun tiedot"),0,0);
+                Text palvelunTiedot = new Text("Palvelun tiedot");
+                palvelunTiedot.setFont(fonttiPaksu);
+                tarkastelePalveluPaneeli.add(palvelunTiedot,0,0);
                 tarkastelePalveluPaneeli.add(new Text("PalveluID: "),0,1);
                 tarkastelePalveluPaneeli.add(new Text("Palvelun nimi: "),0,2);
                 tarkastelePalveluPaneeli.add(new Text("Alue: "),0,3);
@@ -1101,7 +1109,6 @@ public class Main extends Application {
 
             rivi++;
         }
-
     }
 
     public void luoVarausnakyma() {
@@ -1231,6 +1238,7 @@ public class Main extends Application {
         varausLisays.setFitHeight(22);
         varausLisaysNappula.setGraphic(varausLisays);
 
+        // Ikkuna varauksen lisäämiseen
         varausLisaysNappula.setOnAction(e -> {
             Stage varausLisaysStage = new Stage();
 
@@ -1245,7 +1253,6 @@ public class Main extends Application {
             uusiAsiakas.setToggleGroup(asiakas);
             vanhaAsiakas.setToggleGroup(asiakas);
             uusiAsiakas.fire();
-
 
 
             GridPane asiakasLisaysPaneeli = new GridPane();
@@ -1378,7 +1385,6 @@ public class Main extends Application {
             varausLisaysStage.setTitle("Lisää varaus");
             varausLisaysStage.show();
         });
-
     }
 
     public void paivitaVarausTaulukko(ArrayList<Varaus> varausTulokset) {
@@ -1433,6 +1439,8 @@ public class Main extends Application {
             roskis.setFitHeight(22);
             poistoNappula.setGraphic(roskis);
             varausTaulukko.add(poistoNappula, 3, rivi);
+
+            // Ikkuna varauksen poistamiseen
             poistoNappula.setOnMouseClicked(e -> {
                 PoistoIkkuna poistoIkkuna = new PoistoIkkuna("varaus", "varauksen");
 
@@ -1455,8 +1463,9 @@ public class Main extends Application {
             muokkaus.setFitHeight(22);
             muokkausNappula.setGraphic(muokkaus);
             varausTaulukko.add(muokkausNappula, 4, rivi);
+
+            // Ikkuna varauksen muokkaamiseen
             muokkausNappula.setOnMouseClicked(e -> {
-                // muokkaaVaraus();                          //TODO  muokkaavaraus() - metodin luominen
                 Stage varausMuokkausIkkuna = new Stage();
 
                 VBox varausMuokkausPaneeli = new VBox(10);
@@ -1538,6 +1547,8 @@ public class Main extends Application {
             tarkastelu.setFitHeight(22);
             tarkasteleNappula.setGraphic(tarkastelu);
             varausTaulukko.add(tarkasteleNappula, 5, rivi);
+
+            // Ikkuna varauksen tarkasteluun
             tarkasteleNappula.setOnMouseClicked( e -> {
                 Stage tarkasteleVarausIkkuna = new Stage();
                 tarkasteleVarausIkkuna.show();
@@ -1545,10 +1556,13 @@ public class Main extends Application {
                 tarkasteleVarausPaneeli.setPadding(new Insets(25));
                 tarkasteleVarausPaneeli.setVgap(15);
                 tarkasteleVarausPaneeli.setHgap(15);
-                Scene tarkasteleVarausKehys = new Scene(tarkasteleVarausPaneeli, 400, 400);
+                ScrollPane tarkasteleVarausScroll = new ScrollPane(tarkasteleVarausPaneeli);
+                Scene tarkasteleVarausKehys = new Scene(tarkasteleVarausScroll, 400, 400);
                 tarkasteleVarausIkkuna.setScene(tarkasteleVarausKehys);
 
-                tarkasteleVarausPaneeli.add(new Text("Varauksen tiedot"),0,0);
+                Text varauksenTiedot = new Text("Varauksen tiedot");
+                varauksenTiedot.setFont(fonttiPaksu);
+                tarkasteleVarausPaneeli.add(varauksenTiedot,0,0);
                 tarkasteleVarausPaneeli.add(new Text("VarausID: "),0,1);
                 tarkasteleVarausPaneeli.add(new Text("Asiakkaan nimi: "),0,2);
                 tarkasteleVarausPaneeli.add(new Text("AsiakasID: "),0,3);
@@ -1557,6 +1571,13 @@ public class Main extends Application {
                 tarkasteleVarausPaneeli.add(new Text("Vahvistettu: "),0,6);
                 tarkasteleVarausPaneeli.add(new Text("Varauksen alkupvm: "),0,7);
                 tarkasteleVarausPaneeli.add(new Text("Varauksen loppupvm: "),0,8);
+                tarkasteleVarausPaneeli.add(new Text("Varatut palvelut: "), 0, 9);
+                Text varauksenPalvelut = new Text("Palvelu");
+                Text varauksenPalvelutLkm = new Text("Lukumäärä");
+                varauksenPalvelut.setFont(fonttiKursiivi);
+                varauksenPalvelutLkm.setFont(fonttiKursiivi);
+                tarkasteleVarausPaneeli.add(varauksenPalvelut, 0, 10);
+                tarkasteleVarausPaneeli.add(varauksenPalvelutLkm, 1, 10);
 
                 tarkasteleVarausPaneeli.add(new Text(String.valueOf(obj.getID())),1,1);
                 tarkasteleVarausPaneeli.add(new Text(obj.getAsiakas().getNimi(false)),1,2);
@@ -1565,13 +1586,19 @@ public class Main extends Application {
                 tarkasteleVarausPaneeli.add(new Text(dateTimeFormat.format(obj.getVarattuPvm())),1,5);
                 try {
                     tarkasteleVarausPaneeli.add(new Text(dateTimeFormat.format(obj.getVahvistusPvm())),1,6);
-                }
-                catch (RuntimeException ex){
+                } catch (NullPointerException ex) {
                     tarkasteleVarausPaneeli.add(new Text("Varausta ei ole vielä vahvistettu. "),1,6);
                 }
                 tarkasteleVarausPaneeli.add(new Text(dateTimeFormat.format(obj.getVarausAlkuPvm())),1,7);
                 tarkasteleVarausPaneeli.add(new Text(dateTimeFormat.format(obj.getVarausLoppuPvm())),1,8);
 
+                // Varaukseen liittyvät palvelut
+                int riviVp = 11;
+                for (Map.Entry<Palvelu, Integer> vp : obj.getPalvelut().entrySet()) {
+                    tarkasteleVarausPaneeli.add(new Text(vp.getKey().getKuvaus()), 0, riviVp);
+                    tarkasteleVarausPaneeli.add(new Text(String.valueOf(vp.getValue())), 1, riviVp);
+                    riviVp++;
+                }
             });
 
             rivi++;
@@ -1641,6 +1668,7 @@ public class Main extends Application {
         asiakasLisays.setFitHeight(22);
         asiakasLisaysNappula.setGraphic(asiakasLisays);
 
+        // Ikkuna asiakkaan lisäämiseen
         asiakasLisaysNappula.setOnAction( e -> {
             Stage asiakasLisaysIkkuna = new Stage();
 
@@ -1762,6 +1790,8 @@ public class Main extends Application {
             roskis.setFitHeight(22);
             poistoNappula.setGraphic(roskis);
             asiakasTaulukko.add(poistoNappula, 4, rivi);
+
+            // Ikkuna asiakkaan poistamiseen
             poistoNappula.setOnMouseClicked(e -> {
                 PoistoIkkuna poistoIkkuna = new PoistoIkkuna("asiakas", "asiakkaan",
                         "Kaikki asiakkaan varaukset ja laskut poistuvat samalla järjestelmästä.");
@@ -1785,6 +1815,8 @@ public class Main extends Application {
             muokkaus.setFitHeight(22);
             muokkausNappula.setGraphic(muokkaus);
             asiakasTaulukko.add(muokkausNappula, 5, rivi);
+
+            // Ikkuna asiakkaan muokkaamiseen
             muokkausNappula.setOnMouseClicked(e -> {
                 Stage asiakasMuokkausIkkuna = new Stage();
 
@@ -1871,6 +1903,8 @@ public class Main extends Application {
             tarkastelu.setFitHeight(22);
             tarkasteleNappula.setGraphic(tarkastelu);
             asiakasTaulukko.add(tarkasteleNappula, 6, rivi);
+
+            // Ikkuna asiakkaan tarkasteluun
             tarkasteleNappula.setOnMouseClicked(e -> {
                 Stage tarkasteleAsiakasIkkuna = new Stage();
                 tarkasteleAsiakasIkkuna.show();
@@ -1881,7 +1915,9 @@ public class Main extends Application {
                 Scene tarkasteleAsiakasKehys = new Scene(tarkasteleAsiakasPaneeli, 400, 300);
                 tarkasteleAsiakasIkkuna.setScene(tarkasteleAsiakasKehys);
 
-                tarkasteleAsiakasPaneeli.add(new Text("Asiakkaan tiedot"),0,0);
+                Text asiakkaanTiedot = new Text("Asiakkaan tiedot");
+                asiakkaanTiedot.setFont(fonttiPaksu);
+                tarkasteleAsiakasPaneeli.add(asiakkaanTiedot,0,0);
                 tarkasteleAsiakasPaneeli.add(new Text("AsiakasID: "),0,1);
                 tarkasteleAsiakasPaneeli.add(new Text("Nimi: "),0,2);
                 tarkasteleAsiakasPaneeli.add(new Text("Email: "),0,3);
@@ -1963,8 +1999,8 @@ public class Main extends Application {
         laskunLisays.setFitHeight(22);
         laskunLisaysNappula.setGraphic(laskunLisays);
 
+        // Ikkuna laskun lisäämiseen
         laskunLisaysNappula.setOnAction( e -> {
-
             Stage laskuLisaysIkkuna = new Stage();
 
             VBox laskuLisaysPaneeli = new VBox(10);
@@ -2069,7 +2105,6 @@ public class Main extends Application {
             laskuLisaysIkkuna.show();
 
         });
-
     }
     
     public void paivitaLaskuTaulukko() {
@@ -2122,6 +2157,8 @@ public class Main extends Application {
             roskis.setFitHeight(22);
             poistoNappula.setGraphic(roskis);
             laskuTaulukko.add(poistoNappula, 4, rivi);
+
+            // Ikkuna laskun poistamiseen
             poistoNappula.setOnMouseClicked(e -> {
                 PoistoIkkuna poistoIkkuna = new PoistoIkkuna("lasku", "laskun");
 
@@ -2145,8 +2182,8 @@ public class Main extends Application {
             muokkausNappula.setGraphic(muokkaus);
             laskuTaulukko.add(muokkausNappula, 5, rivi);
 
+            // Ikkuna laskun muokkaamiseen
             muokkausNappula.setOnMouseClicked(e -> {
-
                 Stage laskuMuokkausIkkuna = new Stage();
 
                 VBox laskuMuokkausPaneeli = new VBox(10);
@@ -2202,7 +2239,6 @@ public class Main extends Application {
                 laskunMuokkausGridPaneeli.add( status, 1, 8);
 
 
-
                 Varaus varaus = etsiVarausID(varausLista, obj.getVaraus().getID());
 
                 LocalDateTime pvm1 = varaus.getVarausAlkuPvm();
@@ -2239,7 +2275,7 @@ public class Main extends Application {
                         paivitaLaskuTaulukko();
                         
                     } catch (SQLException ex) {
-                        throw new RuntimeException(ex);
+                        throw new RuntimeException(ex); // TEMP
                         //laskuMuokkausTeksti.setFill(Color.RED);
                         //laskuMuokkausTeksti.setText("Muutosten tallentaminen ei onnistunut. \n" +
                         //        "Tarkista syötteet ja yritä uudelleen.");
@@ -2262,7 +2298,8 @@ public class Main extends Application {
             tarkastelu.setFitHeight(22);
             tarkasteleNappula.setGraphic(tarkastelu);
             laskuTaulukko.add(tarkasteleNappula, 6, rivi);
-            
+
+            // Ikkuna laskun tarkasteluun
             tarkasteleNappula.setOnMouseClicked(e -> {
 
                 LocalDateTime pvm1 = obj.getVaraus().getVarausAlkuPvm();
@@ -2279,7 +2316,9 @@ public class Main extends Application {
                 Scene tarkasteleLaskuKehys = new Scene(tarkasteleLaskuPaneeli, 400, 450);
                 tarkasteleLaskuIkkuna.setScene(tarkasteleLaskuKehys);
 
-                tarkasteleLaskuPaneeli.add(new Text("Asiakkaan tiedot"),0,0);
+                Text asiakkaanTiedot = new Text("Asiakkaan tiedot");
+                asiakkaanTiedot.setFont(fonttiPaksu);
+                tarkasteleLaskuPaneeli.add(asiakkaanTiedot,0,0);
                 tarkasteleLaskuPaneeli.add(new Text("LaskuID: "),0,1);
                 tarkasteleLaskuPaneeli.add(new Text("VarausID: "),0,2);
                 tarkasteleLaskuPaneeli.add(new Text("AsiakasID: "),0,3);
@@ -2287,9 +2326,9 @@ public class Main extends Application {
                 tarkasteleLaskuPaneeli.add(new Text("Mökin hinta/vrk (€): "),0,5);
                 tarkasteleLaskuPaneeli.add(new Text("Varauksen päivät: "),0,6);
                 tarkasteleLaskuPaneeli.add(new Text("Lisäpalvelut: "),0,7);
-                tarkasteleLaskuPaneeli.add(new Text("Lisäpalveluiden yhteishinta: "),0,8);
-                tarkasteleLaskuPaneeli.add(new Text("Alv(%): "),0,9);
-                tarkasteleLaskuPaneeli.add(new Text("Laskun summa (sis. alv): "),0,10);
+                tarkasteleLaskuPaneeli.add(new Text("Lisäpalveluiden yhteishinta: "),0,9);
+                tarkasteleLaskuPaneeli.add(new Text("Alv(%): "),0,10);
+                tarkasteleLaskuPaneeli.add(new Text("Laskun summa (sis. alv): "),0,11);
 
                 tarkasteleLaskuPaneeli.add(new Text(String.valueOf(obj.getID())),1,1);
                 tarkasteleLaskuPaneeli.add(new Text(String.valueOf(obj.getVaraus().getID())),1,2);
@@ -2297,16 +2336,37 @@ public class Main extends Application {
                 tarkasteleLaskuPaneeli.add(new Text(obj.getVaraus().getAsiakas().getNimi(false)),1,4);
                 tarkasteleLaskuPaneeli.add(new Text(String.valueOf(obj.getVaraus().getMokki().getHinta())),1,5);
                 tarkasteleLaskuPaneeli.add(new Text(String.valueOf(daysBetween)),1,6);
-                tarkasteleLaskuPaneeli.add(new Text("-"),1,7);   // TODO tähän pitää saada ne lisäpalvelut jotenkin
-                tarkasteleLaskuPaneeli.add(new Text("-"),1,8);   // TODO ja tähän niiden yhteishinta
-                tarkasteleLaskuPaneeli.add(new Text(String.valueOf(obj.getAlv())),1,9);
+                tarkasteleLaskuPaneeli.add(new Text(String.valueOf(obj.getAlv())),1,10);
+
+                // Varaukseen liittyvät palvelut
+                // TODO scrollpane pitää lisätä kaikelle tälle koska palveluita voi olla monta
+                GridPane laskunVarauksenPalvelut = new GridPane();
+                tarkasteleLaskuPaneeli.add(laskunVarauksenPalvelut, 0, 8);
+                GridPane.setColumnSpan(laskunVarauksenPalvelut, 2);
+                laskunVarauksenPalvelut.setHgap(10);
+                Text palveluNimi = new Text("Palvelu");
+                Text palveluMaara = new Text("Lukumäärä");
+                palveluNimi.setFont(fonttiKursiivi);
+                palveluNimi.setFont(fonttiKursiivi);
+                laskunVarauksenPalvelut.add(palveluNimi, 0, 0);
+                laskunVarauksenPalvelut.add(palveluMaara, 1, 0);
+                int riviVp = 1;
+                BigDecimal varaustenHinta = BigDecimal.ZERO;
+                for (Map.Entry<Palvelu, Integer> vp : obj.getVaraus().getPalvelut().entrySet()) {
+                    laskunVarauksenPalvelut.add(new Text(vp.getKey().getKuvaus()), 0, riviVp);
+                    laskunVarauksenPalvelut.add(new Text(String.valueOf(vp.getValue())), 1, riviVp);
+                    varaustenHinta = varaustenHinta.add(vp.getKey().getHinta());
+                    riviVp++;
+                }
+                // Palveluiden yhteishinta
+                tarkasteleLaskuPaneeli.add(new Text(varaustenHinta.toString()),1,9);
 
                 double summa =
-                        daysBetween * Double.parseDouble(String.valueOf(obj.getVaraus().getMokki().getHinta()))
-                                /* TODO tähän palveluiden yhteishinta) */ *
+                        daysBetween * Double.parseDouble(String.valueOf(obj.getVaraus().getMokki().getHinta())) +
+                                varaustenHinta.doubleValue() * // TODO onko tämä oikein
                                 (((double) obj.getAlv() / 100)+1);
 
-                tarkasteleLaskuPaneeli.add(new Text(String.valueOf(String.format("%,.2f", summa))),1,10);
+                tarkasteleLaskuPaneeli.add(new Text(String.valueOf(String.format("%,.2f", summa))),1,11);
 
             });
 
