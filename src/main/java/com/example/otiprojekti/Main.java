@@ -1873,7 +1873,6 @@ public class Main extends Application {
             tarkasteleNappula.setGraphic(tarkastelu);
             asiakasTaulukko.add(tarkasteleNappula, 6, rivi);
             tarkasteleNappula.setOnMouseClicked(e -> {
-                // tarkasteleMokkia();                          //TODO  tarkasteleMokkia() - metodin luominen
                 Stage tarkasteleAsiakasIkkuna = new Stage();
                 tarkasteleAsiakasIkkuna.show();
                 GridPane tarkasteleAsiakasPaneeli = new GridPane();
@@ -2068,6 +2067,7 @@ public class Main extends Application {
             laskuLisaysIkkuna.show();
 
         });
+
     }
     
     public void paivitaLaskuTaulukko() {
@@ -2227,8 +2227,8 @@ public class Main extends Application {
                         haeKaikkiTiedot();
                         laskuMuokkausIkkuna.close();
                         paivitaLaskuTaulukko();
+                        
                     } catch (SQLException ex) {
-
                         laskuMuokkausTeksti.setFill(Color.RED);
                         laskuMuokkausTeksti.setText("Muutosten tallentaminen ei onnistunut. \n" +
                                 "Tarkista syötteet ja yritä uudelleen.");
@@ -2251,8 +2251,52 @@ public class Main extends Application {
             tarkastelu.setFitHeight(22);
             tarkasteleNappula.setGraphic(tarkastelu);
             laskuTaulukko.add(tarkasteleNappula, 6, rivi);
+            
             tarkasteleNappula.setOnMouseClicked(e -> {
-                // tarkasteleLasku();                          //TODO  tarkasteleLasku() - metodin luominen
+
+                LocalDateTime pvm1 = obj.getVaraus().getVarausAlkuPvm();
+                LocalDateTime pvm2 = obj.getVaraus().getVarausLoppuPvm();
+                int daysBetween = (int) Duration.between(pvm1, pvm2).toDays();
+
+
+                Stage tarkasteleLaskuIkkuna = new Stage();
+                tarkasteleLaskuIkkuna.show();
+                GridPane tarkasteleLaskuPaneeli = new GridPane();
+                tarkasteleLaskuPaneeli.setPadding(new Insets(25));
+                tarkasteleLaskuPaneeli.setVgap(15);
+                tarkasteleLaskuPaneeli.setHgap(15);
+                Scene tarkasteleLaskuKehys = new Scene(tarkasteleLaskuPaneeli, 400, 450);
+                tarkasteleLaskuIkkuna.setScene(tarkasteleLaskuKehys);
+
+                tarkasteleLaskuPaneeli.add(new Text("Asiakkaan tiedot"),0,0);
+                tarkasteleLaskuPaneeli.add(new Text("LaskuID: "),0,1);
+                tarkasteleLaskuPaneeli.add(new Text("VarausID: "),0,2);
+                tarkasteleLaskuPaneeli.add(new Text("AsiakasID: "),0,3);
+                tarkasteleLaskuPaneeli.add(new Text("Asiakkaan nimi: "),0,4);
+                tarkasteleLaskuPaneeli.add(new Text("Mökin hinta/vrk (€): "),0,5);
+                tarkasteleLaskuPaneeli.add(new Text("Varauksen päivät: "),0,6);
+                tarkasteleLaskuPaneeli.add(new Text("Lisäpalvelut: "),0,7);
+                tarkasteleLaskuPaneeli.add(new Text("Lisäpalveluiden yhteishinta: "),0,8);
+                tarkasteleLaskuPaneeli.add(new Text("Alv(%): "),0,9);
+                tarkasteleLaskuPaneeli.add(new Text("Laskun summa (sis. alv): "),0,10);
+
+                tarkasteleLaskuPaneeli.add(new Text(String.valueOf(obj.getID())),1,1);
+                tarkasteleLaskuPaneeli.add(new Text(String.valueOf(obj.getVaraus().getID())),1,2);
+                tarkasteleLaskuPaneeli.add(new Text(String.valueOf(obj.getVaraus().getAsiakas().getID())),1,3);
+                tarkasteleLaskuPaneeli.add(new Text(obj.getVaraus().getAsiakas().getNimi(false)),1,4);
+                tarkasteleLaskuPaneeli.add(new Text(String.valueOf(obj.getVaraus().getMokki().getHinta())),1,5);
+                tarkasteleLaskuPaneeli.add(new Text(String.valueOf(daysBetween)),1,6);
+                tarkasteleLaskuPaneeli.add(new Text("-"),1,7);   // TODO tähän pitää saada ne lisäpalvelut jotenkin
+                tarkasteleLaskuPaneeli.add(new Text("-"),1,8);   // TODO ja tähän niiden yhteishinta
+                tarkasteleLaskuPaneeli.add(new Text(String.valueOf(obj.getAlv())),1,9);
+
+                double summa =
+                        daysBetween * Double.parseDouble(String.valueOf(obj.getVaraus().getMokki().getHinta()))
+                                /* TODO tähän palveluiden yhteishinta) */ *
+                                (((double) obj.getAlv() / 100)+1);
+
+                tarkasteleLaskuPaneeli.add(new Text(String.valueOf(String.format("%,.2f", summa))),1,10);
+
             });
 
             Nappula luoLaskuNappula = new Nappula(150, 30);
