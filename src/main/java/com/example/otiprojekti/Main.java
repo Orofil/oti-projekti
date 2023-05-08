@@ -2243,7 +2243,6 @@ public class Main extends Application {
                 laskuMuokkausIkkuna.setScene(laskuMuokkausKehys);
                 laskuMuokkausIkkuna.setTitle("Tallenna muutokset");
                 laskuMuokkausIkkuna.show();
-
             });
 
             Nappula tarkasteleNappula = new Nappula(170, 30);
