@@ -1963,7 +1963,9 @@ public class Main extends Application {
         laskunLisays.setFitWidth(23);
         laskunLisays.setFitHeight(22);
         laskunLisaysNappula.setGraphic(laskunLisays);
+
         laskunLisaysNappula.setOnAction( e -> {
+
             Stage laskuLisaysIkkuna = new Stage();
 
             VBox laskuLisaysPaneeli = new VBox(10);
@@ -1971,7 +1973,7 @@ public class Main extends Application {
 
             Text laskuLisaysTeksti = new Text("Syötä sen varauksen ID, josta haluat muodostaa laskun.");
             TextField varausID = new TextField();
-            Nappula haeLaskulleTiedotNappula = new Nappula("Hae varauksen tiedot laskulle");
+            Nappula haeLaskulleTiedotNappula = new Nappula("Hae varauksen tiedot laskulle", 250,40);
 
             GridPane laskunLisaysGridPaneeli = new GridPane();
             laskunLisaysGridPaneeli.setPadding(new Insets(25));
@@ -2061,7 +2063,7 @@ public class Main extends Application {
                     haeLaskulleTiedotNappula,
                     laskunLisaysGridPaneeli,
                     laskunLisaysNappula);
-            Scene laskuLisaysKehys = new Scene(laskuLisaysPaneeli, 400, 550);
+            Scene laskuLisaysKehys = new Scene(laskuLisaysPaneeli, 400, 570);
             laskuLisaysIkkuna.setScene(laskuLisaysKehys);
             laskuLisaysIkkuna.setTitle("Luo lasku");
             laskuLisaysIkkuna.show();
