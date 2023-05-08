@@ -182,6 +182,7 @@ public class Main extends Application {
         aluenappula.setOnAction(e -> {
             paneeli.setCenter(aluepaneeli);
             isoOtsikkoTeksti.setText("ALUEET");
+            paivitaAlueTaulukko();
         });
 
         GridPane alueHaku = new GridPane();
@@ -276,8 +277,6 @@ public class Main extends Application {
             Scene alueLisaysKehys = new Scene(alueLisaysPaneeli, 400, 300);
             alueLisaysIkkuna.setScene(alueLisaysKehys);
         });
-
-        paivitaAlueTaulukko();
     }
 
     public void paivitaAlueTaulukko() {
@@ -393,6 +392,7 @@ public class Main extends Application {
         mokkinappula.setOnAction(e -> {
             paneeli.setCenter(mokkipaneeli);
             isoOtsikkoTeksti.setText("MÖKIT");
+            paivitaMokkiTaulukko();
         });
 
         GridPane mokkiHaku = new GridPane();
@@ -541,8 +541,6 @@ public class Main extends Application {
             Scene mokkiLisaysKehys = new Scene(mokkiLisaysPaneeli, 400, 550);
             mokkiLisaysIkkuna.setScene(mokkiLisaysKehys);
         });
-
-        paivitaMokkiTaulukko();
     }
 
     public void paivitaMokkiTaulukko(){
@@ -756,7 +754,6 @@ public class Main extends Application {
 
             rivi++;
         }
-
     }
     
     public void luoPalvelunakyma() {
@@ -764,6 +761,7 @@ public class Main extends Application {
         palvelunappula.setOnAction(e -> {
             paneeli.setCenter(palvelupaneeli);
             isoOtsikkoTeksti.setText("PALVELUT");
+            paivitaPalveluTaulukko();
         });
 
         GridPane palveluHaku = new GridPane();
@@ -896,11 +894,6 @@ public class Main extends Application {
             palveluLisaysIkkuna.setScene(palveluLisaysKehys);
             
         });
-
-
-
-
-        paivitaPalveluTaulukko();
     }
 
     public void paivitaPalveluTaulukko() {
