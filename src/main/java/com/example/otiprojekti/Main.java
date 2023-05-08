@@ -284,14 +284,15 @@ public class Main extends Application {
         alueTaulukko.setGridLinesVisible(false);
         alueTaulukko.getColumnConstraints().clear();
         alueTaulukko.getChildren().clear();
-        alueTaulukko.getColumnConstraints().addAll(sarakeLevea, sarakeLevea, sarakeLyhyt, sarakeLyhyt);
+        alueTaulukko.getColumnConstraints().addAll(
+                sarakeLyhyt, sarakeLevea, sarakeLyhyt, sarakeLyhyt);
         alueTaulukko.setGridLinesVisible(true);
 
         alueTaulukko.setPadding(new Insets(20));
         
         alueTaulukko.add(alueenLisaysNappula, 1,0);
 
-        Text aluetunnusOtsikko = new Text("Aluetunnus");
+        Text aluetunnusOtsikko = new Text("Tunnus");
         aluetunnusOtsikko.setFont(fonttiIsompi);
         Text alueennimiOtsikko = new Text("Alueen nimi");
         alueennimiOtsikko.setFont(fonttiIsompi);
@@ -901,7 +902,8 @@ public class Main extends Application {
         palveluTaulukko.setGridLinesVisible(false);
         palveluTaulukko.getColumnConstraints().clear();
         palveluTaulukko.getChildren().clear();
-        palveluTaulukko.getColumnConstraints().addAll(sarakeSemi, sarakeLevea, sarakeLyhyt, sarakeLyhyt, sarakeLyhyt, sarakeLyhyt, sarakeLyhyt);
+        palveluTaulukko.getColumnConstraints().addAll(
+                sarakeLyhyt, sarakeLevea, sarakeLyhyt, sarakeLyhyt, sarakeLyhyt, sarakeLyhyt, sarakeLyhyt);
         palveluTaulukko.setGridLinesVisible(true);
 
         palveluTaulukko.setPadding(new Insets(20));
@@ -1384,8 +1386,8 @@ public class Main extends Application {
         varausTaulukko.setGridLinesVisible(false);
         varausTaulukko.getColumnConstraints().clear();
         varausTaulukko.getChildren().clear();
-        varausTaulukko.getColumnConstraints().addAll
-                (sarakeSemi, sarakeLevea, sarakeLevea, sarakeLyhyt, sarakeLyhyt, sarakeLyhyt);
+        varausTaulukko.getColumnConstraints().addAll(
+                sarakeLyhyt, sarakeLevea, sarakeLevea, sarakeLyhyt, sarakeLyhyt, sarakeLyhyt);
         varausTaulukko.setGridLinesVisible(true);
 
         varausTaulukko.setPadding(new Insets(20));
@@ -1393,7 +1395,7 @@ public class Main extends Application {
 
         varausTaulukko.add(varausLisaysNappula, 1, 0);
 
-        Text varaustunnusOtsikko = new Text("Varaustunnus");
+        Text varaustunnusOtsikko = new Text("Tunnus");
         varaustunnusOtsikko.setFont(fonttiIsompi);
         Text varausAsiakasOtsikko = new Text("Asiakas");
         varausAsiakasOtsikko.setFont(fonttiIsompi);
@@ -1713,16 +1715,17 @@ public class Main extends Application {
         asiakasTaulukko.setGridLinesVisible(false);
         asiakasTaulukko.getColumnConstraints().clear();
         asiakasTaulukko.getChildren().clear();
-        asiakasTaulukko.getColumnConstraints().addAll(sarakeLyhyt, sarakeLevea, sarakeLevea, sarakeLevea, sarakeLyhyt, sarakeLyhyt, sarakeLyhyt);
+        asiakasTaulukko.getColumnConstraints().addAll(
+                sarakeLyhyt, sarakeLevea, sarakeLevea, sarakeLevea, sarakeLyhyt, sarakeLyhyt, sarakeLyhyt);
         asiakasTaulukko.setGridLinesVisible(true);
 
         asiakasTaulukko.setPadding(new Insets(20));
 
         asiakasTaulukko.add(asiakasLisaysNappula, 1,0);
 
-        Text asiakastunnusOtsikko = new Text("AsiakasID");
-        Text asiakasNimiOtsikko = new Text("Asiakas");
-        Text asiakasEmailOtsikko = new Text("Email");
+        Text asiakastunnusOtsikko = new Text("Tunnus");
+        Text asiakasNimiOtsikko = new Text("Nimi");
+        Text asiakasEmailOtsikko = new Text("Sähköposti");
         Text asiakasPuhNroOtsikko = new Text("Puh.nro.");
         asiakastunnusOtsikko.setFont(fonttiIsompi);
         asiakasNimiOtsikko.setFont(fonttiIsompi);
@@ -2003,14 +2006,15 @@ public class Main extends Application {
         laskuTaulukko.setGridLinesVisible(false);
         laskuTaulukko.getColumnConstraints().clear();
         laskuTaulukko.getChildren().clear();
-        laskuTaulukko.getColumnConstraints().addAll(sarakeLyhyt, sarakeLevea, sarakeLyhyt, sarakeSemi, sarakeLyhyt, sarakeLyhyt, sarakeLyhyt, sarakeLyhyt);
+        laskuTaulukko.getColumnConstraints().addAll(
+                sarakeLyhyt, sarakeLevea, sarakeLyhyt, sarakeSemi, sarakeLyhyt, sarakeLyhyt, sarakeLyhyt, sarakeLyhyt);
         laskuTaulukko.setGridLinesVisible(true);
 
         laskuTaulukko.setPadding(new Insets(20));
         
         laskuTaulukko.add(laskunLisaysNappula, 1,0);
 
-        Text laskuTunnusOtsikko = new Text("Laskunro.");
+        Text laskuTunnusOtsikko = new Text("Tunnus");
         laskuTunnusOtsikko.setFont(fonttiIsompi);
         Text laskuVarausOtsikko = new Text("Varaus");
         laskuVarausOtsikko.setFont(fonttiIsompi);
