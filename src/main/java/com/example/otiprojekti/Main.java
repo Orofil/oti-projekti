@@ -1441,7 +1441,7 @@ public class Main extends Application {
                         tietokanta.poistaVaraus(obj.getID());
                         haeKaikkiTiedot();
                         poistoIkkuna.getIkkuna().close();
-                        paivitaVarausTaulukko(varausTulokset); // TODO päivitetäänkö varausTulokset vai tehdäänkö vaan aina niin että hakuvalinnat menee pois kun tekee tällaisen päivityksen
+                        paivitaVarausTaulukko(varausLista); // TODO päivitetäänkö varausTulokset vai tehdäänkö vaan aina niin että hakuvalinnat menee pois kun tekee tällaisen päivityksen
                     } catch (SQLException ex) {
                         ilmoitusPaneeli.lisaaIlmoitus(IlmoitusTyyppi.VAROITUS, "Virhe varauksen poistamisessa.");
                         throw new RuntimeException(ex); // TEMP
