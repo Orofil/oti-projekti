@@ -99,10 +99,6 @@ public class Main extends Application {
     @Override
     public void start(Stage ikkuna) {
 
-        // Haetaan tiedot tietokannasta
-        haeKaikkiTiedot();
-
-
         // Vasen valikko
         for (ToggleNappula n : nappulat) {
             n.setToggleGroup(tgSivuvalikko);
@@ -150,6 +146,9 @@ public class Main extends Application {
         sarakeSemi.setPrefWidth(120);
         sarakeLyhyt.setHalignment(HPos.CENTER);
         sarakeLyhyt.setPrefWidth(80);
+
+        // Haetaan tiedot tietokannasta
+        haeKaikkiTiedot();
 
         // Luodaan eri paneelit
         luoAluenakyma();
