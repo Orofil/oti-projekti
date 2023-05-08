@@ -527,6 +527,7 @@ public class Main extends Application {
                             mokkiVarustelu.getText()
                             );
                     mokkiLisaysIkkuna.close();
+                    haeKaikkiTiedot();
                     paivitaMokkiTaulukko();
                 } catch (SQLException ex) {
                     mokkiLisaysTeksti.setText("Mökin lisääminen ei onnistunut. \n " +
@@ -697,12 +698,14 @@ public class Main extends Application {
                                 mokkiVarustelu.getText()
                         );
                         mokkiMuokkausIkkuna.close();
+                        haeKaikkiTiedot();
                         paivitaMokkiTaulukko();
                     } catch (SQLException ex) {
 
-                        mokkiMuokkausTeksti.setText("Mökin muokkaaminen ei onnistunut. \n " +
-                                "Tarkista syötteet ja yritä uudelleen.");
-                        mokkiMuokkausTeksti.setFill(Color.RED);
+                        throw new RuntimeException(ex);
+                        //mokkiMuokkausTeksti.setText("Mökin muokkaaminen ei onnistunut. \n " +
+                        //        "Tarkista syötteet ja yritä uudelleen.");
+                        //mokkiMuokkausTeksti.setFill(Color.RED);
 
                     }
                 });
@@ -710,8 +713,9 @@ public class Main extends Application {
                 mokkiMuokkausPaneeli.getChildren().addAll(mokkiMuokkausGridPaneeli, muokkaaMokkiNappula);
 
                 Scene mokkiMuokkausKehys = new Scene(mokkiMuokkausPaneeli, 400, 550);
-                mokkiMuokkausIkkuna.setScene(mokkiMuokkausKehys);                          //TODO  muokkaamokki() - metodin luominen
+                mokkiMuokkausIkkuna.setScene(mokkiMuokkausKehys);
             });
+
             Nappula tarkasteleNappula = new Nappula(170, 30);
             ImageView tarkastelu = new ImageView(imageKuvasta("tarkastelu.png"));
             tarkastelu.setFitWidth(23);
