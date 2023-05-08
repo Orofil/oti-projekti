@@ -2099,6 +2099,18 @@ public class Main extends Application {
         }
     }
 
+    /**
+     * Hakee tietokannasta kaikki tiedot.
+     * <ul>
+     *     <li>Postinumerot</li>
+     *     <li>Alueet</li>
+     *     <li>Asiakkaat</li>
+     *     <li>Mökit</li>
+     *     <li>Palvelut</li>
+     *     <li>Varaukset</li>
+     *     <li>Laskut</li>
+     * </ul>
+     */
     public void haeKaikkiTiedot() {
         // Haetaan tiedot tietokannasta olioiksi
         try {
