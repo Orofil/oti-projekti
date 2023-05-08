@@ -263,6 +263,7 @@ public class Main extends Application {
                 try {
                     tietokanta.insertAlue(alueNimi.getText());
                     alueLisaysIkkuna.close();
+                    haeKaikkiTiedot();
                     paivitaAlueTaulukko();
                 } catch (SQLException ex) {
                     alueLisaysTeksti.setText("Alueen lisääminen ei onnistunut. \n Yritä uudelleen.");
@@ -369,6 +370,7 @@ public class Main extends Application {
                     try {
                         tietokanta.muokkaaAlue(obj.getID(), alueenNimi.getText());
                         alueMuokkausIkkuna.close();
+                        haeKaikkiTiedot();
                         paivitaAlueTaulukko();
                     } catch (SQLException ex) {
                         alueMuokkausTeksti.setText("Alueen tietojen muokkaaminen ei onnistunut. \n Yritä uudelleen.");
