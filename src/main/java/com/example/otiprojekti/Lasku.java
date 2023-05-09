@@ -10,7 +10,13 @@ import java.util.Objects;
 import com.itextpdf.text.Document;
 import com.itextpdf.text.Paragraph;
 import com.itextpdf.text.pdf.PdfWriter;
+import javafx.scene.Scene;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.control.TextField;
+import javafx.scene.layout.GridPane;
 import javafx.scene.text.Text;
+import javafx.stage.Stage;
 
 public class Lasku {
     private final int ID;
@@ -114,16 +120,49 @@ public class Lasku {
 
 
     public void vieDokumentiksi() { // TODO
-        Document lasku = new Document();
-        try {
-            PdfWriter.getInstance(lasku, new FileOutputStream("lasku.pdf"));
-            lasku.open();
-            lasku.add(new Paragraph(toString()));
-            lasku.close();
-        }
-        catch (Exception e) {
-            System.out.println("Laskutietojen tallennuksessa tapahtui virhe.");
-        }
+        Stage laskuIkkuna = new Stage();
+        GridPane laskunTiedot = new GridPane();
+        laskunTiedot.setVgap(5);
+        TextField saajanNimi = new TextField();
+        TextField tiliNumero = new TextField();
+        TextField eraPaiva = new TextField();
+        TextField viiteNumero = new TextField();
+        Label saaja = new Label("Saajan nimi");
+        Label tilinro = new Label("Saajan tilinumero");
+        Label erapv = new Label("Laskun eräpäivä");
+        Label viitenro = new Label("Laskun viitenumero");
+        Button syotaTiedot = new Button("Syötä");
+
+        laskunTiedot.add(saaja,0,0);
+        laskunTiedot.add(tilinro,0,1);
+        laskunTiedot.add(erapv,0,2);
+        laskunTiedot.add(viitenro,0,3);
+        laskunTiedot.add(saajanNimi,1,0);
+        laskunTiedot.add(tiliNumero,1,1);
+        laskunTiedot.add(eraPaiva,1,2);
+        laskunTiedot.add(viiteNumero,1,3);
+        laskunTiedot.add(syotaTiedot,0,4);
+
+        Scene scene = new Scene(laskunTiedot,400,600);
+        laskuIkkuna.setScene(scene);
+        laskuIkkuna.setTitle("Syötä laskun tiedot");
+        laskuIkkuna.show();
+
+        syotaTiedot.setOnAction(event -> {
+            Document lasku = new Document();
+            try {
+                PdfWriter.getInstance(lasku, new FileOutputStream("lasku.pdf"));
+                lasku.open();
+                lasku.add(new Paragraph(toString()));
+                lasku.add(new Paragraph("Saajan nimi : "+saajanNimi));
+                lasku.add(new Paragraph("Saajan tilinumero: "+tiliNumero));
+                lasku.add(new Paragraph("Laskun eräpäivä: "+eraPaiva));
+                lasku.add(new Paragraph("Viitenumero: "+viiteNumero));
+                lasku.close();
+            } catch (Exception e) {
+                System.out.println("Laskutietojen tallennuksessa tapahtui virhe.");
+            }
+        });
     }
     public void maksuMuistutus() {
         Document muistutus = new Document();
