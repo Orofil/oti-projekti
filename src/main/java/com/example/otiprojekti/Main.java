@@ -656,7 +656,6 @@ public class Main extends Application {
                         paivitaMokkiTaulukko(paivaAlku, paivaLoppu);
                     } catch (SQLException ex) {
                         ilmoitusPaneeli.lisaaIlmoitus(IlmoitusTyyppi.VAROITUS, "Virhe mökin poistamisessa.");
-                        throw new RuntimeException(ex); // TEMP
                     }
                 });
             });
@@ -746,11 +745,9 @@ public class Main extends Application {
                         haeKaikkiTiedot();
                         paivitaMokkiTaulukko(paivaAlku, paivaLoppu);
                     } catch (SQLException ex) {
-
-                        throw new RuntimeException(ex); // TEMP
-                        //mokkiMuokkausTeksti.setText("Mökin muokkaaminen ei onnistunut. \n " +
-                        //        "Tarkista syötteet ja yritä uudelleen.");
-                        //mokkiMuokkausTeksti.setFill(Color.RED);
+                        mokkiMuokkausTeksti.setText("Mökin muokkaaminen ei onnistunut. \n " +
+                                "Tarkista syötteet ja yritä uudelleen.");
+                        mokkiMuokkausTeksti.setFill(Color.RED);
 
                     }
                 });
@@ -1011,7 +1008,6 @@ public class Main extends Application {
                         paivitaPalveluTaulukko();
                     } catch (SQLException ex) {
                         ilmoitusPaneeli.lisaaIlmoitus(IlmoitusTyyppi.VAROITUS, "Virhe palvelun poistamisessa");
-                        throw new RuntimeException(ex); // TEMP
                     }
 
                 });            
@@ -1467,7 +1463,6 @@ public class Main extends Application {
                     varausLisaysStage.close();
                 } catch (SQLException ex) {
                     ilmoitusPaneeli.lisaaIlmoitus(IlmoitusTyyppi.VAROITUS, String.valueOf(ex));
-                    throw new RuntimeException(ex); // TEMP
                 }
             });
 
@@ -1547,7 +1542,6 @@ public class Main extends Application {
                         paivitaVarausTaulukko(varausLista); // TODO päivitetäänkö varausTulokset vai tehdäänkö vaan aina niin että hakuvalinnat menee pois kun tekee tällaisen päivityksen
                     } catch (SQLException ex) {
                         ilmoitusPaneeli.lisaaIlmoitus(IlmoitusTyyppi.VAROITUS, "Virhe varauksen poistamisessa.");
-                        throw new RuntimeException(ex); // TEMP
                     }
                 });
             });
@@ -1897,12 +1891,11 @@ public class Main extends Application {
                     try {
                         tietokanta.poistaAsiakas(obj.getID());
                         haeKaikkiTiedot();
+                        poistoIkkuna.getIkkuna().close();
+                        paivitaAsiakasTaulukko(asiakasLista);
                     } catch (SQLException ex) {
                         ilmoitusPaneeli.lisaaIlmoitus(IlmoitusTyyppi.VAROITUS, "Virhe asiakkaan poistamisessa.");
-                        throw new RuntimeException(ex); // TEMP
                     }
-                    poistoIkkuna.getIkkuna().close();
-                    paivitaAsiakasTaulukko(asiakasLista);
                 });
             });
 
@@ -2266,7 +2259,6 @@ public class Main extends Application {
                         paivitaLaskuTaulukko();
                     } catch (SQLException ex) {
                         ilmoitusPaneeli.lisaaIlmoitus(IlmoitusTyyppi.VAROITUS, "Virhe laskun poistamisessa.");
-                        throw new RuntimeException(ex); // TEMP
                     }
                 });
             });
