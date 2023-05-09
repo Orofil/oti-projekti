@@ -898,18 +898,13 @@ public class Tietokanta {
                                              HashMap<Integer, HashMap<Palvelu, Integer>> varauksenPalvelut) throws SQLException {
         ArrayList<Varaus> varaukset = new ArrayList<>();
         while (rs.next()) {
-            LocalDateTime vahvistusPvm = null; // TODO miten käsitellään tällaiset jotka voi olla null, tässä vähän monimutkainen ratkaisu, joku vastaava pitää lisätä muillekin jotka voi olla tyhjiä
-            try {
-                vahvistusPvm = LocalDateTime.parse(rs.getString("vahvistus_pvm"), dateTimeFormat);
-            } catch (NullPointerException ignored) {}
-
             varaukset.add(new Varaus(
                     rs.getInt("varaus_id"),
                     etsiAsiakasID(asiakkaat, rs.getInt("asiakas_id")),
                     etsiMokkiID(mokit, rs.getInt("mokki_id")),
                     varauksenPalvelut.get(rs.getInt("varaus_id")),
                     LocalDateTime.parse(rs.getString("varattu_pvm"), dateTimeFormat),
-                    vahvistusPvm,
+                    LocalDateTime.parse(rs.getString("vahvistus_pvm"), dateTimeFormat),
                     LocalDateTime.parse(rs.getString("varattu_alkupvm"), dateTimeFormat),
                     LocalDateTime.parse(rs.getString("varattu_loppupvm"), dateTimeFormat)));
         }
