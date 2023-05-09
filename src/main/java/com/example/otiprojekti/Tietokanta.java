@@ -50,7 +50,6 @@ public class Tietokanta {
 
 
     ///// Tietojen syöttö tietokantaan
-    // TODO kaikki palauttaa uusimman syötetyn rivin
 
     /**
      * Syöttää tietokantaan alueen.
@@ -179,23 +178,6 @@ public class Tietokanta {
         stm.close();
     }
 
-    /**
-     * Syöttää tietokantaan varaukseen liittyvän palvelun.
-     * @param varaus_id Tyyppiä int. OLtava taulussa varaus.
-     * @param palvelu_id Tyyppiä int. Oltava taulussa palvelu.
-     * @param lkm Tyyppiä int
-     */
-    // TODO tehdäänkö tämä näin vähän oudosti erillään
-    public void insertVarauksenPalvelut(int varaus_id, int palvelu_id, int lkm) throws SQLException {
-        stm = con.prepareStatement(
-                "INSERT INTO varauksen_palvelut(varaus_id,palvelu_id,lkm)" +
-                "(?,?,?)");
-        stm.setInt(1, varaus_id);
-        stm.setInt(2, palvelu_id);
-        stm.setInt(3, lkm);
-        stm.executeUpdate();
-        stm.close();
-    }
 
     /**
      * Syöttää tietokantaan varauksen ja palauttaa sen oliona.
@@ -669,7 +651,6 @@ public class Tietokanta {
 
 
     ///// Tietokannasta hakemiset
-    // TODO uusimpien hakeminen
 
     /**
      * Hakee tietokannasta kaikki alueet.
