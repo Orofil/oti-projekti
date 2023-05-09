@@ -654,7 +654,7 @@ public class Main extends Application {
                         tietokanta.poistaMokki(obj.getID());
                         haeKaikkiTiedot();
                         poistaMokkiIkkuna.getIkkuna().close();
-                        paivitaMokkiTaulukko(null, null);
+                        paivitaMokkiTaulukko(paivaAlku, paivaLoppu);
                     } catch (SQLException ex) {
                         ilmoitusPaneeli.lisaaIlmoitus(IlmoitusTyyppi.VAROITUS, "Virhe mökin poistamisessa.");
                         throw new RuntimeException(ex); // TEMP
@@ -744,7 +744,7 @@ public class Main extends Application {
                         );
                         mokkiMuokkausIkkuna.close();
                         haeKaikkiTiedot();
-                        paivitaMokkiTaulukko(null, null);
+                        paivitaMokkiTaulukko(paivaAlku, paivaLoppu);
                     } catch (SQLException ex) {
 
                         throw new RuntimeException(ex); // TEMP
