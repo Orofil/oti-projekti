@@ -1177,7 +1177,7 @@ public class Main extends Application {
         varausHaku.add(varausRaporttiNappula, 6, 2);
 
         varausRaporttiNappula.setOnAction( event -> {
-            String tiedostonNimi = "Varausraportti.pdf"; // PDF-tiedoston nimi
+            String tiedostonNimi = "Varausraportti " + LocalDateTime.now().format(dateTimeFormat) + ".pdf"; // PDF-tiedoston nimi
             Document dokumentti = new Document();
 
             try {
