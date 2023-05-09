@@ -41,7 +41,7 @@ public class Alue {
 
     @Override
     public String toString() {
-        String str = "Alueen ID on " + ID + "\n Alueen nimi on " + nimi;
+        String str = ID + " : " + nimi;
         return str;
     }
 }
