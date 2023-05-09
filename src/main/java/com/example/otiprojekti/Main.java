@@ -99,6 +99,8 @@ public class Main extends Application {
     ArrayList<Alue> alueTulokset = null;
     ArrayList<Palvelu> palveluTulokset = null;
     ArrayList<Varaus> varausTulokset = null;
+    ArrayList<Asiakas> asiakasTulokset = null;
+    ArrayList<Lasku> laskuTulokset = null;
 
     GridPane varausTaulukko = new GridPane();
     GridPane asiakasTaulukko = new GridPane();
@@ -1209,8 +1211,8 @@ public class Main extends Application {
 
         TextField varausAikaAlku = new TextField();
         TextField varausAikaLoppu = new TextField();
-        varausAikaAlku.setPrefWidth(100);
-        varausAikaLoppu.setPrefWidth(100);
+        varausAikaAlku.setPrefWidth(70);
+        varausAikaLoppu.setPrefWidth(70);
         Label varausAikaAlkuLabel = new Label("klo", varausAikaAlku);
         Label varausAikaLoppuLabel = new Label("klo", varausAikaLoppu);
         varausAikaAlkuLabel.setContentDisplay(ContentDisplay.RIGHT);
@@ -1758,10 +1760,12 @@ public class Main extends Application {
         asiakasHaku.add(asiakasLajittelu, 2, 1);
 
         asiakasHakuNappula.setOnAction( e -> {
-            ArrayList<Asiakas> asiakasTulokset = new ArrayList<>();
 
-            // Suodatus
-            // TODO
+            if (!Objects.equals(asiakasHakuKentta.getText(), "")) {
+                asiakasTulokset = haeAsiakasHakusanalla(asiakasLista, asiakasHakuKentta.getText());
+            } else {
+                asiakasTulokset = asiakasLista;
+            }
 
             // Lajittelu
             switch (asiakasLajittelu.getValue()) {
@@ -2089,6 +2093,7 @@ public class Main extends Application {
         laskuHakuNappula.setOnAction(e -> {
             // Suodatus
             // TODO
+
 
             // Lajittelu
             switch (laskuLajittelu.getValue()) {
