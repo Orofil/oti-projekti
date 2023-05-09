@@ -39,6 +39,7 @@ import java.sql.SQLException;
 import java.time.Duration;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.util.*;
 
@@ -112,6 +113,7 @@ public class Main extends Application {
     Nappula alueenLisaysNappula = new Nappula(LISAYS_NAPPULA_LEVEYS, LISAYS_NAPPULA_KORKEUS);
     Nappula mokkienLisaysNappula = new Nappula(LISAYS_NAPPULA_LEVEYS, LISAYS_NAPPULA_KORKEUS);
     Nappula palvelunLisaysNappula = new Nappula(LISAYS_NAPPULA_LEVEYS, LISAYS_NAPPULA_KORKEUS);
+    Nappula varausRaporttiNappula= new Nappula("Luo varausraportti", 190, 30);
 
     @Override
     public void start(Stage ikkuna) {
@@ -1172,69 +1174,7 @@ public class Main extends Application {
         Nappula varausHakuNappula = new Nappula("Suorita haku", 190, 30);
         varausHaku.add(varausHakuNappula, 0, 2);
 
-
-        Nappula varausRaporttiNappula= new Nappula("Luo varausraportti", 190, 30);
         varausHaku.add(varausRaporttiNappula, 6, 2);
-
-        varausRaporttiNappula.setOnAction( event -> {
-            String tiedostonNimi = "Varausraportti " + LocalDateTime.now().format(dateTimeFormat) + ".pdf"; // PDF-tiedoston nimi
-            Document dokumentti = new Document();
-
-            try {
-                // Luodaan PdfWriter osoittamaan tiedostoon
-                PdfWriter.getInstance(dokumentti, new FileOutputStream(tiedostonNimi));
-
-                // Avataan dokumentti
-                dokumentti.open();
-
-                PdfPTable varausTaulukko = new PdfPTable(6);
-                varausTaulukko.setWidths(new int[]{4,4,4,4,4,4});
-
-                // Lisää taulukon otsikkorivi
-
-                varausTaulukko.addCell(new PdfPCell(new Paragraph("Varaus ID")));
-                varausTaulukko.addCell(new PdfPCell(new Paragraph("Asiakkaan nimi")));
-                varausTaulukko.addCell(new PdfPCell(new Paragraph("Mökin nimi")));
-                varausTaulukko.addCell(new PdfPCell(new Paragraph("Varauksen alku")));
-                varausTaulukko.addCell(new PdfPCell(new Paragraph("Varauksen loppu")));
-                varausTaulukko.addCell(new PdfPCell(new Paragraph("Varauksen alue")));
-                //varausTaulukko.addCell(new PdfPCell(new Paragraph("Varauksen palvelun nimi")));
-                //varausTaulukko.addCell(new PdfPCell(new Paragraph("Varauksen palvelujen lukumäärä")));
-
-
-
-
-
-                // Lisää ArrayListin tiedot taulukkoon
-                for (Varaus v : varausLista) { //Tämä ei toimi vielä
-
-                    varausTaulukko.addCell(new PdfPCell(new Paragraph(String.valueOf(v.getID()))));
-                    varausTaulukko.addCell(new PdfPCell(new Paragraph(String.valueOf(v.getAsiakas().getNimi(false)))));
-                    varausTaulukko.addCell(new PdfPCell(new Paragraph(String.valueOf(v.getMokki().getNimi()))));
-                    varausTaulukko.addCell(new PdfPCell(new Paragraph(String.valueOf(v.getVarausAlkuPvm()))));
-                    varausTaulukko.addCell(new PdfPCell(new Paragraph(String.valueOf(v.getVarausLoppuPvm()))));
-                    varausTaulukko.addCell(new PdfPCell(new Paragraph(String.valueOf(v.getMokki().getAlue()))));
-                    //varausTaulukko.addCell(new PdfPCell(new Paragraph(String.valueOf(v.getPalvelut().get()))));
-
-                }
-
-                dokumentti.add(varausTaulukko);
-
-                // Suljetaan dokumentti
-                dokumentti.close();
-
-                System.out.println("Raportti luotu onnistuneesti!");
-
-            } catch (DocumentException | FileNotFoundException i) {
-                System.out.println("Virhe raportin generoimisessa: " + i.getMessage());
-            }
-            try {
-                // Avataan dokumentti oletusohjelmalla
-                Desktop.getDesktop().open(new File(tiedostonNimi));
-            } catch (IOException i) {
-                System.out.println("Virhe tiedoston avaamisessa: " + i.getMessage());
-            }
-        });
 
         Text varausLajitteluTeksti = new Text("Lajittelu");
         varausLajitteluTeksti.setFont(fonttiPaksu);
@@ -1708,6 +1648,71 @@ public class Main extends Application {
 
             rivi++;
         }
+
+        varausRaporttiNappula.setOnAction( event -> {
+            String tiedostonNimi =
+                    "Varausraportti "+LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMdd_HHmmss"))+".pdf"; // PDF-tiedoston nimi
+            Document dokumentti = new Document();
+
+            try {
+                // Luodaan PdfWriter osoittamaan tiedostoon
+                PdfWriter.getInstance(dokumentti, new FileOutputStream(tiedostonNimi));
+
+                // Avataan dokumentti
+                dokumentti.open();
+
+                PdfPTable varausTaulukko = new PdfPTable(6);
+                varausTaulukko.setWidths(new int[]{4,4,4,4,4,4});
+
+                // Lisää taulukon otsikkorivi
+
+                varausTaulukko.addCell(new PdfPCell(new Paragraph("Varaus ID")));
+                varausTaulukko.addCell(new PdfPCell(new Paragraph("Asiakkaan nimi")));
+                varausTaulukko.addCell(new PdfPCell(new Paragraph("Mökin nimi")));
+                varausTaulukko.addCell(new PdfPCell(new Paragraph("Varauksen alku")));
+                varausTaulukko.addCell(new PdfPCell(new Paragraph("Varauksen loppu")));
+                varausTaulukko.addCell(new PdfPCell(new Paragraph("Varauksen alue")));
+                //varausTaulukko.addCell(new PdfPCell(new Paragraph("Varauksen palvelun nimi")));
+                //varausTaulukko.addCell(new PdfPCell(new Paragraph("Varauksen palvelujen lukumäärä")));
+
+
+
+
+
+                // Lisää ArrayListin tiedot taulukkoon
+                for (Varaus v : varausLista) { //Tämä ei toimi vielä
+
+                    varausTaulukko.addCell(new PdfPCell(new Paragraph(String.valueOf(v.getID()))));
+                    varausTaulukko.addCell(new PdfPCell(new Paragraph(String.valueOf(v.getAsiakas().getNimi(false)))));
+                    varausTaulukko.addCell(new PdfPCell(new Paragraph(String.valueOf(v.getMokki().getNimi()))));
+                    varausTaulukko.addCell(new PdfPCell(new Paragraph(String.valueOf(v.getVarausAlkuPvm()))));
+                    varausTaulukko.addCell(new PdfPCell(new Paragraph(String.valueOf(v.getVarausLoppuPvm()))));
+                    varausTaulukko.addCell(new PdfPCell(new Paragraph(String.valueOf(v.getMokki().getAlue()))));
+                    //varausTaulukko.addCell(new PdfPCell(new Paragraph(String.valueOf(v.getPalvelut().get()))));
+
+                }
+
+                dokumentti.add(varausTaulukko);
+
+                // Suljetaan dokumentti
+                dokumentti.close();
+
+                System.out.println("Raportti luotu onnistuneesti!");
+
+            } catch (DocumentException | FileNotFoundException i) {
+                ilmoitusPaneeli.lisaaIlmoitus(
+                        IlmoitusTyyppi.VAROITUS, "Virhe raportin generoimisessa: " + i.getMessage());
+            }
+            try {
+                // Avataan dokumentti oletusohjelmalla
+                Desktop.getDesktop().open(new File(tiedostonNimi));
+            } catch (IOException i) {
+                ilmoitusPaneeli.lisaaIlmoitus(
+                        IlmoitusTyyppi.VAROITUS, "Virhe tiedoston avaamisessa: " + i.getMessage());
+            }
+        });
+
+
     }
 
     public void luoAsiakasnakyma() {
