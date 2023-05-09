@@ -2061,7 +2061,7 @@ public class Main extends Application {
         laskunappula.setOnAction(e -> {
             paneeli.setCenter(laskupaneeli);
             isoOtsikkoTeksti.setText("LASKUT");
-            paivitaLaskuTaulukko();
+            paivitaLaskuTaulukko(laskuLista);
         });
 
         GridPane laskuHaku = new GridPane();
@@ -2091,9 +2091,12 @@ public class Main extends Application {
         laskuHaku.add(laskuLajittelu, 2, 1);
 
         laskuHakuNappula.setOnAction(e -> {
-            // Suodatus
-            // TODO
-
+            
+            if (!Objects.equals(laskuHakuKentta.getText(), "")) {
+                laskuTulokset = haeLaskuHakusanalla(laskuLista, laskuHakuKentta.getText());
+            } else {
+                laskuTulokset = laskuLista;
+            }
 
             // Lajittelu
             switch (laskuLajittelu.getValue()) {
@@ -2105,7 +2108,7 @@ public class Main extends Application {
                         laskuLista.sort(Comparator.comparing(Lasku -> Lasku.getVaraus().getID()));
             }
 
-            paivitaLaskuTaulukko();
+            paivitaLaskuTaulukko(laskuTulokset);
         });
 
         ScrollPane laskuScrollaus = new ScrollPane();
@@ -2202,7 +2205,7 @@ public class Main extends Application {
                     );
                     haeKaikkiTiedot();
                     laskuLisaysIkkuna.close();
-                    paivitaLaskuTaulukko();
+                    paivitaLaskuTaulukko(laskuLista);
                 } catch (SQLException ex) {
                     laskuLisaysTeksti.setFill(Color.RED);
                     laskuLisaysTeksti.setText("Laskun lisääminen ei onnistunut. \n" +
@@ -2224,7 +2227,7 @@ public class Main extends Application {
         });
     }
     
-    public void paivitaLaskuTaulukko() {
+    public void paivitaLaskuTaulukko(ArrayList<Lasku> laskuTulokset) {
         laskuTaulukko.setGridLinesVisible(false);
         laskuTaulukko.getColumnConstraints().clear();
         laskuTaulukko.getChildren().clear();
@@ -2252,7 +2255,7 @@ public class Main extends Application {
 
 
         int rivi = 2;
-        for (Lasku obj : laskuLista) {
+        for (Lasku obj : laskuTulokset) {
             Text laskuID = new Text(String.valueOf(obj.getID()));
             Text laskuVaraus = new Text(String.valueOf(obj.getVaraus().getID()));
             Text laskuSumma = new Text(obj.getSumma() + " €");
@@ -2284,7 +2287,7 @@ public class Main extends Application {
                         tietokanta.poistaLasku(obj.getID());
                         haeKaikkiTiedot();
                         poistoIkkuna.getIkkuna().close();
-                        paivitaLaskuTaulukko();
+                        paivitaLaskuTaulukko(laskuLista);
                     } catch (SQLException ex) {
                         ilmoitusPaneeli.lisaaIlmoitus(IlmoitusTyyppi.VAROITUS, "Virhe laskun poistamisessa.");
                     }
@@ -2388,7 +2391,7 @@ public class Main extends Application {
                         );
                         haeKaikkiTiedot();
                         laskuMuokkausIkkuna.close();
-                        paivitaLaskuTaulukko();
+                        paivitaLaskuTaulukko(laskuLista);
                         
                     } catch (SQLException ex) {
                         laskuMuokkausTeksti.setFill(Color.RED);
@@ -2483,7 +2486,15 @@ public class Main extends Application {
             luoLaskuNappula.setGraphic(tiedostoksi);
             laskuTaulukko.add(luoLaskuNappula, 7, rivi);
             luoLaskuNappula.setOnMouseClicked(e -> {
-                // luoLasku();                          //TODO  luoLasku() - metodin luominen
+                if (obj.vieDokumentiksi()) {
+                    try {
+                        tietokanta.paivitaLaskunStatusLahetetyksi(obj.getID(), 1);
+                        haeKaikkiTiedot();
+                        paivitaLaskuTaulukko(laskuLista);
+                    } catch (SQLException ex) {
+                        throw new RuntimeException(ex);
+                    }
+                }
             });
 
             rivi++;

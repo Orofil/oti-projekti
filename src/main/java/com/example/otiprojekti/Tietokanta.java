@@ -356,6 +356,17 @@ public class Tietokanta {
         stm.close();
     }
 
+    public void paivitaLaskunStatusLahetetyksi(int lasku_id ,int status) throws SQLException {
+        stm = con.prepareStatement(
+                "UPDATE lasku " +
+                        "SET status = ? " +
+                        "WHERE lasku_id = ?");
+        stm.setInt(1, status);
+        stm.setInt(2, lasku_id);
+        stm.executeUpdate();
+        stm.close();
+    }
+
     /**
      * Muokkaa mökkiä tietokannassa.
      * @param mokki_id Tyyppiä int. Oltava taulussa mokki.

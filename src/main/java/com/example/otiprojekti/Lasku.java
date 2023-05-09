@@ -1,22 +1,28 @@
 package com.example.otiprojekti;
 
+import java.awt.*;
+import java.io.File;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.math.BigDecimal;
 import java.time.Duration;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Map;
 import java.util.Objects;
+import java.util.concurrent.atomic.AtomicReference;
 
 import com.itextpdf.text.Document;
 import com.itextpdf.text.Paragraph;
 import com.itextpdf.text.pdf.PdfWriter;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
+import javafx.scene.control.CheckBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.GridPane;
-import javafx.scene.text.Text;
 import javafx.stage.Stage;
+import javafx.geometry.Insets;
 
 public class Lasku {
     private final int ID;
@@ -99,9 +105,14 @@ public class Lasku {
 
     @Override
     public String toString() {
-        String str = "LaskuID: " + ID + "\n VarausID: " + varaus.getID() +
-                "\n Laskun summa: " + summa + "\n Laskun alv: " + alv +
-                "\n Laskun tila: " + status;
+        String str =
+                "LaskuID:\t " + ID +
+                "\nVarausID:\t " + varaus.getID() +
+                "\nAsiakas:\t " + getVaraus().getAsiakas().getNimi(true)+
+                "\nAsiakasID:\t " + getVaraus().getAsiakas().getID()+
+                "\n-----------------------------------------------------\n"+
+                "\nMaksettava (EURO) :\t " + summa +
+                "\nAlv (%) :\t " + alv;
         return str;
     }
 
@@ -118,19 +129,29 @@ public class Lasku {
     }
 
 
-    public void vieDokumentiksi() { // TODO
+    public boolean vieDokumentiksi() { // TODO
         Stage laskuIkkuna = new Stage();
         GridPane laskunTiedot = new GridPane();
-        laskunTiedot.setVgap(5);
-        TextField saajanNimi = new TextField();
-        TextField tiliNumero = new TextField();
-        TextField eraPaiva = new TextField();
-        TextField viiteNumero = new TextField();
+        laskunTiedot.setPadding(new Insets(25));
+        laskunTiedot.setVgap(10);
+        laskunTiedot.setHgap(10);
+        TextField saajanNimi = new TextField("Village Newbies Oy");
+        TextField tiliNumero = new TextField("FI12 3456 7891 0111 21");
+
+        LocalDate currentDate = LocalDate.now();
+        LocalDate eraPaivaDate = currentDate.plusDays(14);
+        TextField eraPaiva = new TextField(
+                String.valueOf(eraPaivaDate.format(DateTimeFormatter.ofPattern("dd.MM.yyyy")))
+        );
+        TextField viiteNumero = new TextField("404");
+
+        CheckBox lahetetyksi = new CheckBox("Merkitse laskun status lähetetyksi");
+
         Label saaja = new Label("Saajan nimi");
-        Label tilinro = new Label("Saajan tilinumero");
+        Label tilinro = new Label("Saajan IBAN");
         Label erapv = new Label("Laskun eräpäivä");
         Label viitenro = new Label("Laskun viitenumero");
-        Button syotaTiedot = new Button("Syötä");
+        Nappula syotaTiedot = new Nappula("Luo lasku");
 
         laskunTiedot.add(saaja,0,0);
         laskunTiedot.add(tilinro,0,1);
@@ -140,29 +161,48 @@ public class Lasku {
         laskunTiedot.add(tiliNumero,1,1);
         laskunTiedot.add(eraPaiva,1,2);
         laskunTiedot.add(viiteNumero,1,3);
-        laskunTiedot.add(syotaTiedot,0,4);
+        laskunTiedot.add(lahetetyksi,0,4);
+        laskunTiedot.add(syotaTiedot,0,5);
 
         Scene scene = new Scene(laskunTiedot,400,600);
         laskuIkkuna.setScene(scene);
         laskuIkkuna.setTitle("Syötä laskun tiedot");
         laskuIkkuna.show();
 
+        AtomicReference<Boolean> palautus = new AtomicReference<>(false);
+
         syotaTiedot.setOnAction(event -> {
             Document lasku = new Document();
+            String tiedostonNimi = "Lasku "+String.valueOf(
+                    LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMdd HHmmss")))+".pdf";
             try {
-                PdfWriter.getInstance(lasku, new FileOutputStream("lasku.pdf"));
+                PdfWriter.getInstance(lasku, new FileOutputStream(tiedostonNimi));
                 lasku.open();
                 lasku.add(new Paragraph(toString()));
-                lasku.add(new Paragraph("Saajan nimi : "+saajanNimi));
-                lasku.add(new Paragraph("Saajan tilinumero: "+tiliNumero));
-                lasku.add(new Paragraph("Laskun eräpäivä: "+eraPaiva));
-                lasku.add(new Paragraph("Viitenumero: "+viiteNumero));
+                lasku.add(new Paragraph("\n-----------------------------------------------------\n"));
+                lasku.add(new Paragraph("Saajan nimi:\t "+saajanNimi.getText()));
+                lasku.add(new Paragraph("Saajan IBAN:\t "+tiliNumero.getText()));
+                lasku.add(new Paragraph("Laskun päiväys:\t "+saajanNimi.getText()));
+                lasku.add(new Paragraph("Eräpäivä:\t "+eraPaiva.getText()));
+                lasku.add(new Paragraph("Viitenumero:\t "+viiteNumero.getText()));
                 lasku.close();
             } catch (Exception e) {
                 System.out.println("Laskutietojen tallennuksessa tapahtui virhe.");
             }
+            // Avataan dokumentti oletusohjelmalla
+            try {
+                Desktop.getDesktop().open(new File(tiedostonNimi));
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+            if (lahetetyksi.isSelected()) {
+                palautus.set(true);
+            }
+            laskuIkkuna.close();
         });
+        return palautus.get();
     }
+
     public void maksuMuistutus() {
         Document muistutus = new Document();
         try {
