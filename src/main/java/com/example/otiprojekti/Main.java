@@ -518,6 +518,7 @@ public class Main extends Application {
             TextField mokkiHinta = new TextField();
             Text mokkiKuvausTeksti = new Text("Kuvaus: ");
             TextArea mokkiKuvaus = new TextArea();
+            mokkiKuvaus.setWrapText(true);
             Text mokkiHlomaaraTeksti = new Text("Henkilömäärä: ");
             TextField mokkiHlomaara = new TextField();
             Text mokkiVarusteluTeksti = new Text("Varustelu: ");
@@ -697,6 +698,7 @@ public class Main extends Application {
                 TextField mokinHinta = new TextField(String.valueOf(obj.getHinta()));
                 Text mokkiKuvausTeksti = new Text("Kuvaus: ");
                 TextArea mokkiKuvaus = new TextArea(obj.getKuvaus());
+                mokkiKuvaus.setWrapText(true);
                 Text mokkiHlomaaraTeksti = new Text("Henkilömäärä: ");
                 TextField mokkiHlomaara = new TextField(String.valueOf(obj.getHloMaara()));
                 Text mokkiVarusteluTeksti = new Text("Varustelu: ");
@@ -893,6 +895,7 @@ public class Main extends Application {
             TextField palveluTyyppi = new TextField();
             Text palveluKuvausTeksti = new Text("Kuvaus: ");
             TextArea palveluKuvaus = new TextArea();
+            palveluKuvaus.setWrapText(true);
             Text palveluHintaTeksti = new Text("Hinta(€): ");
             TextField palveluHinta = new TextField();
             Text palveluAlvTeksti = new Text("Alv(%): ");
@@ -1046,6 +1049,7 @@ public class Main extends Application {
                 TextField palveluTyyppi = new TextField(String.valueOf(obj.getTyyppi()));
                 Text palveluKuvausTeksti = new Text("Kuvaus: ");
                 TextArea palveluKuvaus = new TextArea(obj.getKuvaus());
+                palveluKuvaus.setWrapText(true);
                 Text palveluHintaTeksti = new Text("Hinta(€): ");
                 TextField palvelunHinta = new TextField(String.valueOf(obj.getHinta()));
                 Text palveluAlvTeksti = new Text("Alv(%): ");
