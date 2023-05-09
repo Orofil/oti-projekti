@@ -98,6 +98,7 @@ public class Main extends Application {
     ArrayList<Mokki> mokkiTulokset = null;
     ArrayList<Alue> alueTulokset = null;
     ArrayList<Palvelu> palveluTulokset = null;
+    ArrayList<Varaus> varausTulokset = null;
 
     GridPane varausTaulukko = new GridPane();
     GridPane asiakasTaulukko = new GridPane();
@@ -1239,26 +1240,32 @@ public class Main extends Application {
         varausAikaLoppu.setOnAction(tarkistaSyotteet);
 
         varausHakuNappula.setOnAction( e -> {
-            LocalDateTime valittuAikaAlku = LocalDateTime.parse(
-                    varausPvmAlku.getValue() + " " + varausAikaAlku.getText(), dateTimeFormat);
-            LocalDateTime valittuAikaLoppu = LocalDateTime.parse(
-                    varausPvmLoppu.getValue() + " " + varausAikaLoppu.getText(), dateTimeFormat);
 
-            // Suodatus
-            // TODO haku asiakkaan nimellä
-            // TODO jos ei ole mitään valittuna niin kaikki tulokset tulee
-            // TODO ei ole pakko täyttää kaikkia kenttiä hakua varten
-            ArrayList<Varaus> varausTulokset = new ArrayList<>();
-            for (Varaus v : varausLista) {
-                LocalDateTime vAlkuAika = v.getVarausAlkuPvm();
-                if ((vAlkuAika.isAfter(valittuAikaAlku) || vAlkuAika.isEqual(valittuAikaAlku)) &&
-                        (vAlkuAika.isBefore(valittuAikaLoppu) || vAlkuAika.isEqual(valittuAikaLoppu)) &&
-                        v.getMokki().getAlue().equals(alueSuodatus.getValue())) {
-                    varausTulokset.add(v);
+            varausTulokset = varausLista;
+
+            if (varausAikaAlku.getText().equals("") || varausAikaLoppu.getText().equals("")) {
+                if (!varausHakuKentta.getText().equals("")) {
+                    varausTulokset = haeVarausHakusanalla(varausTulokset, varausHakuKentta.getText());
+                }
+            } else {
+
+                LocalDateTime valittuAikaAlku = LocalDateTime.parse(
+                        varausPvmAlku.getValue() + " " + varausAikaAlku.getText(), dateTimeFormat);
+                LocalDateTime valittuAikaLoppu = LocalDateTime.parse(
+                        varausPvmLoppu.getValue() + " " + varausAikaLoppu.getText(), dateTimeFormat);
+
+                for (Varaus v : varausLista) {
+                    LocalDateTime vAlkuAika = v.getVarausAlkuPvm();
+                    if ((vAlkuAika.isAfter(valittuAikaAlku) || vAlkuAika.isEqual(valittuAikaAlku)) &&
+                            (vAlkuAika.isBefore(valittuAikaLoppu) || vAlkuAika.isEqual(valittuAikaLoppu)) &&
+                            v.getMokki().getAlue().equals(alueSuodatus.getValue())) {
+                        varausTulokset.add(v);
+                    }
                 }
             }
 
-
+            
+            // TODO ei ole pakko täyttää kaikkia kenttiä hakua varten
 
             // Lajittelu
             switch (varausLajittelu.getValue()) {
