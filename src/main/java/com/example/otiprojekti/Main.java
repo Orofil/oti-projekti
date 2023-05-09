@@ -2289,7 +2289,7 @@ public class Main extends Application {
                 TextField varausAlkuPvm = new TextField();
                 TextField varausLoppuPvm = new TextField();
                 TextField varattujaPaiviaYhteensa = new TextField();
-                TextField mokkiHinta = new TextField();
+                TextField mokkiHinta = new TextField(); // TODO ei mökin hintaa tai palveluiden hintaa pitäisi pystyä muokkaamaan tässä
                 TextField palvelutHinta = new TextField("0");
                 TextField alv = new TextField("14");
                 TextField status = new TextField();
@@ -2388,7 +2388,8 @@ public class Main extends Application {
                 tarkasteleLaskuPaneeli.setPadding(new Insets(25));
                 tarkasteleLaskuPaneeli.setVgap(15);
                 tarkasteleLaskuPaneeli.setHgap(15);
-                Scene tarkasteleLaskuKehys = new Scene(tarkasteleLaskuPaneeli, 400, 450);
+                ScrollPane tarkasteleLaskuScroll = new ScrollPane(tarkasteleLaskuPaneeli);
+                Scene tarkasteleLaskuKehys = new Scene(tarkasteleLaskuScroll, 400, 450);
                 tarkasteleLaskuIkkuna.setScene(tarkasteleLaskuKehys);
 
                 Text asiakkaanTiedot = new Text("Asiakkaan tiedot");
@@ -2414,7 +2415,6 @@ public class Main extends Application {
                 tarkasteleLaskuPaneeli.add(new Text(String.valueOf(obj.getAlv())),1,10);
 
                 // Varaukseen liittyvät palvelut
-                // TODO scrollpane pitää lisätä kaikelle tälle koska palveluita voi olla monta
                 GridPane laskunVarauksenPalvelut = new GridPane();
                 tarkasteleLaskuPaneeli.add(laskunVarauksenPalvelut, 0, 8);
                 GridPane.setColumnSpan(laskunVarauksenPalvelut, 2);
@@ -2431,6 +2431,7 @@ public class Main extends Application {
                     laskunVarauksenPalvelut.add(new Text(String.valueOf(vp.getValue())), 1, riviVp);
                     riviVp++;
                 }
+                // TODO lisätäänkö euron merkit näihin
                 tarkasteleLaskuPaneeli.add(new Text(String.format("%,.2f", obj.getVarausPalveluSumma())),1,9);
                 tarkasteleLaskuPaneeli.add(new Text(String.valueOf(String.format("%,.2f", obj.getVarausSumma()))),1,11);
 
