@@ -1385,21 +1385,21 @@ public class Main extends Application {
                 try {
                     int asiakasIDInsert;
                     if (uusiAsiakas.isSelected()) {
-                        asiakasLista.add(tietokanta.insertAsiakas(
+                        tietokanta.insertAsiakas(
                                 postinro.getText(),
                                 enimi.getText(),
                                 snimi.getText(),
                                 lahiosoite.getText(),
                                 email.getText(),
-                                puhnro.getText(),
-                                postiLista));
+                                puhnro.getText());
+                        haeKaikkiTiedot();
                         asiakasIDInsert = asiakasLista.get(asiakasLista.size()-1).getID();
                     } else {
                         asiakasIDInsert = Integer.parseInt(asiakasID.getText());
                     }
                     HashMap<Palvelu, Integer> varauksenPalvelut = new HashMap<>(); // TEMP varaukseen liittyviä palveluita varten
                     varauksenPalvelut.put(palveluLista.get(0), 1); // TEMP
-                    varausLista.add(tietokanta.insertVaraus(
+                    tietokanta.insertVaraus(
                             asiakasIDInsert,
                             Integer.parseInt(mokkiID.getText()),
                             varauksenPalvelut, // TODO varauksen palvelut
@@ -1409,7 +1409,8 @@ public class Main extends Application {
                             varausLoppuAika,
                             asiakasLista,
                             mokkiLista,
-                            palveluLista));
+                            palveluLista);
+                    haeKaikkiTiedot();
                     paivitaVarausTaulukko(varausLista);
                     varausLisaysStage.close();
                 } catch (SQLException ex) {
@@ -1560,7 +1561,7 @@ public class Main extends Application {
                                 obj.getID(),
                                 Integer.parseInt(asiakasID.getText()),
                                 Integer.parseInt(mokkiID.getText()),
-                                varauksenPalvelut, // TODO varauksen palvelut
+                                varauksenPalvelut, // TODO varauksen palvelut, näiden poistamisessa ja lisäämisessä voi käyttää insert- ja muokkaaVarauksenPalvelut-metodeita
                                 LocalDateTime.now().format(dateTimeFormat),
                                 null,
                                 varausAlkuAika,
@@ -1824,8 +1825,8 @@ public class Main extends Application {
                         tietokanta.insertPosti(postinro.getText(), postitoimipaikka.getText());
                     }
 
-                    asiakasLista.add(tietokanta.insertAsiakas(postinro.getText(), enimi.getText(), snimi.getText(), lahiosoite.getText(),
-                            email.getText(), puhnro.getText(), postiLista));
+                    tietokanta.insertAsiakas(postinro.getText(), enimi.getText(), snimi.getText(), lahiosoite.getText(),
+                            email.getText(), puhnro.getText());
                     haeKaikkiTiedot();
                     asiakasLisaysIkkuna.close();
                     paivitaAsiakasTaulukko(asiakasLista);

@@ -72,12 +72,9 @@ public class Tietokanta {
      * @param lahiosoite Tyyppiä varchar(40)
      * @param email Tyyppiä varchar(50)
      * @param puhelinnro Tyyppiä varchar(15)
-     * @param postit Lista {@link Posti Posteista}
-     * @return {@link Asiakas}
      */
-    public Asiakas insertAsiakas(String postinro, String etunimi, String sukunimi,
-                                     String lahiosoite, String email, String puhelinnro,
-                                     ArrayList<Posti> postit) throws SQLException {
+    public void insertAsiakas(String postinro, String etunimi, String sukunimi,
+                                     String lahiosoite, String email, String puhelinnro) throws SQLException {
         stm = con.prepareStatement(
                 "INSERT INTO asiakas(postinro,etunimi,sukunimi,lahiosoite,email,puhelinnro)" +
                 "VALUES (?,?,?,?,?,?)");
@@ -89,7 +86,6 @@ public class Tietokanta {
         stm.setString(6, puhelinnro);
         stm.executeUpdate();
         stm.close();
-        return haeAsiakasUusi(postit);
     }
 
     /**
@@ -178,6 +174,22 @@ public class Tietokanta {
         stm.close();
     }
 
+    /**
+     * Syöttää tietokantaan varaukseen liittyvän palvelun.
+     * @param varaus_id Tyyppiä int. OLtava taulussa varaus.
+     * @param palvelu_id Tyyppiä int. Oltava taulussa palvelu.
+     * @param lkm Tyyppiä int
+     */
+    public void insertVarauksenPalvelut(int varaus_id, int palvelu_id, int lkm) throws SQLException {
+        stm = con.prepareStatement(
+                "INSERT INTO varauksen_palvelut(varaus_id,palvelu_id,lkm)" +
+                        "(?,?,?)");
+        stm.setInt(1, varaus_id);
+        stm.setInt(2, palvelu_id);
+        stm.setInt(3, lkm);
+        stm.executeUpdate();
+        stm.close();
+    }
 
     /**
      * Syöttää tietokantaan varauksen ja palauttaa sen oliona.
@@ -190,9 +202,8 @@ public class Tietokanta {
      * @param asiakkaat Lista {@link Asiakas Asiakkaista}
      * @param mokit Lista {@link Mokki Mökeistä}
      * @param palvelut Lista {@link Palvelu Palveluista}
-     * @return {@link Varaus}
      */
-    public Varaus insertVaraus(int asiakas_id, int mokki_id, HashMap<Palvelu, Integer> varauksenPalvelut, String varattu_pvm,
+    public void insertVaraus(int asiakas_id, int mokki_id, HashMap<Palvelu, Integer> varauksenPalvelut, String varattu_pvm,
                                     String vahvistus_pvm, String varattu_alkupvm, String varattu_loppupvm,
                                     ArrayList<Asiakas> asiakkaat, ArrayList<Mokki> mokit, ArrayList<Palvelu> palvelut) throws SQLException {
         stm = con.prepareStatement(
@@ -217,7 +228,6 @@ public class Tietokanta {
             stm.setInt(2, vp.getKey().getID());
             stm.setInt(3, vp.getValue());
         }
-        return uusiVaraus;
     }
 
 
@@ -463,6 +473,23 @@ public class Tietokanta {
     }
 
     /**
+     * Muokkaa varaukseen liittyvää palvelua tietokannassa.
+     * @param varaus_id Tyyppiä int. Oltava taulussa varaus.
+     * @param palvelu_id Tyyppiä int. Oltava taulussa palvelu.
+     * @param lkm Tyyppiä int
+     */
+    public void muokkaaVarauksenPalvelut(int varaus_id, int palvelu_id, int lkm) throws SQLException {
+        stm = con.prepareStatement(
+                "UPDATE varauksen_palvelu " +
+                        "SET lkm = ? " +
+                        "WHERE varaus_id = ? AND " +
+                        "palvelu_id = ?");
+        stm.setInt(1, lkm);
+        stm.setInt(2, varaus_id);
+        stm.setInt(3, palvelu_id);
+    }
+
+    /**
      * Muokkaa varausta tietokannassa.
      * @param varaus_id Tyyppiä int. Oltava taulussa varaus.
      * @param asiakas_id Tyyppiä int. Oltava taulussa asiakas.
@@ -626,7 +653,6 @@ public class Tietokanta {
      * @param varaus_id Tyyppiä int. Oltava taulussa varaus.
      * @param palvelu_id Tyyppiä int. Oltava taulussa palvelu.
      */
-    // TODO tehdäänkö tämä näin vähän oudosti erillään
     public void poistaVarauksenPalvelut(int varaus_id, int palvelu_id) throws SQLException {
         stm = con.prepareStatement(
                 "DELETE FROM varauksen_palvelut WHERE varaus_id = ? AND palvelu_id = ?");
@@ -662,19 +688,6 @@ public class Tietokanta {
         ArrayList<Alue> tulokset = alueLuokaksi(rs);
         stm.close();
         return tulokset;
-    }
-
-    /**
-     * Hakee tietokannasta uusimman asiakkaan.
-     * @return {@link Asiakas}
-     */
-    public Asiakas haeAsiakasUusi(ArrayList<Posti> postit) throws SQLException {
-        stm = con.prepareStatement(
-                "SELECT * FROM asiakas WHERE asiakas_id = (SELECT MAX(asiakas_id) FROM asiakas)");
-        ResultSet rs = stm.executeQuery();
-        ArrayList<Asiakas> tulokset = asiakasLuokaksi(rs, postit);
-        stm.close();
-        return tulokset.get(0);
     }
 
     /**
@@ -744,16 +757,6 @@ public class Tietokanta {
 
     public HashMap<Integer, HashMap<Palvelu, Integer>> haeVarauksenPalvelut(ArrayList<Palvelu> palvelut) throws SQLException {
         stm = con.prepareStatement("SELECT * FROM varauksen_palvelut");
-        ResultSet rs = stm.executeQuery();
-        HashMap<Integer, HashMap<Palvelu, Integer>> tulokset = varauksenPalvelutLuokaksi(rs, palvelut);
-        stm.close();
-        return tulokset;
-    }
-
-    public HashMap<Integer, HashMap<Palvelu, Integer>> haeTietynVarauksenPalvelut(ArrayList<Palvelu> palvelut, int varausID) throws SQLException {
-        stm = con.prepareStatement("SELECT * FROM varauksen_palvelut " +
-                "WHERE varaus_id = ?");
-        stm.setInt(1, varausID);
         ResultSet rs = stm.executeQuery();
         HashMap<Integer, HashMap<Palvelu, Integer>> tulokset = varauksenPalvelutLuokaksi(rs, palvelut);
         stm.close();
