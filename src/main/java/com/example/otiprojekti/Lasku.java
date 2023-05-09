@@ -2,11 +2,15 @@ package com.example.otiprojekti;
 
 import java.io.FileOutputStream;
 import java.math.BigDecimal;
+import java.time.Duration;
+import java.time.LocalDateTime;
+import java.util.Map;
 import java.util.Objects;
 
 import com.itextpdf.text.Document;
 import com.itextpdf.text.Paragraph;
 import com.itextpdf.text.pdf.PdfWriter;
+import javafx.scene.text.Text;
 
 public class Lasku {
     private final int ID;
@@ -67,6 +71,25 @@ public class Lasku {
 
     public void setStatus(LaskuStatus status) {
         this.status = status;
+    }
+
+    public BigDecimal getVarausSumma() {
+        int daysBetween = (int) Duration.between(
+                getVaraus().getVarausAlkuPvm(), getVaraus().getVarausLoppuPvm()).toDays();
+
+        BigDecimal varaustenHinta = getVarausPalveluSumma();
+
+        return getVaraus().getMokki().getHinta().multiply(BigDecimal.valueOf(daysBetween)).
+                add(varaustenHinta.multiply(BigDecimal.valueOf((getAlv() / 100d) + 1))); // TODO onko tämä oikein
+    }
+
+    public BigDecimal getVarausPalveluSumma() {
+        BigDecimal varaustenHinta = BigDecimal.ZERO;
+        for (Map.Entry<Palvelu, Integer> vp : getVaraus().getPalvelut().entrySet()) {
+            varaustenHinta = varaustenHinta.add(vp.getKey().getHinta().multiply(
+                    BigDecimal.valueOf(((vp.getKey().getAlv() / 100d) + 1)))); // TODO onko tämä oikein
+        }
+        return varaustenHinta;
     }
 
     @Override

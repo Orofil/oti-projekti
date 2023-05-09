@@ -2155,7 +2155,7 @@ public class Main extends Application {
                             Integer.parseInt(varausID.getText()),
                             BigDecimal.valueOf(summa),
                             Integer.parseInt(alv.getText()),
-                            LaskuStatus.EI_LAHETETTY.id // TODO onko laskun status aina tämä sama kun se tehdään? JOO
+                            LaskuStatus.EI_LAHETETTY.id
                     );
                     haeKaikkiTiedot();
                     laskuLisaysIkkuna.close();
@@ -2426,22 +2426,13 @@ public class Main extends Application {
                 laskunVarauksenPalvelut.add(palveluNimi, 0, 0);
                 laskunVarauksenPalvelut.add(palveluMaara, 1, 0);
                 int riviVp = 1;
-                BigDecimal varaustenHinta = BigDecimal.ZERO;
                 for (Map.Entry<Palvelu, Integer> vp : obj.getVaraus().getPalvelut().entrySet()) {
                     laskunVarauksenPalvelut.add(new Text(vp.getKey().getKuvaus()), 0, riviVp);
                     laskunVarauksenPalvelut.add(new Text(String.valueOf(vp.getValue())), 1, riviVp);
-                    varaustenHinta = varaustenHinta.add(vp.getKey().getHinta());
                     riviVp++;
                 }
-                // Palveluiden yhteishinta
-                tarkasteleLaskuPaneeli.add(new Text(varaustenHinta.toString()),1,9);
-
-                double summa =
-                        daysBetween * Double.parseDouble(String.valueOf(obj.getVaraus().getMokki().getHinta())) +
-                                varaustenHinta.doubleValue() * // TODO onko tämä oikein
-                                (((double) obj.getAlv() / 100)+1);
-
-                tarkasteleLaskuPaneeli.add(new Text(String.valueOf(String.format("%,.2f", summa))),1,11);
+                tarkasteleLaskuPaneeli.add(new Text(String.format("%,.2f", obj.getVarausPalveluSumma())),1,9);
+                tarkasteleLaskuPaneeli.add(new Text(String.valueOf(String.format("%,.2f", obj.getVarausSumma()))),1,11);
 
             });
 
