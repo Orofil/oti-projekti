@@ -3,8 +3,9 @@ module com.example.otiprojekti {
     requires javafx.fxml;
     requires java.sql;
     requires mysql.connector.j;
-    requires itextpdf;
+    //requires itextpdf;
     requires java.desktop;
+    requires itext;
 
     opens com.example.otiprojekti to javafx.fxml;
     exports com.example.otiprojekti;
