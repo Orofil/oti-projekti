@@ -111,6 +111,7 @@ public class Main extends Application {
     Nappula alueenLisaysNappula = new Nappula(LISAYS_NAPPULA_LEVEYS, LISAYS_NAPPULA_KORKEUS);
     Nappula mokkienLisaysNappula = new Nappula(LISAYS_NAPPULA_LEVEYS, LISAYS_NAPPULA_KORKEUS);
     Nappula palvelunLisaysNappula = new Nappula(LISAYS_NAPPULA_LEVEYS, LISAYS_NAPPULA_KORKEUS);
+    DatePicker varattuPaivana = new DatePicker();
 
     @Override
     public void start(Stage ikkuna) {
@@ -445,18 +446,8 @@ public class Main extends Application {
         mokkiHaku.add(mokkiLajittelu, 2, 1);
 
         mokkiHaku.add(new Text("Onko varattu päivänä"), 3, 0); // TODO paremmin tämä
-        DatePicker varattuPaivana = new DatePicker();
+
         mokkiHaku.add(varattuPaivana, 3, 1);
-        varattuPaivana.setOnAction(e -> {
-            LocalDate valittuPaiva = varattuPaivana.getValue();
-            for (Varaus v : varausLista) {
-                if (v.getVarausAlkuPvm().isBefore(valittuPaiva.plusDays(1).atStartOfDay()) &&
-                        v.getVarausLoppuPvm().isAfter(valittuPaiva.atStartOfDay())) {
-                    // TODO aseta jotenkin mökkitaulukkoon esim. Paneja soluihin ja sitten väritetään ne jotka on varattu
-                    v.getMokki(); // Tällä tieto mökistä, sitten vaan muokataan taulukkoa jotenkin hienosti
-                }
-            }
-        });
 
         mokkiHakuNappula.setOnAction( e -> {
             // Suodatus
@@ -628,6 +619,18 @@ public class Main extends Application {
             mokkiTaulukko.add(mokkiAlue, 2, rivi);
             mokkiTaulukko.add(mokkiHinta, 3, rivi);
             mokkiTaulukko.add(mokkiHloMaara, 4, rivi);
+
+            varattuPaivana.setOnAction(e -> {
+                LocalDate valittuPaiva = varattuPaivana.getValue();
+
+                for (Varaus v : varausLista) {
+                    if (v.getMokki().varattuPaivana(v, valittuPaiva) && v.getMokki().equals(obj)) {
+                        mokkiNimi.setFill(Color.RED);
+                    } else {
+                        mokkiNimi.setFill(Color.BLACK);
+                    }
+                }
+            });
 
             Nappula poistoNappula = new Nappula(150, 30);
             ImageView roskis = new ImageView(imageKuvasta("roskis.png"));

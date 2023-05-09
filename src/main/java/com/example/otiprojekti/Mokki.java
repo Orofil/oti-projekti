@@ -1,6 +1,7 @@
 package com.example.otiprojekti;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.util.Objects;
 
 public class Mokki {
@@ -117,6 +118,7 @@ public class Mokki {
         this.varustelu = varustelu;
     }
 
+
     @Override
     public String toString() {
         String str= "Mökin ID on: " + ID + "\nAlueen ID: "+ alue + "\nPostinro: "+ postiNro+"\nMökin nimi: "+
@@ -141,4 +143,10 @@ public class Mokki {
                 Objects.equals(kuvaus, mokki.kuvaus) &&
                 Objects.equals(varustelu, mokki.varustelu);
     }
+
+    public boolean varattuPaivana(Varaus v ,LocalDate valittuPaiva) {
+        return v.getVarausAlkuPvm().isBefore(valittuPaiva.plusDays(1).atStartOfDay()) &&
+                v.getVarausLoppuPvm().isAfter(valittuPaiva.atStartOfDay());
+    }
+
 }
