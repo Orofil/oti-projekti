@@ -1,6 +1,7 @@
 package com.example.otiprojekti;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.util.Objects;
 
 public class Mokki {
@@ -116,6 +117,7 @@ public class Mokki {
     public void setVarustelu(String varustelu) {
         this.varustelu = varustelu;
     }
+
 
     @Override
     public String toString() {

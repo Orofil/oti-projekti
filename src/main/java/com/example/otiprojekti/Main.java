@@ -29,7 +29,6 @@ import javafx.stage.Stage;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 
-import javax.swing.*;
 import java.awt.*;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -413,7 +412,7 @@ public class Main extends Application {
         mokkinappula.setOnAction(e -> {
             paneeli.setCenter(mokkipaneeli);
             isoOtsikkoTeksti.setText("MÖKIT");
-            paivitaMokkiTaulukko();
+            paivitaMokkiTaulukko(null, null);
         });
 
         GridPane mokkiHaku = new GridPane();
@@ -444,19 +443,13 @@ public class Main extends Application {
         mokkiLajittelu.setValue("Tunnuksen mukaan"); // Oletuksena valittu vaihtoehto
         mokkiHaku.add(mokkiLajittelu, 2, 1);
 
-        mokkiHaku.add(new Text("Onko varattu päivänä"), 3, 0); // TODO paremmin tämä
-        DatePicker varattuPaivana = new DatePicker();
-        mokkiHaku.add(varattuPaivana, 3, 1);
-        varattuPaivana.setOnAction(e -> {
-            LocalDate valittuPaiva = varattuPaivana.getValue();
-            for (Varaus v : varausLista) {
-                if (v.getVarausAlkuPvm().isBefore(valittuPaiva.plusDays(1).atStartOfDay()) &&
-                        v.getVarausLoppuPvm().isAfter(valittuPaiva.atStartOfDay())) {
-                    // TODO aseta jotenkin mökkitaulukkoon esim. Paneja soluihin ja sitten väritetään ne jotka on varattu
-                    v.getMokki(); // Tällä tieto mökistä, sitten vaan muokataan taulukkoa jotenkin hienosti
-                }
-            }
-        });
+        mokkiHaku.add(new Text("Onko varattu päivinä"), 3, 0);
+        DatePicker varausPaivaAlku = new DatePicker();
+        DatePicker varausPaivaLoppu = new DatePicker();
+        Label varausPaivaAlkuLabel = new Label("Alku", varausPaivaAlku);
+        Label varausPaivaLoppuLabel = new Label("Loppu", varausPaivaLoppu);
+        mokkiHaku.add(varausPaivaAlkuLabel, 3, 1);
+        mokkiHaku.add(varausPaivaLoppuLabel, 3, 2);
 
         mokkiHakuNappula.setOnAction( e -> {
             // Suodatus
@@ -478,7 +471,11 @@ public class Main extends Application {
                         mokkiLista.sort(Comparator.comparing(Mokki -> Mokki.getAlue().getID())); // TODO onko alueen ID:n vai nimen mukaan
             }
 
-            paivitaAlueTaulukko();
+            // Valittu päivämäärä
+            LocalDate alkuPvm = varausPaivaAlku.getValue();
+            LocalDate loppuPvm = varausPaivaLoppu.getValue();
+
+            paivitaMokkiTaulukko(alkuPvm, loppuPvm);
         });
 
         ScrollPane mokkiScrollaus = new ScrollPane();
@@ -490,6 +487,7 @@ public class Main extends Application {
         mokkienLisays.setFitWidth(23);
         mokkienLisays.setFitHeight(22);
         mokkienLisaysNappula.setGraphic(mokkienLisays);
+
         // Ikkuna mökkien lisäämiseen
         mokkienLisaysNappula.setOnAction( e -> {
             Stage mokkiLisaysIkkuna = new Stage();
@@ -564,7 +562,7 @@ public class Main extends Application {
                             );
                     mokkiLisaysIkkuna.close();
                     haeKaikkiTiedot();
-                    paivitaMokkiTaulukko();
+                    paivitaMokkiTaulukko(null, null);
                 } catch (SQLException ex) {
                     mokkiLisaysTeksti.setText("Mökin lisääminen ei onnistunut. \n " +
                             "Tarkista syötteet ja yritä uudelleen.");
@@ -579,7 +577,7 @@ public class Main extends Application {
         });
     }
 
-    public void paivitaMokkiTaulukko() {
+    public void paivitaMokkiTaulukko(LocalDate paivaAlku, LocalDate paivaLoppu) {
 
         mokkiTaulukko.setGridLinesVisible(false);
         mokkiTaulukko.getColumnConstraints().clear();
@@ -629,6 +627,15 @@ public class Main extends Application {
             mokkiTaulukko.add(mokkiHinta, 3, rivi);
             mokkiTaulukko.add(mokkiHloMaara, 4, rivi);
 
+            // Onko varattu valitulla välillä
+            if (!(paivaAlku == null || paivaLoppu == null)) {
+                for (Varaus v : varausLista) {
+                    if (v.varattuValilla(obj, paivaAlku, paivaLoppu)) {
+                        mokkiNimi.setFill(Color.RED);
+                    }
+                }
+            }
+
             Nappula poistoNappula = new Nappula(150, 30);
             ImageView roskis = new ImageView(imageKuvasta("roskis.png"));
             roskis.setFitWidth(22);
@@ -645,7 +652,7 @@ public class Main extends Application {
                         tietokanta.poistaMokki(obj.getID());
                         haeKaikkiTiedot();
                         poistaMokkiIkkuna.getIkkuna().close();
-                        paivitaMokkiTaulukko();
+                        paivitaMokkiTaulukko(paivaAlku, paivaLoppu);
                     } catch (SQLException ex) {
                         ilmoitusPaneeli.lisaaIlmoitus(IlmoitusTyyppi.VAROITUS, "Virhe mökin poistamisessa.");
                         throw new RuntimeException(ex); // TEMP
@@ -659,6 +666,7 @@ public class Main extends Application {
             muokkaus.setFitHeight(22);
             muokkausNappula.setGraphic(muokkaus);
             mokkiTaulukko.add(muokkausNappula, 6, rivi);
+
             // Ikkuna mökin muokkaamiseen
             muokkausNappula.setOnMouseClicked(e -> {
                 Stage mokkiMuokkausIkkuna = new Stage();
@@ -734,7 +742,7 @@ public class Main extends Application {
                         );
                         mokkiMuokkausIkkuna.close();
                         haeKaikkiTiedot();
-                        paivitaMokkiTaulukko();
+                        paivitaMokkiTaulukko(paivaAlku, paivaLoppu);
                     } catch (SQLException ex) {
 
                         throw new RuntimeException(ex); // TEMP
@@ -757,6 +765,7 @@ public class Main extends Application {
             tarkastelu.setFitHeight(22);
             tarkasteleNappula.setGraphic(tarkastelu);
             mokkiTaulukko.add(tarkasteleNappula, 7, rivi);
+
             // Ikkuna mökin tarkasteluun
             tarkasteleNappula.setOnMouseClicked(e -> {
                 Stage tarkasteleMokkiIkkuna = new Stage();
@@ -918,7 +927,6 @@ public class Main extends Application {
                     haeKaikkiTiedot();
                     paivitaPalveluTaulukko();
                 } catch (SQLException ex) {
-                    //throw new RuntimeException(ex);
                     palveluLisaysTeksti.setText("Palvelun lisääminen ei onnistunut. \n " +
                             "Tarkista syötteet ja yritä uudelleen.");
                     palveluLisaysTeksti.setFill(Color.RED);
@@ -1073,7 +1081,6 @@ public class Main extends Application {
                         haeKaikkiTiedot();
                         paivitaPalveluTaulukko();
                     } catch (SQLException ex) {
-                        //throw new RuntimeException(ex);
                         palveluMuokkausTeksti.setText("Muutosten tallentaminen ei onnistunut. \n " +
                                 "Tarkista syötteet ja yritä uudelleen.");
                         palveluMuokkausTeksti.setFill(Color.RED);
@@ -2066,7 +2073,7 @@ public class Main extends Application {
                 case "Tunnuksen mukaan" ->
                         laskuLista.sort(Comparator.comparing(Lasku::getID));
                 case "Uusin > Vanhin" ->
-                        laskuLista.sort(Comparator.comparing(Lasku -> Lasku.getVaraus().getVahvistusPvm())); // TODO tehdäänkö vahvistuspvm:n mukaan
+                        laskuLista.sort(Comparator.comparing(Lasku -> Lasku.getVaraus().getVahvistusPvm()));
                 case "Vanhin > Uusin" ->
                         laskuLista.sort(Comparator.comparing(Lasku -> Lasku.getVaraus().getVahvistusPvm())); // TODO tämä ei jostain syystä toimi jos siihen laittaa reversed perään
                 case "Varaustunnuksen mukaan" ->
@@ -2166,13 +2173,12 @@ public class Main extends Application {
                             Integer.parseInt(varausID.getText()),
                             BigDecimal.valueOf(summa),
                             Integer.parseInt(alv.getText()),
-                            LaskuStatus.EI_LAHETETTY.id // TODO onko laskun status aina tämä sama kun se tehdään? JOO
+                            LaskuStatus.EI_LAHETETTY.id
                     );
                     haeKaikkiTiedot();
                     laskuLisaysIkkuna.close();
                     paivitaLaskuTaulukko();
                 } catch (SQLException ex) {
-                    //throw new RuntimeException(ex);
                     laskuLisaysTeksti.setFill(Color.RED);
                     laskuLisaysTeksti.setText("Laskun lisääminen ei onnistunut. \n" +
                             "Tarkista syötteet ja yritä uudelleen.");
@@ -2300,7 +2306,7 @@ public class Main extends Application {
                 TextField varausAlkuPvm = new TextField();
                 TextField varausLoppuPvm = new TextField();
                 TextField varattujaPaiviaYhteensa = new TextField();
-                TextField mokkiHinta = new TextField();
+                TextField mokkiHinta = new TextField(); // TODO ei mökin hintaa tai palveluiden hintaa pitäisi pystyä muokkaamaan tässä
                 TextField palvelutHinta = new TextField("0");
                 TextField alv = new TextField("14");
                 TextField status = new TextField();
@@ -2399,7 +2405,8 @@ public class Main extends Application {
                 tarkasteleLaskuPaneeli.setPadding(new Insets(25));
                 tarkasteleLaskuPaneeli.setVgap(15);
                 tarkasteleLaskuPaneeli.setHgap(15);
-                Scene tarkasteleLaskuKehys = new Scene(tarkasteleLaskuPaneeli, 400, 450);
+                ScrollPane tarkasteleLaskuScroll = new ScrollPane(tarkasteleLaskuPaneeli);
+                Scene tarkasteleLaskuKehys = new Scene(tarkasteleLaskuScroll, 400, 450);
                 tarkasteleLaskuIkkuna.setScene(tarkasteleLaskuKehys);
 
                 Text asiakkaanTiedot = new Text("Asiakkaan tiedot");
@@ -2425,7 +2432,6 @@ public class Main extends Application {
                 tarkasteleLaskuPaneeli.add(new Text(String.valueOf(obj.getAlv())),1,10);
 
                 // Varaukseen liittyvät palvelut
-                // TODO scrollpane pitää lisätä kaikelle tälle koska palveluita voi olla monta
                 GridPane laskunVarauksenPalvelut = new GridPane();
                 tarkasteleLaskuPaneeli.add(laskunVarauksenPalvelut, 0, 8);
                 GridPane.setColumnSpan(laskunVarauksenPalvelut, 2);
@@ -2437,22 +2443,14 @@ public class Main extends Application {
                 laskunVarauksenPalvelut.add(palveluNimi, 0, 0);
                 laskunVarauksenPalvelut.add(palveluMaara, 1, 0);
                 int riviVp = 1;
-                BigDecimal varaustenHinta = BigDecimal.ZERO;
                 for (Map.Entry<Palvelu, Integer> vp : obj.getVaraus().getPalvelut().entrySet()) {
                     laskunVarauksenPalvelut.add(new Text(vp.getKey().getKuvaus()), 0, riviVp);
                     laskunVarauksenPalvelut.add(new Text(String.valueOf(vp.getValue())), 1, riviVp);
-                    varaustenHinta = varaustenHinta.add(vp.getKey().getHinta());
                     riviVp++;
                 }
-                // Palveluiden yhteishinta
-                tarkasteleLaskuPaneeli.add(new Text(varaustenHinta.toString()),1,9);
-
-                double summa =
-                        daysBetween * Double.parseDouble(String.valueOf(obj.getVaraus().getMokki().getHinta())) +
-                                varaustenHinta.doubleValue() * // TODO onko tämä oikein
-                                (((double) obj.getAlv() / 100)+1);
-
-                tarkasteleLaskuPaneeli.add(new Text(String.valueOf(String.format("%,.2f", summa))),1,11);
+                // TODO lisätäänkö euron merkit näihin
+                tarkasteleLaskuPaneeli.add(new Text(String.format("%,.2f", obj.getVarausPalveluSumma())),1,9);
+                tarkasteleLaskuPaneeli.add(new Text(String.valueOf(String.format("%,.2f", obj.getVarausSumma()))),1,11);
 
             });
 
