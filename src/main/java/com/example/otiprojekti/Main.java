@@ -97,6 +97,7 @@ public class Main extends Application {
     ArrayList<Lasku> laskuLista = new ArrayList<>();
     ArrayList<Mokki> mokkiTulokset = null;
     ArrayList<Alue> alueTulokset = null;
+    ArrayList<Palvelu> palveluTulokset = null;
 
     GridPane varausTaulukko = new GridPane();
     GridPane asiakasTaulukko = new GridPane();
@@ -820,7 +821,7 @@ public class Main extends Application {
         palvelunappula.setOnAction(e -> {
             paneeli.setCenter(palvelupaneeli);
             isoOtsikkoTeksti.setText("PALVELUT");
-            paivitaPalveluTaulukko();
+            paivitaPalveluTaulukko(palveluLista);
         });
 
         GridPane palveluHaku = new GridPane();
@@ -853,6 +854,11 @@ public class Main extends Application {
         palveluHakuNappula.setOnAction( e -> {
             // Suodatus
             // TODO
+            if (palveluHakuKentta.getText().equals("")) {
+                palveluTulokset = palveluLista;
+            } else {
+                palveluTulokset = haePalveluHakusanalla(palveluLista, palveluHakuKentta.getText());
+            }
 
             // Lajittelu
             switch (palveluLajittelu.getValue()) {
@@ -864,7 +870,7 @@ public class Main extends Application {
                         palveluLista.sort(Comparator.comparing(Palvelu -> Palvelu.getAlue().getID()));
             }
 
-            paivitaPalveluTaulukko();
+            paivitaPalveluTaulukko(palveluTulokset);
         });
 
         ScrollPane palveluScrollaus = new ScrollPane();
@@ -934,7 +940,7 @@ public class Main extends Application {
                     );
                     palveluLisaysIkkuna.close();
                     haeKaikkiTiedot();
-                    paivitaPalveluTaulukko();
+                    paivitaPalveluTaulukko(palveluLista);
                 } catch (SQLException ex) {
                     palveluLisaysTeksti.setText("Palvelun lisääminen ei onnistunut. \n " +
                             "Tarkista syötteet ja yritä uudelleen.");
@@ -950,7 +956,7 @@ public class Main extends Application {
         });
     }
 
-    public void paivitaPalveluTaulukko() {
+    public void paivitaPalveluTaulukko(ArrayList<Palvelu> palveluTulokset) {
 
         palveluTaulukko.setGridLinesVisible(false);
         palveluTaulukko.getColumnConstraints().clear();
@@ -979,7 +985,7 @@ public class Main extends Application {
 
 
         int rivi = 2;
-        for (Palvelu obj : palveluLista) {
+        for (Palvelu obj : palveluTulokset) {
             Text palveluID = new Text(String.valueOf(obj.getID()));
             Text palveluNimi = new Text(String.valueOf(obj.getNimi()));
             Text palveluAlue = new Text(String.valueOf(obj.getAlue().getNimi()));
@@ -1014,7 +1020,7 @@ public class Main extends Application {
                         tietokanta.poistaPalvelu(obj.getID());
                         haeKaikkiTiedot();
                         poistaPalveluIkkuna.getIkkuna().close();
-                        paivitaPalveluTaulukko();
+                        paivitaPalveluTaulukko(palveluLista);
                     } catch (SQLException ex) {
                         ilmoitusPaneeli.lisaaIlmoitus(IlmoitusTyyppi.VAROITUS, "Virhe palvelun poistamisessa");
                     }
@@ -1088,7 +1094,7 @@ public class Main extends Application {
                         );
                         palveluMuokkausIkkuna.close();
                         haeKaikkiTiedot();
-                        paivitaPalveluTaulukko();
+                        paivitaPalveluTaulukko(palveluLista);
                     } catch (SQLException ex) {
                         palveluMuokkausTeksti.setText("Muutosten tallentaminen ei onnistunut. \n " +
                                 "Tarkista syötteet ja yritä uudelleen.");
