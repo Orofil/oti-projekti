@@ -1671,7 +1671,7 @@ public class Main extends Application {
 
                 // Lisää taulukon otsikkorivi
 
-                varausTaulukko.addCell(new PdfPCell(new Paragraph("Varaus ID")));
+                varausTaulukko.addCell(new PdfPCell(new Paragraph("Tunnus")));
                 varausTaulukko.addCell(new PdfPCell(new Paragraph("Asiakkaan nimi")));
                 varausTaulukko.addCell(new PdfPCell(new Paragraph("Mökin nimi")));
                 varausTaulukko.addCell(new PdfPCell(new Paragraph("Varauksen alku")));
@@ -1681,19 +1681,15 @@ public class Main extends Application {
                 //varausTaulukko.addCell(new PdfPCell(new Paragraph("Varauksen palvelujen lukumäärä")));
 
 
-
-
-
                 // Lisää ArrayListin tiedot taulukkoon
                 for (Varaus v : varausLista) { //Tämä ei toimi vielä
-
                     varausTaulukko.addCell(new PdfPCell(new Paragraph(String.valueOf(v.getID()))));
                     varausTaulukko.addCell(new PdfPCell(new Paragraph(String.valueOf(v.getAsiakas().getNimi(false)))));
                     varausTaulukko.addCell(new PdfPCell(new Paragraph(String.valueOf(v.getMokki().getNimi()))));
-                    varausTaulukko.addCell(new PdfPCell(new Paragraph(String.valueOf(v.getVarausAlkuPvm()))));
-                    varausTaulukko.addCell(new PdfPCell(new Paragraph(String.valueOf(v.getVarausLoppuPvm()))));
+                    varausTaulukko.addCell(new PdfPCell(new Paragraph(v.getVarausAlkuPvm().format(dateTimeFormat))));
+                    varausTaulukko.addCell(new PdfPCell(new Paragraph(v.getVarausLoppuPvm().format(dateTimeFormat))));
                     varausTaulukko.addCell(new PdfPCell(new Paragraph(String.valueOf(v.getMokki().getAlue()))));
-                    //varausTaulukko.addCell(new PdfPCell(new Paragraph(String.valueOf(v.getPalvelut().get()))));
+                    //varausTaulukko.addCell(new PdfPCell(new Paragraph(String.valueOf(v.getPalvelut().get())))); // TODO palvelut
 
                 }
 
