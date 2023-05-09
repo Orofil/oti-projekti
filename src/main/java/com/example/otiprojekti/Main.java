@@ -472,10 +472,8 @@ public class Main extends Application {
             }
 
             // Valittu päivämäärä
-//            try {
-                LocalDate alkuPvm = varausPaivaAlku.getValue();
-                LocalDate loppuPvm = varausPaivaLoppu.getValue();
-//            } catch ()
+            LocalDate alkuPvm = varausPaivaAlku.getValue();
+            LocalDate loppuPvm = varausPaivaLoppu.getValue();
 
             paivitaMokkiTaulukko(alkuPvm, loppuPvm);
         });
@@ -767,6 +765,7 @@ public class Main extends Application {
             tarkastelu.setFitHeight(22);
             tarkasteleNappula.setGraphic(tarkastelu);
             mokkiTaulukko.add(tarkasteleNappula, 7, rivi);
+
             // Ikkuna mökin tarkasteluun
             tarkasteleNappula.setOnMouseClicked(e -> {
                 Stage tarkasteleMokkiIkkuna = new Stage();
