@@ -2,6 +2,7 @@ package com.example.otiprojekti;
 
 import javafx.scene.image.Image;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.function.Predicate;
 
@@ -107,4 +108,90 @@ public class Utils {
     public static <T> T findByProperty(Collection<T> col, Predicate<T> filter) {
         return col.stream().filter(filter).findFirst().orElse(null);
     }
+
+
+    public static ArrayList<Alue> haeAlueHakusanalla(ArrayList<Alue> alueLista, String hakusana) {
+        ArrayList<Alue> tulokset = new ArrayList<>();
+        for (Alue obj : alueLista) {
+            if (obj.getNimi().contains(hakusana)) {
+                tulokset.add(obj);
+            }
+        }
+        return tulokset;
+    }
+
+    public static ArrayList<Mokki> haeMokkiHakusanalla(ArrayList<Mokki> mokkiLista, String hakusana) {
+        ArrayList<Mokki> tulokset = new ArrayList<>();
+        for (Mokki obj : mokkiLista) {
+            if (obj.getNimi().contains(hakusana)) {
+                tulokset.add(obj);
+            }
+            else if (obj.getAlue().getNimi().contains(hakusana)) {
+                tulokset.add(obj);
+            }
+            else if (obj.getVarustelu().contains(hakusana)) {
+                tulokset.add(obj);
+            }
+        }
+        return tulokset;
+    }
+
+    public static ArrayList<Palvelu> haePalveluHakusanalla(ArrayList<Palvelu> palveluLista, String hakusana) {
+        ArrayList<Palvelu> tulokset = new ArrayList<>();
+        for (Palvelu obj : palveluLista) {
+            if (obj.getNimi().contains(hakusana)) {
+                tulokset.add(obj);
+            }
+            else if (obj.getAlue().getNimi().contains(hakusana)) {
+                tulokset.add(obj);
+            }
+            else if (obj.getKuvaus().contains(hakusana)) {
+                tulokset.add(obj);
+            }
+        }
+        return tulokset;
+    }
+
+    public static ArrayList<Varaus> haeVarausHakusanalla(ArrayList<Varaus> varausLista, String hakusana) {
+        ArrayList<Varaus> tulokset = new ArrayList<>();
+        for (Varaus obj : varausLista) {
+            if (obj.getAsiakas().getNimi(false).contains(hakusana)) {
+                tulokset.add(obj);
+            }
+            else if (obj.getMokki().getNimi().contains(hakusana)) {
+                tulokset.add(obj);
+            }
+        }
+        return tulokset;
+    }
+
+    public static ArrayList<Asiakas> haeAsiakasHakusanalla(ArrayList<Asiakas> asiakasLista, String hakusana) {
+        ArrayList<Asiakas> tulokset = new ArrayList<>();
+        for (Asiakas obj : asiakasLista) {
+            if (obj.getNimi(false).contains(hakusana)) {
+                tulokset.add(obj);
+            }
+            else if (obj.getEmail().contains(hakusana)) {
+                tulokset.add(obj);
+            }
+            else if (obj.getLahiosoite().contains(hakusana)) {
+                tulokset.add(obj);
+            }
+            else if (obj.getPuhelinNro().contains(hakusana)) {
+                tulokset.add(obj);
+            }
+        }
+        return tulokset;
+    }
+
+    public static ArrayList<Lasku> haeLaskuHakusanalla(ArrayList<Lasku> laskuLista, String hakusana) {
+        ArrayList<Lasku> tulokset = new ArrayList<>();
+        for (Lasku obj : laskuLista) {
+            if (obj.getVaraus().getAsiakas().getNimi(false).contains(hakusana)) {
+                tulokset.add(obj);
+            }
+        }
+        return tulokset;
+    }
+    
 }

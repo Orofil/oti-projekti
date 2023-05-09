@@ -94,6 +94,8 @@ public class Main extends Application {
     ArrayList<Palvelu> palveluLista = new ArrayList<>();
     ArrayList<Varaus> varausLista = new ArrayList<>();
     ArrayList<Lasku> laskuLista = new ArrayList<>();
+    ArrayList<Mokki> mokkiTulokset = null;
+    ArrayList<Alue> alueTulokset = null;
 
     GridPane varausTaulukko = new GridPane();
     GridPane asiakasTaulukko = new GridPane();
@@ -197,7 +199,7 @@ public class Main extends Application {
         aluenappula.setOnAction(e -> {
             paneeli.setCenter(aluepaneeli);
             isoOtsikkoTeksti.setText("ALUEET");
-            paivitaAlueTaulukko();
+            paivitaAlueTaulukko(alueLista);
         });
 
         GridPane alueHaku = new GridPane();
@@ -230,15 +232,22 @@ public class Main extends Application {
             // Suodatus
             // TODO
 
+            if (alueHakuKentta.getText().equals("")) {
+                alueTulokset = alueLista;
+            }
+            else {
+                alueTulokset = haeAlueHakusanalla(alueLista, alueHakuKentta.getText());
+            }
+
             // Lajittelu
             switch (alueLajittelu.getValue()) {
                 case "Tunnuksen mukaan" ->
-                        alueLista.sort(Comparator.comparing(Alue::getID));
+                        alueTulokset.sort(Comparator.comparing(Alue::getID));
                 case "A > Ö" ->
-                        alueLista.sort(Comparator.comparing(Alue::getNimi));
+                        alueTulokset.sort(Comparator.comparing(Alue::getNimi));
             }
 
-            paivitaAlueTaulukko();
+            paivitaAlueTaulukko(alueTulokset);
         });
 
         ScrollPane alueScrollaus = new ScrollPane();
@@ -282,7 +291,7 @@ public class Main extends Application {
                     tietokanta.insertAlue(alueNimi.getText());
                     alueLisaysIkkuna.close();
                     haeKaikkiTiedot();
-                    paivitaAlueTaulukko();
+                    paivitaAlueTaulukko(alueLista);
                 } catch (SQLException ex) {
                     alueLisaysTeksti.setText("Alueen lisääminen ei onnistunut. \n Yritä uudelleen.");
                     alueLisaysTeksti.setFill(Color.RED);
@@ -296,7 +305,7 @@ public class Main extends Application {
         });
     }
 
-    public void paivitaAlueTaulukko() {
+    public void paivitaAlueTaulukko(ArrayList<Alue> alueTulokset) {
 
         alueTaulukko.setGridLinesVisible(false);
         alueTaulukko.getColumnConstraints().clear();
@@ -316,9 +325,8 @@ public class Main extends Application {
         alueTaulukko.add(aluetunnusOtsikko, 0, 1);
         alueTaulukko.add(alueennimiOtsikko, 1, 1);
 
-
         int rivi = 2;
-        for (Alue obj : alueLista) {
+        for (Alue obj : alueTulokset) {
             Text alueID = new Text(String.valueOf(obj.getID()));
             alueID.setFont(fonttiIsompi);
             Text alueNimi = new Text(String.valueOf(obj.getNimi()));
@@ -346,7 +354,7 @@ public class Main extends Application {
                         tietokanta.poistaAlue(obj.getID());
                         haeKaikkiTiedot();
                         poistaAlueIkkuna.getIkkuna().close();
-                        paivitaAlueTaulukko();
+                        paivitaAlueTaulukko(alueLista);
                     } catch (SQLException ex) {
                         ilmoitusPaneeli.lisaaIlmoitus(IlmoitusTyyppi.VAROITUS, "Virhe alueen poistamisessa.");
                         throw new RuntimeException(ex); // TEMP
@@ -390,7 +398,7 @@ public class Main extends Application {
                         tietokanta.muokkaaAlue(obj.getID(), alueenNimi.getText());
                         alueMuokkausIkkuna.close();
                         haeKaikkiTiedot();
-                        paivitaAlueTaulukko();
+                        paivitaAlueTaulukko(alueLista);
                     } catch (SQLException ex) {
                         alueMuokkausTeksti.setText("Alueen tietojen muokkaaminen ei onnistunut. \n Yritä uudelleen.");
                         alueMuokkausTeksti.setFill(Color.RED);
@@ -412,7 +420,7 @@ public class Main extends Application {
         mokkinappula.setOnAction(e -> {
             paneeli.setCenter(mokkipaneeli);
             isoOtsikkoTeksti.setText("MÖKIT");
-            paivitaMokkiTaulukko(null, null);
+            paivitaMokkiTaulukko(null, null, mokkiLista);
         });
 
         GridPane mokkiHaku = new GridPane();
@@ -455,6 +463,12 @@ public class Main extends Application {
             // Suodatus
             // TODO
 
+            if (!Objects.equals(mokkiHakuKentta.getText(), "")) {
+                mokkiTulokset = haeMokkiHakusanalla(mokkiLista, mokkiHakuKentta.getText());
+            } else {
+                mokkiTulokset = mokkiLista;
+            }
+
             // Lajittelu
             switch (mokkiLajittelu.getValue()) {
                 case "Tunnuksen mukaan" ->
@@ -475,7 +489,7 @@ public class Main extends Application {
             LocalDate alkuPvm = varausPaivaAlku.getValue();
             LocalDate loppuPvm = varausPaivaLoppu.getValue();
 
-            paivitaMokkiTaulukko(alkuPvm, loppuPvm);
+            paivitaMokkiTaulukko(alkuPvm, loppuPvm, mokkiTulokset);
         });
 
         ScrollPane mokkiScrollaus = new ScrollPane();
@@ -563,7 +577,7 @@ public class Main extends Application {
                             );
                     mokkiLisaysIkkuna.close();
                     haeKaikkiTiedot();
-                    paivitaMokkiTaulukko(null, null);
+                    paivitaMokkiTaulukko(null, null, mokkiTulokset);
                 } catch (SQLException ex) {
                     mokkiLisaysTeksti.setText("Mökin lisääminen ei onnistunut. \n " +
                             "Tarkista syötteet ja yritä uudelleen.");
@@ -578,7 +592,7 @@ public class Main extends Application {
         });
     }
 
-    public void paivitaMokkiTaulukko(LocalDate paivaAlku, LocalDate paivaLoppu) {
+    public void paivitaMokkiTaulukko(LocalDate paivaAlku, LocalDate paivaLoppu, ArrayList<Mokki> mokkiTulokset) {
 
         mokkiTaulukko.setGridLinesVisible(false);
         mokkiTaulukko.getColumnConstraints().clear();
@@ -610,7 +624,7 @@ public class Main extends Application {
 
 
         int rivi = 2;
-        for (Mokki obj : mokkiLista) {
+        for (Mokki obj : mokkiTulokset) {
             Text mokkiID = new Text(String.valueOf(obj.getID()));
             mokkiID.setFont(fonttiIsompi);
             Text mokkiNimi = new Text(String.valueOf(obj.getNimi()));
@@ -653,7 +667,7 @@ public class Main extends Application {
                         tietokanta.poistaMokki(obj.getID());
                         haeKaikkiTiedot();
                         poistaMokkiIkkuna.getIkkuna().close();
-                        paivitaMokkiTaulukko(paivaAlku, paivaLoppu);
+                        paivitaMokkiTaulukko(paivaAlku, paivaLoppu, mokkiLista);
                     } catch (SQLException ex) {
                         ilmoitusPaneeli.lisaaIlmoitus(IlmoitusTyyppi.VAROITUS, "Virhe mökin poistamisessa.");
                     }
@@ -743,7 +757,7 @@ public class Main extends Application {
                         );
                         mokkiMuokkausIkkuna.close();
                         haeKaikkiTiedot();
-                        paivitaMokkiTaulukko(paivaAlku, paivaLoppu);
+                        paivitaMokkiTaulukko(paivaAlku, paivaLoppu, mokkiLista);
                     } catch (SQLException ex) {
                         mokkiMuokkausTeksti.setText("Mökin muokkaaminen ei onnistunut. \n " +
                                 "Tarkista syötteet ja yritä uudelleen.");
@@ -1153,7 +1167,7 @@ public class Main extends Application {
         TextField varausHakuKentta = new TextField();
         Label varausHakuKenttaLabel = new Label("Hae varausta: ", varausHakuKentta); // TODO tarvitaanko tätä?
         varausHakuKenttaLabel.setFont(fonttiIsompi);
-        varausHakuKenttaLabel.setContentDisplay(ContentDisplay.RIGHT);
+        varausHakuKenttaLabel.setContentDisplay(ContentDisplay.BOTTOM);
         varausHaku.add(varausHakuKenttaLabel, 0, 1);
         Nappula varausHakuNappula = new Nappula("Suorita haku", 190, 30);
         varausHaku.add(varausHakuNappula, 0, 2);
@@ -2305,7 +2319,7 @@ public class Main extends Application {
                 TextField mokkiHinta = new TextField(); // TODO ei mökin hintaa tai palveluiden hintaa pitäisi pystyä muokkaamaan tässä
                 TextField palvelutHinta = new TextField("0");
                 TextField alv = new TextField("14");
-                TextField status = new TextField();
+                TextField status = new TextField(String.valueOf(obj.getStatus().id));
 
                 laskunMuokkausGridPaneeli.add( asiakkaanNimiText, 0, 0);
                 laskunMuokkausGridPaneeli.add( asiakkaanNimi, 1, 0);
@@ -2405,7 +2419,7 @@ public class Main extends Application {
                 Scene tarkasteleLaskuKehys = new Scene(tarkasteleLaskuScroll, 400, 450);
                 tarkasteleLaskuIkkuna.setScene(tarkasteleLaskuKehys);
 
-                Text asiakkaanTiedot = new Text("Asiakkaan tiedot");
+                Text asiakkaanTiedot = new Text("Laskun tiedot");
                 asiakkaanTiedot.setFont(fonttiPaksu);
                 tarkasteleLaskuPaneeli.add(asiakkaanTiedot,0,0);
                 tarkasteleLaskuPaneeli.add(new Text("LaskuID: "),0,1);
@@ -2492,6 +2506,8 @@ public class Main extends Application {
                     "Virhe tietojen hakemisessa. Tietokantaa ei ole ehkä käynnistetty.");
         }
     }
+
+
 
     public static void main(String[] args) {
         launch();
