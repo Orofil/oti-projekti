@@ -1,5 +1,6 @@
 package com.example.otiprojekti;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -96,6 +97,19 @@ public class Varaus {
 
     public void setVarausLoppuPvm(LocalDateTime varausLoppuPvm) {
         this.varausLoppuPvm = varausLoppuPvm;
+    }
+
+    /**
+     * Onko tietty mökki varattu tietyllä välillä tässä varauksessa.
+     * @param m Mökki
+     * @param paivaAlku Varauksen alkupäivä
+     * @param paivaLoppu Varauksen loppupäivä
+     * @return Onko mökki varattu jonain päivänä tällä välillä
+     */
+    public boolean varattuValilla(Mokki m, LocalDate paivaAlku, LocalDate paivaLoppu) {
+        return getMokki().equals(m) &&
+                !(getVarausLoppuPvm().isBefore(paivaAlku.atStartOfDay()) ||
+                getVarausAlkuPvm().isAfter(paivaLoppu.plusDays(1).atStartOfDay()));
     }
 
     @Override

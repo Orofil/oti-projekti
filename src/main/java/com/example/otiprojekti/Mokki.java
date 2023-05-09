@@ -143,10 +143,4 @@ public class Mokki {
                 Objects.equals(kuvaus, mokki.kuvaus) &&
                 Objects.equals(varustelu, mokki.varustelu);
     }
-
-    public boolean varattuPaivana(Varaus v ,LocalDate valittuPaiva) {
-        return v.getVarausAlkuPvm().isBefore(valittuPaiva.plusDays(1).atStartOfDay()) &&
-                v.getVarausLoppuPvm().isAfter(valittuPaiva.atStartOfDay());
-    }
-
 }

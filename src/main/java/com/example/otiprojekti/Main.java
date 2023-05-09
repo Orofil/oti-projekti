@@ -29,7 +29,6 @@ import javafx.stage.Stage;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 
-import javax.swing.*;
 import java.awt.*;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -111,7 +110,6 @@ public class Main extends Application {
     Nappula alueenLisaysNappula = new Nappula(LISAYS_NAPPULA_LEVEYS, LISAYS_NAPPULA_KORKEUS);
     Nappula mokkienLisaysNappula = new Nappula(LISAYS_NAPPULA_LEVEYS, LISAYS_NAPPULA_KORKEUS);
     Nappula palvelunLisaysNappula = new Nappula(LISAYS_NAPPULA_LEVEYS, LISAYS_NAPPULA_KORKEUS);
-    DatePicker varattuPaivana = new DatePicker();
 
     @Override
     public void start(Stage ikkuna) {
@@ -414,7 +412,7 @@ public class Main extends Application {
         mokkinappula.setOnAction(e -> {
             paneeli.setCenter(mokkipaneeli);
             isoOtsikkoTeksti.setText("MÖKIT");
-            paivitaMokkiTaulukko();
+            paivitaMokkiTaulukko(null, null);
         });
 
         GridPane mokkiHaku = new GridPane();
@@ -445,9 +443,13 @@ public class Main extends Application {
         mokkiLajittelu.setValue("Tunnuksen mukaan"); // Oletuksena valittu vaihtoehto
         mokkiHaku.add(mokkiLajittelu, 2, 1);
 
-        mokkiHaku.add(new Text("Onko varattu päivänä"), 3, 0); // TODO paremmin tämä
-
-        mokkiHaku.add(varattuPaivana, 3, 1);
+        mokkiHaku.add(new Text("Onko varattu päivinä"), 3, 0);
+        DatePicker varausPaivaAlku = new DatePicker();
+        DatePicker varausPaivaLoppu = new DatePicker();
+        Label varausPaivaAlkuLabel = new Label("Alku", varausPaivaAlku);
+        Label varausPaivaLoppuLabel = new Label("Loppu", varausPaivaLoppu);
+        mokkiHaku.add(varausPaivaAlkuLabel, 3, 1);
+        mokkiHaku.add(varausPaivaLoppuLabel, 3, 2);
 
         mokkiHakuNappula.setOnAction( e -> {
             // Suodatus
@@ -469,7 +471,13 @@ public class Main extends Application {
                         mokkiLista.sort(Comparator.comparing(Mokki -> Mokki.getAlue().getID())); // TODO onko alueen ID:n vai nimen mukaan
             }
 
-            paivitaAlueTaulukko();
+            // Valittu päivämäärä
+//            try {
+                LocalDate alkuPvm = varausPaivaAlku.getValue();
+                LocalDate loppuPvm = varausPaivaLoppu.getValue();
+//            } catch ()
+
+            paivitaMokkiTaulukko(alkuPvm, loppuPvm);
         });
 
         ScrollPane mokkiScrollaus = new ScrollPane();
@@ -481,6 +489,7 @@ public class Main extends Application {
         mokkienLisays.setFitWidth(23);
         mokkienLisays.setFitHeight(22);
         mokkienLisaysNappula.setGraphic(mokkienLisays);
+
         // Ikkuna mökkien lisäämiseen
         mokkienLisaysNappula.setOnAction( e -> {
             Stage mokkiLisaysIkkuna = new Stage();
@@ -555,7 +564,7 @@ public class Main extends Application {
                             );
                     mokkiLisaysIkkuna.close();
                     haeKaikkiTiedot();
-                    paivitaMokkiTaulukko();
+                    paivitaMokkiTaulukko(null, null);
                 } catch (SQLException ex) {
                     mokkiLisaysTeksti.setText("Mökin lisääminen ei onnistunut. \n " +
                             "Tarkista syötteet ja yritä uudelleen.");
@@ -570,7 +579,7 @@ public class Main extends Application {
         });
     }
 
-    public void paivitaMokkiTaulukko() {
+    public void paivitaMokkiTaulukko(LocalDate paivaAlku, LocalDate paivaLoppu) {
 
         mokkiTaulukko.setGridLinesVisible(false);
         mokkiTaulukko.getColumnConstraints().clear();
@@ -620,17 +629,14 @@ public class Main extends Application {
             mokkiTaulukko.add(mokkiHinta, 3, rivi);
             mokkiTaulukko.add(mokkiHloMaara, 4, rivi);
 
-            varattuPaivana.setOnAction(e -> {
-                LocalDate valittuPaiva = varattuPaivana.getValue();
-
+            // Onko varattu valitulla välillä
+            if (!(paivaAlku == null || paivaLoppu == null)) {
                 for (Varaus v : varausLista) {
-                    if (v.getMokki().varattuPaivana(v, valittuPaiva) && v.getMokki().equals(obj)) {
+                    if (v.varattuValilla(obj, paivaAlku, paivaLoppu)) {
                         mokkiNimi.setFill(Color.RED);
-                    } else {
-                        mokkiNimi.setFill(Color.BLACK);
                     }
                 }
-            });
+            }
 
             Nappula poistoNappula = new Nappula(150, 30);
             ImageView roskis = new ImageView(imageKuvasta("roskis.png"));
@@ -648,7 +654,7 @@ public class Main extends Application {
                         tietokanta.poistaMokki(obj.getID());
                         haeKaikkiTiedot();
                         poistaMokkiIkkuna.getIkkuna().close();
-                        paivitaMokkiTaulukko();
+                        paivitaMokkiTaulukko(null, null);
                     } catch (SQLException ex) {
                         ilmoitusPaneeli.lisaaIlmoitus(IlmoitusTyyppi.VAROITUS, "Virhe mökin poistamisessa.");
                         throw new RuntimeException(ex); // TEMP
@@ -662,6 +668,7 @@ public class Main extends Application {
             muokkaus.setFitHeight(22);
             muokkausNappula.setGraphic(muokkaus);
             mokkiTaulukko.add(muokkausNappula, 6, rivi);
+
             // Ikkuna mökin muokkaamiseen
             muokkausNappula.setOnMouseClicked(e -> {
                 Stage mokkiMuokkausIkkuna = new Stage();
@@ -737,7 +744,7 @@ public class Main extends Application {
                         );
                         mokkiMuokkausIkkuna.close();
                         haeKaikkiTiedot();
-                        paivitaMokkiTaulukko();
+                        paivitaMokkiTaulukko(null, null);
                     } catch (SQLException ex) {
 
                         throw new RuntimeException(ex); // TEMP
@@ -921,7 +928,6 @@ public class Main extends Application {
                     haeKaikkiTiedot();
                     paivitaPalveluTaulukko();
                 } catch (SQLException ex) {
-                    //throw new RuntimeException(ex);
                     palveluLisaysTeksti.setText("Palvelun lisääminen ei onnistunut. \n " +
                             "Tarkista syötteet ja yritä uudelleen.");
                     palveluLisaysTeksti.setFill(Color.RED);
@@ -1076,7 +1082,6 @@ public class Main extends Application {
                         haeKaikkiTiedot();
                         paivitaPalveluTaulukko();
                     } catch (SQLException ex) {
-                        //throw new RuntimeException(ex);
                         palveluMuokkausTeksti.setText("Muutosten tallentaminen ei onnistunut. \n " +
                                 "Tarkista syötteet ja yritä uudelleen.");
                         palveluMuokkausTeksti.setFill(Color.RED);
@@ -2164,7 +2169,6 @@ public class Main extends Application {
                     laskuLisaysIkkuna.close();
                     paivitaLaskuTaulukko();
                 } catch (SQLException ex) {
-                    //throw new RuntimeException(ex);
                     laskuLisaysTeksti.setFill(Color.RED);
                     laskuLisaysTeksti.setText("Laskun lisääminen ei onnistunut. \n" +
                             "Tarkista syötteet ja yritä uudelleen.");
