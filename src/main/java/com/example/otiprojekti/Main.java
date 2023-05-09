@@ -187,7 +187,7 @@ public class Main extends Application {
         double boundsH = bounds.getHeight();
         double boundsSuhdeMin = Math.min(boundsW / SUHDE_W, boundsH / SUHDE_H);
         double W = Math.min(boundsSuhdeMin * MAX_OSUUS * SUHDE_W, MAX_LEVEYS);
-        double H = Math.min(boundsSuhdeMin * MAX_OSUUS * SUHDE_H, MAX_KORKEUS); // TODO tämä ei ihan toimi, ikkuna voi mennä yhä vähän liian isoksi
+        double H = Math.min(boundsSuhdeMin * MAX_OSUUS * SUHDE_H, MAX_KORKEUS);
 
         Scene kehys = new Scene(paneeliYlin, W, H);
         ikkuna.setScene(kehys);
@@ -232,8 +232,6 @@ public class Main extends Application {
 
         alueHakuNappula.setOnAction( e -> {
             // Suodatus
-            // TODO
-
             if (alueHakuKentta.getText().equals("")) {
                 alueTulokset = alueLista;
             }
@@ -359,7 +357,6 @@ public class Main extends Application {
                         paivitaAlueTaulukko(alueLista);
                     } catch (SQLException ex) {
                         ilmoitusPaneeli.lisaaIlmoitus(IlmoitusTyyppi.VAROITUS, "Virhe alueen poistamisessa.");
-                        throw new RuntimeException(ex); // TEMP
                     }
                 });
             });
@@ -463,8 +460,6 @@ public class Main extends Application {
 
         mokkiHakuNappula.setOnAction( e -> {
             // Suodatus
-            // TODO
-
             if (!Objects.equals(mokkiHakuKentta.getText(), "")) {
                 mokkiTulokset = haeMokkiHakusanalla(mokkiLista, mokkiHakuKentta.getText());
             } else {
@@ -484,7 +479,7 @@ public class Main extends Application {
                 case "Henkilömäärän mukaan" ->
                         mokkiLista.sort(Comparator.comparing(Mokki::getHloMaara));
                 case "Alueittain" ->
-                        mokkiLista.sort(Comparator.comparing(Mokki -> Mokki.getAlue().getID())); // TODO onko alueen ID:n vai nimen mukaan
+                        mokkiLista.sort(Comparator.comparing(Mokki -> Mokki.getAlue().getID()));
             }
 
             // Valittu päivämäärä
@@ -863,12 +858,10 @@ public class Main extends Application {
             switch (palveluLajittelu.getValue()) {
                 case "Tunnuksen mukaan" ->
                         palveluLista.sort(Comparator.comparing(Palvelu::getID));
-                case "Uusin > Vanhin" -> {} // TODO miten tämä toimii?
-                case "Vanhin > Uusin" -> {} // TODO miten tämä toimii?
                 case "A > Ö" ->
                         palveluLista.sort(Comparator.comparing(Palvelu::getNimi));
                 case "Alueittain" ->
-                        palveluLista.sort(Comparator.comparing(Palvelu -> Palvelu.getAlue().getID())); // TODO onko alueen ID:n vai nimen mukaan
+                        palveluLista.sort(Comparator.comparing(Palvelu -> Palvelu.getAlue().getID()));
             }
 
             paivitaPalveluTaulukko();
@@ -1167,7 +1160,7 @@ public class Main extends Application {
         varauspaneeli.setTop(varausHaku);
 
         TextField varausHakuKentta = new TextField();
-        Label varausHakuKenttaLabel = new Label("Hae varausta: ", varausHakuKentta); // TODO tarvitaanko tätä?
+        Label varausHakuKenttaLabel = new Label("Hae varausta: ", varausHakuKentta);
         varausHakuKenttaLabel.setFont(fonttiIsompi);
         varausHakuKenttaLabel.setContentDisplay(ContentDisplay.BOTTOM);
         varausHaku.add(varausHakuKenttaLabel, 0, 1);
@@ -1220,7 +1213,7 @@ public class Main extends Application {
 
         Text alueSuodatusTeksti = new Text("Varauksen alue");
         alueSuodatusTeksti.setFont(fonttiPaksu);
-        ComboBox<Alue> alueSuodatus = new ComboBox<>(FXCollections.observableArrayList(alueLista)); // TODO nämä tekstit jotenkin paremmin ja alueiden päivittyminen jos niitä muutetaan
+        ComboBox<Alue> alueSuodatus = new ComboBox<>(FXCollections.observableArrayList(alueLista));
         varausHaku.add(alueSuodatusTeksti, 5, 0);
         varausHaku.add(alueSuodatus, 5, 1);
 
@@ -1246,12 +1239,14 @@ public class Main extends Application {
                     varausPvmLoppu.getValue() + " " + varausAikaLoppu.getText(), dateTimeFormat);
 
             // Suodatus
+            // TODO haku asiakkaan nimellä
             // TODO jos ei ole mitään valittuna niin kaikki tulokset tulee
+            // TODO ei ole pakko täyttää kaikkia kenttiä hakua varten
             ArrayList<Varaus> varausTulokset = new ArrayList<>();
             for (Varaus v : varausLista) {
                 LocalDateTime vAlkuAika = v.getVarausAlkuPvm();
                 if ((vAlkuAika.isAfter(valittuAikaAlku) || vAlkuAika.isEqual(valittuAikaAlku)) &&
-                        (vAlkuAika.isBefore(valittuAikaLoppu) || vAlkuAika.isEqual(valittuAikaAlku)) && // TODO onko näin tämä
+                        (vAlkuAika.isBefore(valittuAikaLoppu) || vAlkuAika.isEqual(valittuAikaLoppu)) &&
                         v.getMokki().getAlue().equals(alueSuodatus.getValue())) {
                     varausTulokset.add(v);
                 }
@@ -1267,8 +1262,10 @@ public class Main extends Application {
                         varausTulokset.sort(Comparator.comparing(Varaus::getVarausAlkuPvm).reversed());
                 case "Vanhin > Uusin" ->
                         varausTulokset.sort(Comparator.comparing(Varaus::getVarausAlkuPvm));
-                case "A > Ö" -> {} // TODO miten tämä toimii?
-                case "Alueittain" -> varausTulokset.sort(Comparator.comparing(Varaus -> Varaus.getMokki().getAlue().getID())); // TODO lajitellaanko ID:n vai nimen mukaan
+                case "Asiakkaan mukaan" ->
+                        varausTulokset.sort(Comparator.comparing(Varaus -> Varaus.getAsiakas().getSukunimi()));
+                case "Alueittain" ->
+                        varausTulokset.sort(Comparator.comparing(Varaus -> Varaus.getMokki().getAlue().getID()));
             }
             paivitaVarausTaulukko(varausTulokset);
         });
@@ -1383,7 +1380,7 @@ public class Main extends Application {
 
             Nappula lisaaVaraus = new Nappula("Aseta varaus");
             lisaaVaraus.setOnAction( event -> {
-                String varausAlkuAika = aloitusPvm.getValue() + " " + aloitusAika.getText(); // TODO muotoilun tarkistus, aka virheiden käsittely
+                String varausAlkuAika = aloitusPvm.getValue() + " " + aloitusAika.getText();
                 String varausLoppuAika = lopetusPvm.getValue() + " " + lopetusAika.getText();
                 try {
                     int asiakasIDInsert;
@@ -1398,11 +1395,11 @@ public class Main extends Application {
                                 postiLista));
                         asiakasIDInsert = asiakasLista.get(asiakasLista.size()-1).getID();
                     } else {
-                        asiakasIDInsert = Integer.parseInt(asiakasID.getText()); // TODO virheiden käsittely, näytetään virheteksti ikkunassa
+                        asiakasIDInsert = Integer.parseInt(asiakasID.getText());
                     }
                     HashMap<Palvelu, Integer> varauksenPalvelut = new HashMap<>(); // TEMP varaukseen liittyviä palveluita varten
                     varauksenPalvelut.put(palveluLista.get(0), 1); // TEMP
-                    varausLista.add(tietokanta.insertVaraus( // TODO tuleeko kenttään varattu_pvm tämänhetkinen aika?
+                    varausLista.add(tietokanta.insertVaraus(
                             asiakasIDInsert,
                             Integer.parseInt(mokkiID.getText()),
                             varauksenPalvelut, // TODO varauksen palvelut
@@ -1417,6 +1414,7 @@ public class Main extends Application {
                     varausLisaysStage.close();
                 } catch (SQLException ex) {
                     ilmoitusPaneeli.lisaaIlmoitus(IlmoitusTyyppi.VAROITUS, String.valueOf(ex));
+                    // TODO lisää teksti siitä että syötteet vääriä
                 }
             });
 
@@ -1493,7 +1491,7 @@ public class Main extends Application {
                         tietokanta.poistaVaraus(obj.getID());
                         haeKaikkiTiedot();
                         poistoIkkuna.getIkkuna().close();
-                        paivitaVarausTaulukko(varausLista); // TODO päivitetäänkö varausTulokset vai tehdäänkö vaan aina niin että hakuvalinnat menee pois kun tekee tällaisen päivityksen
+                        paivitaVarausTaulukko(varausLista);
                     } catch (SQLException ex) {
                         ilmoitusPaneeli.lisaaIlmoitus(IlmoitusTyyppi.VAROITUS, "Virhe varauksen poistamisessa.");
                     }
@@ -1522,9 +1520,9 @@ public class Main extends Application {
                 TextField asiakasID = new TextField(String.valueOf(obj.getAsiakas().getID()));
                 TextField mokkiID = new TextField(String.valueOf(obj.getMokki().getID()));
                 DatePicker aloitusPvm = new DatePicker(obj.getVarausAlkuPvm().toLocalDate());
-                // Laittaa tekstiksi varausAlkuPvm:n ajan jos se ei ole null, muuten 16:00, TODO tuleeko sekunnit mukaan varausAlkuPvm:stä
+                // Laittaa tekstiksi varausAlkuPvm:n ajan jos se ei ole null, muuten 16:00
                 TextField aloitusAika = new TextField(String.valueOf(Objects.requireNonNullElse(
-                        obj.getVarausAlkuPvm().toLocalTime(), "16:00")));
+                        obj.getVarausAlkuPvm().toLocalTime(), "16:00"))); // TODO testataan toimiiko lisääminen ilman sekunteja
                 DatePicker lopetusPvm = new DatePicker(obj.getVarausLoppuPvm().toLocalDate());
                 TextField lopetusAika = new TextField(String.valueOf(Objects.requireNonNullElse(
                         obj.getVarausLoppuPvm().toLocalTime(), "12:00")));
@@ -1553,12 +1551,12 @@ public class Main extends Application {
 
                 Nappula tallennaVarausMuutokset = new Nappula("Tallenna muutokset");
                 tallennaVarausMuutokset.setOnAction( event -> {
-                    String varausAlkuAika = aloitusPvm.getValue() + " " + aloitusAika.getText(); // TODO muotoilun tarkistus, aka virheiden käsittely
+                    String varausAlkuAika = aloitusPvm.getValue() + " " + aloitusAika.getText();
                     String varausLoppuAika = lopetusPvm.getValue() + " " + lopetusAika.getText();
                     HashMap<Palvelu, Integer> varauksenPalvelut = new HashMap<>(); // TEMP varaukseen liittyviä palveluita varten
                     varauksenPalvelut.put(palveluLista.get(0), 1); // TEMP
                     try {
-                        tietokanta.muokkaaVaraus( // TODO  asiakasLista.add()
+                        tietokanta.muokkaaVaraus(
                                 obj.getID(),
                                 Integer.parseInt(asiakasID.getText()),
                                 Integer.parseInt(mokkiID.getText()),
@@ -1572,7 +1570,7 @@ public class Main extends Application {
                         paivitaVarausTaulukko(varausLista);
                     } catch (SQLException ex) {
                         ilmoitusPaneeli.lisaaIlmoitus(IlmoitusTyyppi.VAROITUS, String.valueOf(ex));
-                        throw new RuntimeException(ex); // TEMP
+                        // TODO teksti siitä että syötteet vääriä
                     }
                 });
 
@@ -1759,8 +1757,6 @@ public class Main extends Application {
             switch (asiakasLajittelu.getValue()) {
                 case "Tunnuksen mukaan" ->
                         asiakasTulokset.sort(Comparator.comparing(Asiakas::getID));
-                case "Uusin > Vanhin" -> {} // TODO miten tämä toimii?
-                case "Vanhin > Uusin" -> {} // TODO miten tämä toimii?
                 case "A > Ö" ->
                         asiakasTulokset.sort(Comparator.comparing(Asiakas::getSukunimi));
             }
@@ -1832,7 +1828,7 @@ public class Main extends Application {
                             email.getText(), puhnro.getText(), postiLista));
                     haeKaikkiTiedot();
                     asiakasLisaysIkkuna.close();
-                    paivitaAsiakasTaulukko(asiakasLista); // TODO tämä ei huomioi sitä jos asiakkaita on suodatettu haulla, mutta se olisi ehkä vaikea tehdäkin niin
+                    paivitaAsiakasTaulukko(asiakasLista);
                 } catch (SQLException ex) {
                     asiakasLisaysTeksti.setText("Tarkista, että syöttämäsi arvot ovat \n " +
                             "oikeaa muotoa ja yritä uudelleen.");
@@ -1985,7 +1981,7 @@ public class Main extends Application {
 
                         tietokanta.muokkaaAsiakas
                                 (obj.getID(), postinro.getText(), snimi.getText(), enimi.getText(),
-                                        email.getText(), lahiosoite.getText(), puhnro.getText()); // TODO tämän voi korvata Asiakas-oliolla, sitä vain pitää muokata ensin
+                                        email.getText(), lahiosoite.getText(), puhnro.getText());
                         haeKaikkiTiedot();
                         asiakasMuokkausIkkuna.close();
                         paivitaAsiakasTaulukko(asiakasLista);
@@ -2088,10 +2084,8 @@ public class Main extends Application {
             switch (laskuLajittelu.getValue()) {
                 case "Tunnuksen mukaan" ->
                         laskuLista.sort(Comparator.comparing(Lasku::getID));
-                case "Uusin > Vanhin" ->
+                case "Uusin > Vanhin" -> // TODO katso lajitteleeko vanhimmasta uusimpaan
                         laskuLista.sort(Comparator.comparing(Lasku -> Lasku.getVaraus().getVahvistusPvm()));
-                case "Vanhin > Uusin" ->
-                        laskuLista.sort(Comparator.comparing(Lasku -> Lasku.getVaraus().getVahvistusPvm())); // TODO tämä ei jostain syystä toimi jos siihen laittaa reversed perään
                 case "Varaustunnuksen mukaan" ->
                         laskuLista.sort(Comparator.comparing(Lasku -> Lasku.getVaraus().getID()));
             }
@@ -2321,7 +2315,7 @@ public class Main extends Application {
                 TextField varausAlkuPvm = new TextField();
                 TextField varausLoppuPvm = new TextField();
                 TextField varattujaPaiviaYhteensa = new TextField();
-                TextField mokkiHinta = new TextField(); // TODO ei mökin hintaa tai palveluiden hintaa pitäisi pystyä muokkaamaan tässä
+                TextField mokkiHinta = new TextField();
                 TextField palvelutHinta = new TextField("0");
                 TextField alv = new TextField("14");
                 TextField status = new TextField(String.valueOf(obj.getStatus().id));
@@ -2375,17 +2369,16 @@ public class Main extends Application {
                                 obj.getVaraus().getID(),
                                 BigDecimal.valueOf(summa),
                                 Integer.parseInt(alv.getText()),
-                                Integer.parseInt(status.getText()) // TODO statuksen muuttaminen
+                                Integer.parseInt(status.getText())
                         );
                         haeKaikkiTiedot();
                         laskuMuokkausIkkuna.close();
                         paivitaLaskuTaulukko();
                         
                     } catch (SQLException ex) {
-                        throw new RuntimeException(ex); // TEMP
-                        //laskuMuokkausTeksti.setFill(Color.RED);
-                        //laskuMuokkausTeksti.setText("Muutosten tallentaminen ei onnistunut. \n" +
-                        //        "Tarkista syötteet ja yritä uudelleen.");
+                        laskuMuokkausTeksti.setFill(Color.RED);
+                        laskuMuokkausTeksti.setText("Muutosten tallentaminen ei onnistunut. \n" +
+                                "Tarkista syötteet ja yritä uudelleen.");
                     }
                 });
 
@@ -2463,9 +2456,8 @@ public class Main extends Application {
                     laskunVarauksenPalvelut.add(new Text(String.valueOf(vp.getValue())), 1, riviVp);
                     riviVp++;
                 }
-                // TODO lisätäänkö euron merkit näihin
-                tarkasteleLaskuPaneeli.add(new Text(String.format("%,.2f", obj.getVarausPalveluSumma())),1,9);
-                tarkasteleLaskuPaneeli.add(new Text(String.valueOf(String.format("%,.2f", obj.getVarausSumma()))),1,11);
+                tarkasteleLaskuPaneeli.add(new Text(String.format("%,.2f", obj.getVarausPalveluSumma()) + " €"),1,9);
+                tarkasteleLaskuPaneeli.add(new Text(String.valueOf(String.format("%,.2f", obj.getVarausSumma()) + " €")),1,11);
 
             });
 

@@ -34,7 +34,6 @@ INSERT INTO asiakas(postinro, etunimi, sukunimi, lahiosoite, email, puhelinnro) 
   ('73200', 'Lauri', 'Korhonen', 'Vitostie 6551', 'lauri1293@gmail.com', '+358494652246'),
   ('88610', 'Olavi', 'Virtanen', 'Koukkukatu 21', 'virtanen.olavi@gmail.com', '+358426859');
 
--- TODO joku merkitys tyypille
 INSERT INTO palvelu(alue_id, nimi, tyyppi, kuvaus, hinta, alv) VALUES
   (1, 'Siivouspalvelu', 1, 'Mökin siivous', 170, 10),
   (1, 'Liinavaatevuokraus', 2, 'Liinavaatteiden vuokraaminen ', 30, 10),

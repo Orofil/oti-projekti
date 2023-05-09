@@ -85,15 +85,14 @@ public class Lasku {
 
         BigDecimal varaustenHinta = getVarausPalveluSumma();
 
-        return getVaraus().getMokki().getHinta().multiply(BigDecimal.valueOf(daysBetween)).
-                add(varaustenHinta.multiply(BigDecimal.valueOf((getAlv() / 100d) + 1))); // TODO onko tämä oikein
+        return (getVaraus().getMokki().getHinta().multiply(BigDecimal.valueOf(daysBetween)).
+                add(varaustenHinta)).multiply(BigDecimal.valueOf((getAlv() / 100d) + 1));
     }
 
     public BigDecimal getVarausPalveluSumma() {
         BigDecimal varaustenHinta = BigDecimal.ZERO;
         for (Map.Entry<Palvelu, Integer> vp : getVaraus().getPalvelut().entrySet()) {
-            varaustenHinta = varaustenHinta.add(vp.getKey().getHinta().multiply(
-                    BigDecimal.valueOf(((vp.getKey().getAlv() / 100d) + 1)))); // TODO onko tämä oikein
+            varaustenHinta = varaustenHinta.add(vp.getKey().getHinta());
         }
         return varaustenHinta;
     }

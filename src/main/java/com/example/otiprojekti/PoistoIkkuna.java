@@ -23,9 +23,6 @@ public class PoistoIkkuna {
      */
     public PoistoIkkuna(String teksti, String tekstiGen, String tekstiEkstra) {
         ikkuna = new Stage();
-        // TODO ylaIkkuna parametriksi jos haluaa lukita alemman ikkunan käytön
-//        ikkuna.initModality(Modality.WINDOW_MODAL);
-//        ikkuna.initOwner(ylaIkkuna);
         ikkuna.show();
 
         BorderPane paneeli = new BorderPane();
