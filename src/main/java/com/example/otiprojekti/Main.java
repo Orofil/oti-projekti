@@ -2063,7 +2063,7 @@ public class Main extends Application {
                 case "Tunnuksen mukaan" ->
                         laskuLista.sort(Comparator.comparing(Lasku::getID));
                 case "Uusin > Vanhin" ->
-                        laskuLista.sort(Comparator.comparing(Lasku -> Lasku.getVaraus().getVahvistusPvm())); // TODO tehdäänkö vahvistuspvm:n mukaan
+                        laskuLista.sort(Comparator.comparing(Lasku -> Lasku.getVaraus().getVahvistusPvm()));
                 case "Vanhin > Uusin" ->
                         laskuLista.sort(Comparator.comparing(Lasku -> Lasku.getVaraus().getVahvistusPvm())); // TODO tämä ei jostain syystä toimi jos siihen laittaa reversed perään
                 case "Varaustunnuksen mukaan" ->
