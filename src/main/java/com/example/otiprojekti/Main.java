@@ -1227,22 +1227,16 @@ public class Main extends Application {
         varausHaku.add(alueSuodatus, 5, 1);
 
         // Virheiden käsittely. Jos virheitä on, hakunappula on poistettu käytöstä.
-        EventHandler<ActionEvent> tarkistaSyotteet = event -> {
-            try {
-                LocalDateTime.parse(varausPvmAlku.getValue() + " " + varausAikaAlku.getText(), dateTimeFormat);
-                LocalDateTime.parse(varausPvmLoppu.getValue() + " " + varausAikaLoppu.getText(), dateTimeFormat);
-                varausHakuNappula.setDisable(false);
-            } catch (DateTimeParseException ex) {
-                varausHakuNappula.setDisable(true);
-            }
-        };
-        varausPvmAlku.setOnAction(tarkistaSyotteet);
-        varausPvmLoppu.setOnAction(tarkistaSyotteet);
-        varausAikaAlku.setOnAction(tarkistaSyotteet);
-        varausAikaLoppu.setOnAction(tarkistaSyotteet);
+        varausPvmAlku.setOnAction(e -> tarkistaVarausHakuSyotteet(
+                varausPvmAlku, varausPvmLoppu, varausAikaAlku, varausAikaLoppu, varausHakuNappula));
+        varausPvmLoppu.setOnAction(e -> tarkistaVarausHakuSyotteet(
+                varausPvmAlku, varausPvmLoppu, varausAikaAlku, varausAikaLoppu, varausHakuNappula));
+        varausAikaAlku.setOnKeyTyped(e -> tarkistaVarausHakuSyotteet(
+                varausPvmAlku, varausPvmLoppu, varausAikaAlku, varausAikaLoppu, varausHakuNappula));
+        varausAikaLoppu.setOnKeyTyped(e -> tarkistaVarausHakuSyotteet(
+                varausPvmAlku, varausPvmLoppu, varausAikaAlku, varausAikaLoppu, varausHakuNappula));
 
         varausHakuNappula.setOnAction( e -> {
-
             varausTulokset = varausLista;
 
             if (varausAikaAlku.getText().equals("") || varausAikaLoppu.getText().equals("")) {
@@ -1251,15 +1245,13 @@ public class Main extends Application {
                 }
             } else {
 
-                LocalDateTime valittuAikaAlku = LocalDateTime.parse(
-                        varausPvmAlku.getValue() + " " + varausAikaAlku.getText(), dateTimeFormat);
-                LocalDateTime valittuAikaLoppu = LocalDateTime.parse(
-                        varausPvmLoppu.getValue() + " " + varausAikaLoppu.getText(), dateTimeFormat);
+                HashMap<String, LocalDateTime> valitutAjat = parseVarausAika(
+                        varausPvmAlku.getValue(), varausAikaAlku.getText(), varausPvmLoppu.getValue(), varausAikaLoppu.getText());
 
                 for (Varaus v : varausLista) {
                     LocalDateTime vAlkuAika = v.getVarausAlkuPvm();
-                    if ((vAlkuAika.isAfter(valittuAikaAlku) || vAlkuAika.isEqual(valittuAikaAlku)) &&
-                            (vAlkuAika.isBefore(valittuAikaLoppu) || vAlkuAika.isEqual(valittuAikaLoppu)) &&
+                    if ((vAlkuAika.isAfter(valitutAjat.get("alku")) || vAlkuAika.isEqual(valitutAjat.get("alku"))) &&
+                            (vAlkuAika.isBefore(valitutAjat.get("loppu")) || vAlkuAika.isEqual(valitutAjat.get("loppu"))) &&
                             v.getMokki().getAlue().equals(alueSuodatus.getValue())) {
                         varausTulokset.add(v);
                     }
@@ -1443,6 +1435,50 @@ public class Main extends Application {
             varausLisaysStage.setTitle("Lisää varaus");
             varausLisaysStage.show();
         });
+    }
+
+    public void tarkistaVarausHakuSyotteet(DatePicker alkuPvm, DatePicker loppuPvm,
+                                           TextField alkuAika, TextField loppuAika,
+                                           Nappula hakuNappula) {
+        try {
+            parseVarausAika(alkuPvm.getValue(), alkuAika.getText(), loppuPvm.getValue(), loppuAika.getText());
+            hakuNappula.setDisable(false);
+        } catch (IllegalArgumentException ex) {
+            hakuNappula.setDisable(true);
+        }
+    }
+
+    public HashMap<String, LocalDateTime> parseVarausAika(LocalDate alkuPvm, String alkuAika,
+                                                          LocalDate loppuPvm, String loppuAika) throws IllegalArgumentException {
+        HashMap<String, LocalDateTime> tulokset = new HashMap<>();
+
+        if (alkuPvm == null && alkuAika.equals("") && loppuPvm == null && loppuAika.equals("")) {
+            tulokset.put("alku", null);
+            tulokset.put("loppu", null);
+        } else if (alkuPvm == null || alkuAika.equals("") || loppuPvm == null || loppuAika.equals("")) {
+            throw new IllegalArgumentException();
+        } else {
+            int kaksoispisteet;
+            if ((kaksoispisteet = laskeMerkki(alkuAika, ':')) < 2) {
+                alkuAika = alkuAika + ":00".repeat(2 - kaksoispisteet);
+            }
+            if ((kaksoispisteet = laskeMerkki(loppuAika, ':')) < 2) {
+                loppuAika = loppuAika + ":00".repeat(2 - kaksoispisteet);
+            }
+            try {
+                LocalDateTime alku = LocalDateTime.parse(alkuPvm + " " + alkuAika, dateTimeFormat);
+                tulokset.put("alku", alku);
+            } catch (DateTimeParseException e) {
+                throw new IllegalArgumentException();
+            }
+            try {
+                LocalDateTime loppu = LocalDateTime.parse(loppuPvm + " " + loppuAika, dateTimeFormat);
+                tulokset.put("loppu", loppu);
+            } catch (DateTimeParseException e) {
+                throw new IllegalArgumentException();
+            }
+        }
+        return tulokset;
     }
 
     public void paivitaVarausTaulukko(ArrayList<Varaus> varausTulokset) {

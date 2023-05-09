@@ -26,6 +26,22 @@ public class Utils {
     }
 
     /**
+     * Laskee kuinka monta kertaa merkki esiintyy merkkijonossa.
+     * @param teksti Merkkijono
+     * @param merkki Merkki jota etsitään
+     * @return Merkin määrä merkkijonossa
+     */
+    public static int laskeMerkki(String teksti, char merkki) {
+        int summa = 0;
+        for (int i = 0; i < teksti.length(); i++) {
+            if (teksti.charAt(i) == merkki) {
+                summa++;
+            }
+        }
+        return summa;
+    }
+
+    /**
      * Etsii alueista sen, jolla on annettu ID.
      * @param lista Lista alueista
      * @param id alueID
