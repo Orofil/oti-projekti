@@ -92,10 +92,9 @@ public class Palvelu {
 
     @Override
     public String toString(){
-        String str= "Palvelun ID on: " + ID + "\nAlueen ID: "+ alue + "\nPalvelun nimi: "+ nimi +
+        return "Palvelun ID on: " + ID + "\nAlueen ID: "+ alue + "\nPalvelun nimi: "+ nimi +
                 "\nPalvelun tyyppi: "+ tyyppi +"\nPalvelun kuvaus: "+ kuvaus + "\nPalvelun hinta: "
                 + hinta + "\nPalvelun Alv: "+ alv;
-        return str;
 
     }
 

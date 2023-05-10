@@ -9,8 +9,6 @@ module com.example.otiprojekti {
     opens com.example.otiprojekti to javafx.fxml;
     exports com.example.otiprojekti;
 
-    exports com.example.otiprojekti.nakymat;
-    opens com.example.otiprojekti.nakymat to javafx.fxml;
     exports com.example.otiprojekti.ilmoitukset;
     opens com.example.otiprojekti.ilmoitukset to javafx.fxml;
 }

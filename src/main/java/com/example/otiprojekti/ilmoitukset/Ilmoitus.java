@@ -6,26 +6,24 @@ import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
 
 public class Ilmoitus extends StackPane {
-    private static int leveys = 200;
-    private static int korkeus = 70;
-    private static int kulmaSade = 20;
+    private final static int leveys = 200;
+    private final static int korkeus = 70;
+    private final static int kulmaSade = 20;
 
-    private Rectangle rect;
-    private Text text;
     private String teksti;
     private int kesto;
 
     public Ilmoitus(IlmoitusTyyppi tyyppi, String teksti, int kesto) {
         super();
 
-        rect = new Rectangle(leveys, korkeus);
+        Rectangle rect = new Rectangle(leveys, korkeus);
 
         this.teksti = teksti;
         // Lyhennetään teksti jos se on liian pitkä
         if (teksti.length() > 72) {
             teksti = teksti.substring(0, 71) + "...";
         }
-        text = new Text(teksti);
+        Text text = new Text(teksti);
 
         rect.setArcWidth(kulmaSade);
         rect.setArcHeight(kulmaSade);
@@ -43,6 +41,14 @@ public class Ilmoitus extends StackPane {
         getChildren().addAll(rect, text);
 
         this.kesto = kesto;
+    }
+
+    public String getTeksti() {
+        return teksti;
+    }
+
+    public void setTeksti(String teksti) {
+        this.teksti = teksti;
     }
 
     public int getKesto() {

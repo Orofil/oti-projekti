@@ -8,12 +8,11 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextAlignment;
-import javafx.stage.Modality;
 import javafx.stage.Stage;
 
 public class PoistoIkkuna {
-    private Stage ikkuna;
-    private Nappula poistoNappula;
+    private final Stage ikkuna;
+    private final Nappula poistoNappula;
 
     /**
      * Luo uuden poistoikkunan. Ikkunalle täytyy erikseen asettaa toiminnallisuus poistoNappulalle.

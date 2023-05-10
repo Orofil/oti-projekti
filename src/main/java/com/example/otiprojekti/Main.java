@@ -11,8 +11,6 @@ import com.itextpdf.text.pdf.PdfPTable;
 import com.itextpdf.text.pdf.PdfWriter;
 import javafx.application.Application;
 import javafx.collections.FXCollections;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.geometry.*;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
@@ -198,6 +196,7 @@ public class Main extends Application {
 
         Scene kehys = new Scene(paneeliYlin, W, H);
         ikkuna.setScene(kehys);
+        ikkuna.setTitle("Varaustenhallintajärjestelmä");
         ikkuna.setMaxWidth(MAX_LEVEYS);
         ikkuna.setMaxHeight(MAX_KORKEUS);
         ikkuna.show();
@@ -340,7 +339,6 @@ public class Main extends Application {
 
             alueID.setTextAlignment(TextAlignment.CENTER);
             alueTaulukko.add(alueNimi, 1, rivi);
-            //alueNimi.setAlignment(Pos.CENTER);
             alueNimi.setTextAlignment(TextAlignment.CENTER);
 
             Nappula poistoNappula = new Nappula(150, 30);
@@ -372,6 +370,7 @@ public class Main extends Application {
             muokkaus.setFitHeight(22);
             muokkausNappula.setGraphic(muokkaus);
             alueTaulukko.add(muokkausNappula, 3, rivi);
+
             // Ikkuna alueen muokkaamiseen
             muokkausNappula.setOnAction(e -> {
                 Stage alueMuokkausIkkuna = new Stage();
@@ -659,6 +658,7 @@ public class Main extends Application {
             roskis.setFitHeight(22);
             poistoNappula.setGraphic(roskis);
             mokkiTaulukko.add(poistoNappula, 5, rivi);
+
             // Ikkuna mökin poistamiseen
             poistoNappula.setOnMouseClicked(e -> {
                 PoistoIkkuna poistaMokkiIkkuna = new PoistoIkkuna("mökki", "mökin",
@@ -882,6 +882,7 @@ public class Main extends Application {
         palvelunLisays.setFitWidth(23);
         palvelunLisays.setFitHeight(22);
         palvelunLisaysNappula.setGraphic(palvelunLisays);
+
         // Ikkuna palvelun lisäämiseen
         palvelunLisaysNappula.setOnAction( e -> {
 
@@ -1699,7 +1700,6 @@ public class Main extends Application {
                         varausMuokkausTeksti.setText("Muutosten tallentaminen ei onnistunut. " +
                                 "\nTarkista syötteet ja yritä uudelleen.");
                         varausMuokkausTeksti.setFill(Color.RED);
-                        throw new RuntimeException(ex);
                     }
                 });
 
@@ -1780,7 +1780,7 @@ public class Main extends Application {
 
         varausRaporttiNappula.setOnAction( event -> {
             String tiedostonNimi =
-                    "Varausraportti "+LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMdd_HHmmss"))+".pdf"; // PDF-tiedoston nimi
+                    "Varausraportti "+LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMdd_HHmmss"))+".pdf";
             Document dokumentti = new Document();
 
             try {
@@ -2673,7 +2673,7 @@ public class Main extends Application {
                     riviVp++;
                 }
                 tarkasteleLaskuPaneeli.add(new Text(String.format("%,.2f", obj.getVarausPalveluSumma()) + " €"),1,9);
-                tarkasteleLaskuPaneeli.add(new Text(String.valueOf(String.format("%,.2f", obj.getVarausSumma()) + " €")),1,11);
+                tarkasteleLaskuPaneeli.add(new Text(String.format("%,.2f", obj.getVarausSumma()) + " €"),1,11);
 
             });
 
@@ -2684,7 +2684,7 @@ public class Main extends Application {
             luoLaskuNappula.setGraphic(tiedostoksi);
             laskuTaulukko.add(luoLaskuNappula, 7, rivi);
             luoLaskuNappula.setOnMouseClicked(e -> {
-                obj.vieDokumentiksi();
+                obj.vieDokumentiksi(ilmoitusPaneeli);
                 try {
                     tietokanta.paivitaLaskunStatusLahetetyksi(obj.getID(), 1);
                     haeKaikkiTiedot();
@@ -2726,8 +2726,6 @@ public class Main extends Application {
                     "Virhe tietojen hakemisessa. Tietokantaa ei ole ehkä käynnistetty.");
         }
     }
-
-
 
     public static void main(String[] args) {
         launch();

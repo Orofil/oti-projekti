@@ -121,10 +121,9 @@ public class Mokki {
 
     @Override
     public String toString() {
-        String str= "Mökin ID on: " + ID + "\nAlueen ID: "+ alue + "\nPostinro: "+ postiNro+"\nMökin nimi: "+
+        return "Mökin ID on: " + ID + "\nAlueen ID: "+ alue + "\nPostinro: "+ postiNro+"\nMökin nimi: "+
                 nimi +"\nKatuosoite: "+ katuosoite+ "\nHinta: "+ hinta + "\nKuvaus: "+ kuvaus+ "\nHenkilömäärä: "+
                 hloMaara+"\nVarustelu: "+ varustelu;
-        return str;
 
     }
 

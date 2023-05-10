@@ -13,6 +13,8 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.concurrent.atomic.AtomicReference;
 
+import com.example.otiprojekti.ilmoitukset.IlmoitusPaneeli;
+import com.example.otiprojekti.ilmoitukset.IlmoitusTyyppi;
 import com.itextpdf.text.Document;
 import com.itextpdf.text.Paragraph;
 import com.itextpdf.text.pdf.PdfWriter;
@@ -105,15 +107,13 @@ public class Lasku {
 
     @Override
     public String toString() {
-        String str =
-                "LaskuID:\t " + ID +
-                "\nVarausID:\t " + varaus.getID() +
-                "\nAsiakas:\t " + getVaraus().getAsiakas().getNimi(true)+
-                "\nAsiakasID:\t " + getVaraus().getAsiakas().getID()+
-                "\n-----------------------------------------------------\n"+
-                "\nMaksettava (EURO) :\t " + summa +
-                "\nAlv (%) :\t " + alv;
-        return str;
+        return "LaskuID:\t " + ID +
+        "\nVarausID:\t " + varaus.getID() +
+        "\nAsiakas:\t " + getVaraus().getAsiakas().getNimi(true)+
+        "\nAsiakasID:\t " + getVaraus().getAsiakas().getID()+
+        "\n-----------------------------------------------------\n"+
+        "\nMaksettava (EURO) :\t " + summa +
+        "\nAlv (%) :\t " + alv;
     }
 
     @Override
@@ -129,7 +129,7 @@ public class Lasku {
     }
 
 
-    public void vieDokumentiksi() {
+    public void vieDokumentiksi(IlmoitusPaneeli ilmoitusPaneeli) {
         Stage laskuIkkuna = new Stage();
         GridPane laskunTiedot = new GridPane();
         laskunTiedot.setPadding(new Insets(25));
@@ -184,13 +184,13 @@ public class Lasku {
                 lasku.add(new Paragraph("Viitenumero:\t "+viiteNumero.getText()));
                 lasku.close();
             } catch (Exception e) {
-                System.out.println("Laskutietojen tallennuksessa tapahtui virhe.");
+                ilmoitusPaneeli.lisaaIlmoitus(IlmoitusTyyppi.VAROITUS, "Virhe laskun luomisessa.\nVirhe: " + e);
             }
             // Avataan dokumentti oletusohjelmalla
             try {
                 Desktop.getDesktop().open(new File(tiedostonNimi));
             } catch (IOException e) {
-                throw new RuntimeException(e);
+                ilmoitusPaneeli.lisaaIlmoitus(IlmoitusTyyppi.VAROITUS, "Virhe laskun avaamisessa.\nVirhe: " + e);
             }
             laskuIkkuna.close();
         });
