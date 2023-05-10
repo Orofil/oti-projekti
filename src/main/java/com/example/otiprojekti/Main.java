@@ -1337,20 +1337,18 @@ public class Main extends Application {
             varausLisaysPaneeli.setVgap(5);
             Text vanhaAsiakasTeksti = new Text("Jos kyseessä on vanha asiakas, syötä asiakasID.");
             varausLisaysPaneeli.add(vanhaAsiakasTeksti, 0, 0);
+            GridPane.setColumnSpan(vanhaAsiakasTeksti, 2);
             TextField asiakasID = new TextField();
             TextField mokkiID = new TextField();
             DatePicker aloitusPvm = new DatePicker();
             TextField aloitusAika = new TextField("16:00");
             DatePicker lopetusPvm = new DatePicker();
             TextField lopetusAika = new TextField("12:00");
-            TextField lisapalvelu1 = new TextField();
-            TextField lisapalvelu1lkm = new TextField();
-            TextField lisapalvelu2 = new TextField();
-            TextField lisapalvelu2lkm = new TextField();
-            TextField lisapalvelu3 = new TextField();
-            TextField lisapalvelu3lkm = new TextField();
+            GridPane lisaPalvelutGrid = new GridPane();
+            lisaPalvelutGrid.setVgap(5);
+            lisaPalvelutGrid.setHgap(15);
             Nappula lisaaPalveluNappula = new Nappula("Liitä uusi lisäpalvelu");
-            
+
 
             Text asiakasIDText = new Text("AsiakasID");
             Text mokkiIDText = new Text("MökkiID");
@@ -1358,12 +1356,6 @@ public class Main extends Application {
             Text aloitusAikaText = new Text("ja kellonaika");
             Text lopetusPvmText = new Text("Lopetuspäivämäärä");
             Text lopetusAikaText = new Text("ja kellonaika");
-            Text lisapalvelu1Text = new Text("Lisäpalvelu 1 (palveluID)");
-            Text lisapalvelu1lkmText = new Text("Lukumäärä");
-            Text lisapalvelu2Text = new Text("Lisäpalvelu 2 (palveluID)");
-            Text lisapalvelu2lkmText = new Text("Lukumäärä");
-            Text lisapalvelu3Text = new Text("Lisäpalvelu 3 (palveluID)");
-            Text lisapalvelu3lkmText = new Text("Lukumäärä");
 
             varausLisaysPaneeli.add(asiakasIDText, 0, 1);
             varausLisaysPaneeli.add(asiakasID, 1, 1);
@@ -1377,27 +1369,26 @@ public class Main extends Application {
             varausLisaysPaneeli.add(lopetusPvm, 1, 5);
             varausLisaysPaneeli.add(lopetusAikaText, 0, 6);
             varausLisaysPaneeli.add(lopetusAika, 1, 6);
-            varausLisaysPaneeli.add(lisaaPalveluNappula, 0, 13);
+            varausLisaysPaneeli.add(lisaPalvelutGrid, 0, 7);
+            GridPane.setColumnSpan(lisaPalvelutGrid, 2);
+            varausLisaysPaneeli.add(lisaaPalveluNappula, 0, 9);
 
-            AtomicInteger laskuri = new AtomicInteger(0);
+            // Lisäpalveluiden kenttien luonti
+            HashMap<TextField, TextField> lisaPalvelut = new HashMap<>();
+            AtomicInteger laskuri = new AtomicInteger(1);
             lisaaPalveluNappula.setOnAction( event -> {
-                if (laskuri.get() == 0) {
-                    varausLisaysPaneeli.add(lisapalvelu1Text, 0, 7);
-                    varausLisaysPaneeli.add(lisapalvelu1, 1, 7);
-                    varausLisaysPaneeli.add(lisapalvelu1lkmText, 0, 8);
-                    varausLisaysPaneeli.add(lisapalvelu1lkm, 1, 8);
-                } else if (laskuri.get() == 1) {
-                    varausLisaysPaneeli.add(lisapalvelu2Text, 0, 9);
-                    varausLisaysPaneeli.add(lisapalvelu2, 1, 9);
-                    varausLisaysPaneeli.add(lisapalvelu2lkmText, 0, 10);
-                    varausLisaysPaneeli.add(lisapalvelu2lkm, 1, 10);
-                } else if (laskuri.get() == 2) {
-                    varausLisaysPaneeli.add(lisapalvelu3Text, 0, 11);
-                    varausLisaysPaneeli.add(lisapalvelu3, 1, 11);
-                    varausLisaysPaneeli.add(lisapalvelu3lkmText, 0, 12);
-                    varausLisaysPaneeli.add(lisapalvelu3lkm, 1, 12);
-                }
-                laskuri.set(laskuri.get()+1);
+                Text lisaPalveluText = new Text("Lisäpalvelu " + laskuri.get() + " (palveluID)");
+                Text lisaPalveluLkmText = new Text("lkm");
+                TextField lisaPalvelu = new TextField();
+                TextField lisaPalveluLkm = new TextField();
+                lisaPalvelu.setPrefWidth(100);
+                lisaPalveluLkm.setPrefWidth(100);
+                lisaPalvelut.put(lisaPalvelu, lisaPalveluLkm);
+                lisaPalvelutGrid.add(lisaPalveluText, 0, laskuri.get());
+                lisaPalvelutGrid.add(lisaPalvelu, 1, laskuri.get());
+                lisaPalvelutGrid.add(lisaPalveluLkmText, 2, laskuri.get());
+                lisaPalvelutGrid.add(lisaPalveluLkm, 3, laskuri.get());
+                laskuri.set(laskuri.get() + 1);
             });
             
 
@@ -1421,8 +1412,6 @@ public class Main extends Application {
 
             Nappula lisaaVaraus = new Nappula("Aseta varaus");
             lisaaVaraus.setOnAction( event -> {
-                String varausAlkuAika = aloitusPvm.getValue() + " " + aloitusAika.getText();
-                String varausLoppuAika = lopetusPvm.getValue() + " " + lopetusAika.getText();
                 try {
                     int asiakasIDInsert;
                     if (uusiAsiakas.isSelected()) {
@@ -1439,23 +1428,17 @@ public class Main extends Application {
                         asiakasIDInsert = Integer.parseInt(asiakasID.getText());
                     }
 
-                    HashMap<Palvelu, Integer> varauksenPalvelut = new HashMap<>(); // TEMP varaukseen liittyviä palveluita varten
-
-                    if (!lisapalvelu1lkm.getText().equals("") && !lisapalvelu1.getText().equals("")) {
-                        varauksenPalvelut.put(
-                                etsiPalveluID(palveluLista, Integer.parseInt(lisapalvelu1.getText())),
-                                Integer.parseInt(lisapalvelu1lkm.getText())
-                                );
-                    } if (!lisapalvelu2lkm.getText().equals("") && !lisapalvelu2.getText().equals("")) {
-                        varauksenPalvelut.put(
-                                etsiPalveluID(palveluLista, Integer.parseInt(lisapalvelu2.getText())),
-                                Integer.parseInt(lisapalvelu2lkm.getText())
-                        );
-                    } if (!lisapalvelu3lkm.getText().equals("") && !lisapalvelu3.getText().equals("")) {
-                        varauksenPalvelut.put(
-                                etsiPalveluID(palveluLista, Integer.parseInt(lisapalvelu3.getText())),
-                                Integer.parseInt(lisapalvelu3lkm.getText())
-                        );
+                    HashMap<String, LocalDateTime> varausAjat = parseVarausAika(
+                            aloitusPvm.getValue(), aloitusAika.getText(), lopetusPvm.getValue(), lopetusAika.getText());
+                    HashMap<Palvelu, Integer> varauksenPalvelut = new HashMap<>();
+                    for (Map.Entry<TextField, TextField> entry : lisaPalvelut.entrySet()) {
+                        try {
+                            varauksenPalvelut.put(
+                                    etsiPalveluID(palveluLista, Integer.parseInt(entry.getKey().getText())),
+                                    Integer.parseInt(entry.getValue().getText())
+                            );
+                        // Virheellinen lukuarvo, esim tyhjä kenttä, jätetään huomiotta ja jatketaan TODO onko ok näin
+                        } catch (NumberFormatException ignored) {}
                     }
 
 
@@ -1465,8 +1448,8 @@ public class Main extends Application {
                             varauksenPalvelut,
                             LocalDateTime.now().format(dateTimeFormat),
                             LocalDateTime.now().format(dateTimeFormat),
-                            varausAlkuAika,
-                            varausLoppuAika,
+                            varausAjat.get("alku").format(dateTimeFormat),
+                            varausAjat.get("loppu").format(dateTimeFormat),
                             asiakasLista,
                             mokkiLista,
                             palveluLista);
