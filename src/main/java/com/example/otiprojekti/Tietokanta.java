@@ -504,6 +504,7 @@ public class Tietokanta {
 
     /**
      * Muokkaa varausta tietokannassa.
+     * @param varaus Varaus
      * @param varaus_id Tyyppiä int. Oltava taulussa varaus.
      * @param asiakas_id Tyyppiä int. Oltava taulussa asiakas.
      * @param mokki_id Tyyppiä int. Oltava taulussa mokki.
@@ -513,8 +514,8 @@ public class Tietokanta {
      * @param varattu_alkupvm Tyyppiä datetime (muotoa YYYY-MM-DD hh:mm:ss)
      * @param varattu_loppupvm Tyyppiä datetime (muotoa YYYY-MM-DD hh:mm:ss)
      */
-    public void muokkaaVaraus(int varaus_id, int asiakas_id, int mokki_id, HashMap<Palvelu, Integer> palvelut, String varattu_pvm,
-                              String vahvistus_pvm, String varattu_alkupvm, String varattu_loppupvm) throws SQLException {
+    public void muokkaaVaraus(Varaus varaus, int varaus_id, int asiakas_id, int mokki_id, HashMap<Palvelu, Integer> palvelut,
+                              String varattu_pvm, String vahvistus_pvm, String varattu_alkupvm, String varattu_loppupvm) throws SQLException {
         stm = con.prepareStatement(
                 "UPDATE varaus " +
                         "SET asiakas_id = ?," +
@@ -535,17 +536,15 @@ public class Tietokanta {
         stm.close();
 
         // Muokataan varaukseen liittyvät palvelut
+        // Poistetaan ensin kaikki
+        for (Map.Entry<Palvelu, Integer> vp : varaus.getPalvelut().entrySet()) {
+            poistaVarauksenPalvelut(varaus_id, vp.getKey().getID());
+        }
+        varaus.getPalvelut().clear();
+
+        // Lisätään sitten ne, jotka on annettu
         for (Map.Entry<Palvelu, Integer> vp : palvelut.entrySet()) {
-            stm = con.prepareStatement(
-                    "UPDATE varauksen_palvelut " +
-                            "SET lkm = ? " +
-                            "WHERE varaus_id = ? " +
-                            "AND palvelu_id = ?");
-            stm.setInt(1, vp.getValue());
-            stm.setInt(2, varaus_id);
-            stm.setInt(3, vp.getKey().getID());
-            stm.executeUpdate();
-            stm.close();
+            insertVarauksenPalvelut(varaus_id, vp.getKey().getID(), vp.getValue());
         }
     }
 
