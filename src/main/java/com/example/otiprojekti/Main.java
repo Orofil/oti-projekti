@@ -1376,20 +1376,23 @@ public class Main extends Application {
 
             // Lisäpalveluiden kenttien luonti
             HashMap<TextField, TextField> lisaPalvelut = new HashMap<>();
-            AtomicInteger laskuri = new AtomicInteger(1);
+            AtomicInteger riviVp = new AtomicInteger(1);
             lisaaPalveluNappula.setOnAction( event -> {
-                Text lisaPalveluText = new Text("Lisäpalvelu " + laskuri.get() + " (palveluID)");
+                Text lisaPalveluText = new Text("Lisäpalvelu " + riviVp.get() + " (palveluID)");
                 Text lisaPalveluLkmText = new Text("lkm");
                 TextField lisaPalvelu = new TextField();
                 TextField lisaPalveluLkm = new TextField();
                 lisaPalvelu.setPrefWidth(100);
                 lisaPalveluLkm.setPrefWidth(100);
+
+                lisaPalvelutGrid.add(lisaPalveluText, 0, riviVp.get());
+                lisaPalvelutGrid.add(lisaPalvelu, 1, riviVp.get());
+                lisaPalvelutGrid.add(lisaPalveluLkmText, 2, riviVp.get());
+                lisaPalvelutGrid.add(lisaPalveluLkm, 3, riviVp.get());
+
                 lisaPalvelut.put(lisaPalvelu, lisaPalveluLkm);
-                lisaPalvelutGrid.add(lisaPalveluText, 0, laskuri.get());
-                lisaPalvelutGrid.add(lisaPalvelu, 1, laskuri.get());
-                lisaPalvelutGrid.add(lisaPalveluLkmText, 2, laskuri.get());
-                lisaPalvelutGrid.add(lisaPalveluLkm, 3, laskuri.get());
-                laskuri.set(laskuri.get() + 1);
+
+                riviVp.set(riviVp.get() + 1);
             });
             
 
@@ -1572,37 +1575,40 @@ public class Main extends Application {
                 DatePicker aloitusPvm = new DatePicker(obj.getVarausAlkuPvm().toLocalDate());
                 // Laittaa tekstiksi varausAlkuPvm:n ajan jos se ei ole null, muuten 16:00
                 TextField aloitusAika = new TextField(String.valueOf(Objects.requireNonNullElse(
-                        obj.getVarausAlkuPvm().toLocalTime(), "16:00"))); // TODO testataan toimiiko lisääminen ilman sekunteja
+                        obj.getVarausAlkuPvm().toLocalTime(), "16:00")));
                 DatePicker lopetusPvm = new DatePicker(obj.getVarausLoppuPvm().toLocalDate());
                 TextField lopetusAika = new TextField(String.valueOf(Objects.requireNonNullElse(
                         obj.getVarausLoppuPvm().toLocalTime(), "12:00")));
+                GridPane lisaPalvelutGrid = new GridPane();
+                lisaPalvelutGrid.setVgap(5);
+                lisaPalvelutGrid.setHgap(15);
+                Nappula lisaaPalveluNappula = new Nappula("Liitä uusi lisäpalvelu");
 
                 // Lisäpalvelut kenttien luonti
                 HashMap<Palvelu, Integer> lisaPalvelutIn = obj.getPalvelut();
                 HashMap<TextField, TextField> lisaPalvelutOut = new HashMap<>();
-                GridPane lisaPalvelutGrid = new GridPane();
-                lisaPalvelutGrid.setVgap(5);
-                lisaPalvelutGrid.setHgap(15);
-                int riviVp = 1;
-                for (Map.Entry<Palvelu, Integer> vp : lisaPalvelutIn.entrySet()) {
-                    Text lisaPalveluText = new Text("Lisäpalvelu " + riviVp + " (palveluID)");
-                    Text lisaPalveluLkmText = new Text("lkm");
-                    TextField lisaPalvelu = new TextField();
-                    TextField lisaPalveluLkm = new TextField();
-                    lisaPalvelu.setPrefWidth(100);
-                    lisaPalveluLkm.setPrefWidth(100);
+                AtomicInteger riviVp = new AtomicInteger(1);
+                try {
+                    for (Map.Entry<Palvelu, Integer> vp : lisaPalvelutIn.entrySet()) {
+                        Text lisaPalveluText = new Text("Lisäpalvelu " + riviVp.get() + " (palveluID)");
+                        Text lisaPalveluLkmText = new Text("lkm");
+                        TextField lisaPalvelu = new TextField();
+                        TextField lisaPalveluLkm = new TextField();
+                        lisaPalvelu.setPrefWidth(100);
+                        lisaPalveluLkm.setPrefWidth(100);
 
-                    lisaPalvelutGrid.add(lisaPalveluText, 0, riviVp);
-                    lisaPalvelutGrid.add(lisaPalvelu, 1, riviVp);
-                    lisaPalvelutGrid.add(lisaPalveluLkmText, 2, riviVp);
-                    lisaPalvelutGrid.add(lisaPalveluLkm, 3, riviVp);
+                        lisaPalvelutGrid.add(lisaPalveluText, 0, riviVp.get());
+                        lisaPalvelutGrid.add(lisaPalvelu, 1, riviVp.get());
+                        lisaPalvelutGrid.add(lisaPalveluLkmText, 2, riviVp.get());
+                        lisaPalvelutGrid.add(lisaPalveluLkm, 3, riviVp.get());
 
-                    lisaPalvelu.setText(String.valueOf(vp.getKey().getID()));
-                    lisaPalveluLkm.setText(String.valueOf(vp.getValue()));
-                    lisaPalvelutOut.put(lisaPalvelu, lisaPalveluLkm);
+                        lisaPalvelu.setText(String.valueOf(vp.getKey().getID()));
+                        lisaPalveluLkm.setText(String.valueOf(vp.getValue()));
+                        lisaPalvelutOut.put(lisaPalvelu, lisaPalveluLkm);
 
-                    riviVp++;
-                }
+                        riviVp.set(riviVp.get() + 1);
+                    }
+                } catch (NullPointerException ignored) {}
 
                 Text asiakasIDText = new Text("AsiakasID");
                 Text mokkiIDText = new Text("MökkiID");
@@ -1625,12 +1631,31 @@ public class Main extends Application {
                 varausMuokkausGridPaneeli.add(lopetusAika, 1, 6);
                 varausMuokkausGridPaneeli.add(lisaPalvelutGrid, 0, 7);
                 GridPane.setColumnSpan(lisaPalvelutGrid, 2);
+                varausMuokkausGridPaneeli.add(lisaaPalveluNappula, 0, 9);
 
+                // Uusien lisäpalveluiden kenttien luonti
+                lisaaPalveluNappula.setOnAction(event -> {
+                    Text lisaPalveluText = new Text("Lisäpalvelu " + riviVp.get() + " (palveluID)");
+                    Text lisaPalveluLkmText = new Text("lkm");
+                    TextField lisaPalvelu = new TextField();
+                    TextField lisaPalveluLkm = new TextField();
+                    lisaPalvelu.setPrefWidth(100);
+                    lisaPalveluLkm.setPrefWidth(100);
+
+                    lisaPalvelutGrid.add(lisaPalveluText, 0, riviVp.get());
+                    lisaPalvelutGrid.add(lisaPalvelu, 1, riviVp.get());
+                    lisaPalvelutGrid.add(lisaPalveluLkmText, 2, riviVp.get());
+                    lisaPalvelutGrid.add(lisaPalveluLkm, 3, riviVp.get());
+
+                    lisaPalvelutOut.put(lisaPalvelu, lisaPalveluLkm);
+
+                    riviVp.set(riviVp.get() + 1);
+                });
                 
                 Nappula tallennaVarausMuutokset = new Nappula("Tallenna muutokset");
                 tallennaVarausMuutokset.setOnAction( event -> {
-                    String varausAlkuAika = aloitusPvm.getValue() + " " + aloitusAika.getText();
-                    String varausLoppuAika = lopetusPvm.getValue() + " " + lopetusAika.getText();
+                    HashMap<String, LocalDateTime> varausAjat = parseVarausAika(
+                            aloitusPvm.getValue(), aloitusAika.getText(), lopetusPvm.getValue(), lopetusAika.getText());
 
                     HashMap<Palvelu, Integer> varauksenPalvelut = new HashMap<>();
                     for (Map.Entry<TextField, TextField> entry : lisaPalvelutOut.entrySet()) {
@@ -1639,7 +1664,7 @@ public class Main extends Application {
                                     etsiPalveluID(palveluLista, Integer.parseInt(entry.getKey().getText())),
                                     Integer.parseInt(entry.getValue().getText())
                             );
-                            // Virheellinen lukuarvo, esim tyhjä kenttä, jätetään huomiotta ja jatketaan TODO onko ok näin
+                            // Virheellinen lukuarvo, esim tyhjä kenttä, jätetään huomiotta ja jatketaan TODO onko ok näin, toisaalta jos vahingossa jättää jonkun tyhjäksi, niin se palvelu poistuu
                         } catch (NumberFormatException ignored) {}
                     }
 
@@ -1652,8 +1677,8 @@ public class Main extends Application {
                                 varauksenPalvelut,
                                 LocalDateTime.now().format(dateTimeFormat),
                                 LocalDateTime.now().format(dateTimeFormat),
-                                varausAlkuAika,
-                                varausLoppuAika);
+                                varausAjat.get("alku").format(dateTimeFormat),
+                                varausAjat.get("loppu").format(dateTimeFormat));
                         varausMuokkausIkkuna.close();
                         haeKaikkiTiedot();
                         paivitaVarausTaulukko(varausLista);
@@ -1661,13 +1686,15 @@ public class Main extends Application {
                         ilmoitusPaneeli.lisaaIlmoitus(IlmoitusTyyppi.VAROITUS, String.valueOf(ex));
                         varausMuokkausTeksti.setText("Muutosten tallentaminen ei onnistunut. " +
                                 "\nTarkista syötteet ja yritä uudelleen.");
+                        varausMuokkausTeksti.setFill(Color.RED);
+                        throw new RuntimeException(ex);
                     }
                 });
 
                 varausMuokkausPaneeli.getChildren().addAll
                         (varausMuokkausGridPaneeli, tallennaVarausMuutokset);
 
-                Scene varausMuokkausKehys = new Scene(varausMuokkausPaneeli, 400, 550);
+                Scene varausMuokkausKehys = new Scene(varausMuokkausPaneeli, 450, 550);
                 varausMuokkausIkkuna.setScene(varausMuokkausKehys);
                 varausMuokkausIkkuna.setTitle("Muokkaa varausta");
                 varausMuokkausIkkuna.show();

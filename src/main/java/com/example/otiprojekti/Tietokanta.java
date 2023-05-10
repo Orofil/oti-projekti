@@ -182,8 +182,8 @@ public class Tietokanta {
      */
     public void insertVarauksenPalvelut(int varaus_id, int palvelu_id, int lkm) throws SQLException {
         stm = con.prepareStatement(
-                "INSERT INTO varauksen_palvelut(varaus_id,palvelu_id,lkm)" +
-                        "(?,?,?)");
+                "INSERT INTO varauksen_palvelut(varaus_id,palvelu_id,lkm) " +
+                        "VALUES (?,?,?)");
         stm.setInt(1, varaus_id);
         stm.setInt(2, palvelu_id);
         stm.setInt(3, lkm);
