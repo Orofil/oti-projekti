@@ -129,7 +129,7 @@ public class Lasku {
     }
 
 
-    public boolean vieDokumentiksi() { // TODO
+    public boolean vieDokumentiksi() {
         Stage laskuIkkuna = new Stage();
         GridPane laskunTiedot = new GridPane();
         laskunTiedot.setPadding(new Insets(25));

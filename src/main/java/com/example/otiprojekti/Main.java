@@ -1443,7 +1443,6 @@ public class Main extends Application {
                                     etsiPalveluID(palveluLista, Integer.parseInt(entry.getKey().getText())),
                                     Integer.parseInt(entry.getValue().getText())
                             );
-                        // Virheellinen lukuarvo, esim tyhjä kenttä, jätetään huomiotta ja jatketaan TODO onko ok näin
                         } catch (NumberFormatException ignored) {}
                     }
 
@@ -1665,7 +1664,6 @@ public class Main extends Application {
                                     etsiPalveluID(palveluLista, Integer.parseInt(entry.getKey().getText())),
                                     Integer.parseInt(entry.getValue().getText())
                             );
-                            // Virheellinen lukuarvo, esim tyhjä kenttä, jätetään huomiotta ja jatketaan TODO onko ok näin, toisaalta jos vahingossa jättää jonkun tyhjäksi, niin se palvelu poistuu
                         } catch (NumberFormatException ignored) {}
                     }
 
@@ -2258,7 +2256,6 @@ public class Main extends Application {
         ComboBox<String> laskuLajittelu = new ComboBox<>(FXCollections.observableList(Arrays.asList(
                 "Tunnuksen mukaan",
                 "Uusin > Vanhin",
-                "Vanhin > Uusin",
                 "Varaustunnuksen mukaan"
         )));
         laskuLajittelu.setValue("Tunnuksen mukaan"); // Oletuksena valittu vaihtoehto
@@ -2275,11 +2272,11 @@ public class Main extends Application {
             // Lajittelu
             switch (laskuLajittelu.getValue()) {
                 case "Tunnuksen mukaan" ->
-                        laskuLista.sort(Comparator.comparing(Lasku::getID));
-                case "Uusin > Vanhin" -> // TODO katso lajitteleeko vanhimmasta uusimpaan
-                        laskuLista.sort(Comparator.comparing(Lasku -> Lasku.getVaraus().getVahvistusPvm()));
+                        laskuTulokset.sort(Comparator.comparing(Lasku::getID));
+                case "Uusin > Vanhin" ->
+                        laskuTulokset.sort(Comparator.comparing(Lasku -> Lasku.getVaraus().getVahvistusPvm()));
                 case "Varaustunnuksen mukaan" ->
-                        laskuLista.sort(Comparator.comparing(Lasku -> Lasku.getVaraus().getID()));
+                        laskuTulokset.sort(Comparator.comparing(Lasku -> Lasku.getVaraus().getID()));
             }
 
             paivitaLaskuTaulukko(laskuTulokset);
