@@ -1809,7 +1809,7 @@ public class Main extends Application {
 
 
                 // Lisää ArrayListin tiedot taulukkoon
-                for (Varaus v : varausLista) { // TODO Tämä ei toimi vielä (vai toimiiko? tämä vaan luki tässä)
+                for (Varaus v : varausLista) {
                     varausTaulukko.addCell(new PdfPCell(new Paragraph(
                             String.valueOf(v.getID()), FontFactory.getFont("Arial", 9f))));
                     varausTaulukko.addCell(new PdfPCell(new Paragraph(
@@ -1826,7 +1826,7 @@ public class Main extends Application {
                     HashMap<Palvelu, Integer> varauksenPalvelut = v.getPalvelut();
 
                     int laskuri = 0;
-                    for (Map.Entry<Palvelu, Integer> vp : varauksenPalvelut.entrySet()) { // TODO muutin tätä vähän järkevämmäksi, toimiiko vielä
+                    for (Map.Entry<Palvelu, Integer> vp : varauksenPalvelut.entrySet()) {
                         if (laskuri >= 1) {
                             for (int i = 1; i <= 6; i++) {
                                 varausTaulukko.addCell(new PdfPCell(new Paragraph("")));
