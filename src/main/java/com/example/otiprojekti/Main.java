@@ -42,6 +42,7 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.util.*;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import static com.example.otiprojekti.Tietokanta.dateTimeFormat;
 import static com.example.otiprojekti.Utils.*;
@@ -855,8 +856,6 @@ public class Main extends Application {
         palveluHaku.add(palveluLajittelu, 2, 1);
 
         palveluHakuNappula.setOnAction( e -> {
-            // Suodatus
-            // TODO
             if (palveluHakuKentta.getText().equals("")) {
                 palveluTulokset = palveluLista;
             } else {
@@ -1258,7 +1257,6 @@ public class Main extends Application {
                 }
             }
 
-            
             // TODO ei ole pakko täyttää kaikkia kenttiä hakua varten
 
             // Lajittelu
@@ -1345,6 +1343,13 @@ public class Main extends Application {
             TextField aloitusAika = new TextField("16:00");
             DatePicker lopetusPvm = new DatePicker();
             TextField lopetusAika = new TextField("12:00");
+            TextField lisapalvelu1 = new TextField();
+            TextField lisapalvelu1lkm = new TextField();
+            TextField lisapalvelu2 = new TextField();
+            TextField lisapalvelu2lkm = new TextField();
+            TextField lisapalvelu3 = new TextField();
+            TextField lisapalvelu3lkm = new TextField();
+            Nappula lisaaPalveluNappula = new Nappula("Liitä uusi lisäpalvelu");
             
 
             Text asiakasIDText = new Text("AsiakasID");
@@ -1353,6 +1358,12 @@ public class Main extends Application {
             Text aloitusAikaText = new Text("ja kellonaika");
             Text lopetusPvmText = new Text("Lopetuspäivämäärä");
             Text lopetusAikaText = new Text("ja kellonaika");
+            Text lisapalvelu1Text = new Text("Lisäpalvelu 1 (palveluID)");
+            Text lisapalvelu1lkmText = new Text("Lukumäärä");
+            Text lisapalvelu2Text = new Text("Lisäpalvelu 2 (palveluID)");
+            Text lisapalvelu2lkmText = new Text("Lukumäärä");
+            Text lisapalvelu3Text = new Text("Lisäpalvelu 3 (palveluID)");
+            Text lisapalvelu3lkmText = new Text("Lukumäärä");
 
             varausLisaysPaneeli.add(asiakasIDText, 0, 1);
             varausLisaysPaneeli.add(asiakasID, 1, 1);
@@ -1366,6 +1377,29 @@ public class Main extends Application {
             varausLisaysPaneeli.add(lopetusPvm, 1, 5);
             varausLisaysPaneeli.add(lopetusAikaText, 0, 6);
             varausLisaysPaneeli.add(lopetusAika, 1, 6);
+            varausLisaysPaneeli.add(lisaaPalveluNappula, 0, 13);
+
+            AtomicInteger laskuri = new AtomicInteger(0);
+            lisaaPalveluNappula.setOnAction( event -> {
+                if (laskuri.get() == 0) {
+                    varausLisaysPaneeli.add(lisapalvelu1Text, 0, 7);
+                    varausLisaysPaneeli.add(lisapalvelu1, 1, 7);
+                    varausLisaysPaneeli.add(lisapalvelu1lkmText, 0, 8);
+                    varausLisaysPaneeli.add(lisapalvelu1lkm, 1, 8);
+                } else if (laskuri.get() == 1) {
+                    varausLisaysPaneeli.add(lisapalvelu2Text, 0, 9);
+                    varausLisaysPaneeli.add(lisapalvelu2, 1, 9);
+                    varausLisaysPaneeli.add(lisapalvelu2lkmText, 0, 10);
+                    varausLisaysPaneeli.add(lisapalvelu2lkm, 1, 10);
+                } else if (laskuri.get() == 2) {
+                    varausLisaysPaneeli.add(lisapalvelu3Text, 0, 11);
+                    varausLisaysPaneeli.add(lisapalvelu3, 1, 11);
+                    varausLisaysPaneeli.add(lisapalvelu3lkmText, 0, 12);
+                    varausLisaysPaneeli.add(lisapalvelu3lkm, 1, 12);
+                }
+                laskuri.set(laskuri.get()+1);
+            });
+            
 
             vanhaAsiakasTeksti.setVisible(false);
             asiakasIDText.setVisible(false);
@@ -1404,14 +1438,33 @@ public class Main extends Application {
                     } else {
                         asiakasIDInsert = Integer.parseInt(asiakasID.getText());
                     }
+
                     HashMap<Palvelu, Integer> varauksenPalvelut = new HashMap<>(); // TEMP varaukseen liittyviä palveluita varten
-                    varauksenPalvelut.put(palveluLista.get(0), 1); // TEMP
+
+                    if (!lisapalvelu1lkm.getText().equals("") && !lisapalvelu1.getText().equals("")) {
+                        varauksenPalvelut.put(
+                                etsiPalveluID(palveluLista, Integer.parseInt(lisapalvelu1.getText())),
+                                Integer.parseInt(lisapalvelu1lkm.getText())
+                                );
+                    } if (!lisapalvelu2lkm.getText().equals("") && !lisapalvelu2.getText().equals("")) {
+                        varauksenPalvelut.put(
+                                etsiPalveluID(palveluLista, Integer.parseInt(lisapalvelu2.getText())),
+                                Integer.parseInt(lisapalvelu2lkm.getText())
+                        );
+                    } if (!lisapalvelu3lkm.getText().equals("") && !lisapalvelu3.getText().equals("")) {
+                        varauksenPalvelut.put(
+                                etsiPalveluID(palveluLista, Integer.parseInt(lisapalvelu3.getText())),
+                                Integer.parseInt(lisapalvelu3lkm.getText())
+                        );
+                    }
+
+
                     tietokanta.insertVaraus(
                             asiakasIDInsert,
                             Integer.parseInt(mokkiID.getText()),
-                            varauksenPalvelut, // TODO varauksen palvelut
+                            varauksenPalvelut,
                             LocalDateTime.now().format(dateTimeFormat),
-                            null,
+                            LocalDateTime.now().format(dateTimeFormat),
                             varausAlkuAika,
                             varausLoppuAika,
                             asiakasLista,
@@ -1422,15 +1475,18 @@ public class Main extends Application {
                     varausLisaysStage.close();
                 } catch (SQLException ex) {
                     ilmoitusPaneeli.lisaaIlmoitus(IlmoitusTyyppi.VAROITUS, String.valueOf(ex));
-                    // TODO lisää teksti siitä että syötteet vääriä
+                    vanhaAsiakasTeksti.setText("Varauksen asettaminen ei onnistunut. \n" +
+                            "Tarkista syötteet ja yritä uudelleen.");
                 }
             });
 
             varausLisaysVBoxPaneeli.getChildren().addAll
                     (uusiAsiakas, vanhaAsiakas, asiakasLisaysPaneeli, varausLisaysPaneeli, lisaaVaraus);
+            ScrollPane varausLisaysScrollPane = new ScrollPane();
+            varausLisaysScrollPane.setContent(varausLisaysVBoxPaneeli);
 
             // Luodaan uusi scene
-            Scene scene2 = new Scene(varausLisaysVBoxPaneeli, 400, 650);
+            Scene scene2 = new Scene(varausLisaysScrollPane, 550, 650);
             varausLisaysStage.setScene(scene2);
             varausLisaysStage.setTitle("Lisää varaus");
             varausLisaysStage.show();
@@ -1689,11 +1745,14 @@ public class Main extends Application {
 
                 // Varaukseen liittyvät palvelut
                 int riviVp = 11;
+
                 for (Map.Entry<Palvelu, Integer> vp : obj.getPalvelut().entrySet()) {
                     tarkasteleVarausPaneeli.add(new Text(vp.getKey().getKuvaus()), 0, riviVp);
                     tarkasteleVarausPaneeli.add(new Text(String.valueOf(vp.getValue())), 1, riviVp);
                     riviVp++;
                 }
+
+
             });
 
             rivi++;

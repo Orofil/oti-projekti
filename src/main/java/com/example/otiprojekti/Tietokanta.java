@@ -227,6 +227,8 @@ public class Tietokanta {
             stm.setInt(1, uusiVaraus.getID());
             stm.setInt(2, vp.getKey().getID());
             stm.setInt(3, vp.getValue());
+            stm.executeUpdate();
+            stm.close();
         }
     }
 
