@@ -36,6 +36,7 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.sql.SQLException;
 import java.time.Duration;
 import java.time.LocalDate;
@@ -1807,7 +1808,6 @@ public class Main extends Application {
                             v.getVarausLoppuPvm().format(dateTimeFormat), FontFactory.getFont("Arial", 9f))));
                     varausTaulukko.addCell(new PdfPCell(new Paragraph(
                             String.valueOf(v.getMokki().getAlue()), FontFactory.getFont("Arial", 9f))));
-                    //varausTaulukko.addCell(new PdfPCell(new Paragraph(String.valueOf(v.getPalvelut().get())))); // TODO palvelut
 
                     HashMap<Palvelu, Integer> map
                             = v.getPalvelut();
@@ -2359,7 +2359,18 @@ public class Main extends Application {
                 varausLoppuPvm.setText(String.valueOf(varaus.getVarausLoppuPvm()));
                 varattujaPaiviaYhteensa.setText(String.valueOf(daysBetween));
                 mokkiHinta.setText(String.valueOf(varaus.getMokki().getHinta()));
-                //palvelutHinta.setText();   TODO tähän pitäisi hakea varaukseen liittyvät palvelut ja niiden yhteishinta
+                BigDecimal palveluidenHinta = BigDecimal.valueOf(0);
+                for (Palvelu p : varaus.getPalvelutArrayListina()) {
+                    palveluidenHinta =
+                            palveluidenHinta.add(
+                                    (p.getHinta().
+                                            multiply(
+                                                    BigDecimal.valueOf(varaus.getPalvelut().get(p)))
+                                    )
+                            );
+                }
+
+                palvelutHinta.setText(String.valueOf(palveluidenHinta.setScale(2, RoundingMode.HALF_UP)));
             });
 
             Nappula laskunLisaysNappula = new Nappula("Lisää lasku");
@@ -2545,7 +2556,19 @@ public class Main extends Application {
                 varausLoppuPvm.setText(String.valueOf(varaus.getVarausLoppuPvm()));
                 varattujaPaiviaYhteensa.setText(String.valueOf(daysBetween));
                 mokkiHinta.setText(String.valueOf(varaus.getMokki().getHinta()));
-                //palvelutHinta.setText();   TODO tähän pitäisi hakea varaukseen liittyvät palvelut ja niiden yhteishinta
+
+                BigDecimal palveluidenHinta = BigDecimal.valueOf(0);
+                for (Palvelu p : varaus.getPalvelutArrayListina()) {
+                    palveluidenHinta =
+                            palveluidenHinta.add(
+                                    (p.getHinta().
+                                            multiply(
+                                                    BigDecimal.valueOf(varaus.getPalvelut().get(p)))
+                                    )
+                            );
+                }
+
+                palvelutHinta.setText(String.valueOf(palveluidenHinta.setScale(2, RoundingMode.HALF_UP)));
 
 
                 Nappula laskunMuokkausNappula = new Nappula("Tallenna muutokset");
