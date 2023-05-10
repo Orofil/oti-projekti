@@ -1624,7 +1624,8 @@ public class Main extends Application {
 
                 GridPane varausMuokkausGridPaneeli = new GridPane();
                 varausMuokkausGridPaneeli.setVgap(5);
-                varausMuokkausGridPaneeli.add(new Text("Muokkaa varauksen tietoja:"), 0, 0);
+                Text varausMuokkausTeksti = new Text("Muokkaa varauksen tietoja:");
+                varausMuokkausGridPaneeli.add(varausMuokkausTeksti, 0, 0);
                 TextField asiakasID = new TextField(String.valueOf(obj.getAsiakas().getID()));
                 TextField mokkiID = new TextField(String.valueOf(obj.getMokki().getID()));
                 DatePicker aloitusPvm = new DatePicker(obj.getVarausAlkuPvm().toLocalDate());
@@ -1635,6 +1636,27 @@ public class Main extends Application {
                 TextField lopetusAika = new TextField(String.valueOf(Objects.requireNonNullElse(
                         obj.getVarausLoppuPvm().toLocalTime(), "12:00")));
 
+                HashMap<Palvelu, Integer> map = obj.getPalvelut();
+                Set<Palvelu> keySet = map.keySet();
+                ArrayList<Palvelu> listOfKeys = new ArrayList<Palvelu>(keySet);
+                Collection<Integer> values = map.values();
+                ArrayList<Integer> listOfValues = new ArrayList<>(values);
+
+                TextField lisapalvelu1 = new TextField(String.valueOf(listOfKeys.get(0).getID()));
+                TextField lisapalvelu1lkm = new TextField(String.valueOf(listOfValues.get(0)));
+                TextField lisapalvelu2 = new TextField();
+                TextField lisapalvelu2lkm = new TextField();
+                TextField lisapalvelu3 = new TextField();
+                TextField lisapalvelu3lkm = new TextField();
+
+                if (listOfKeys.size() >= 2) {
+                    lisapalvelu1.setText(String.valueOf(listOfKeys.get(1).getID()));
+                    lisapalvelu1lkm.setText(String.valueOf(listOfValues.get(1)));
+                    if (listOfKeys.size() >= 3) {
+                        lisapalvelu3.setText(String.valueOf(listOfKeys.get(2).getID()));
+                        lisapalvelu3lkm.setText(String.valueOf(listOfValues.get(2)));
+                    }
+                }
 
                 Text asiakasIDText = new Text("AsiakasID");
                 Text mokkiIDText = new Text("MökkiID");
@@ -1642,6 +1664,12 @@ public class Main extends Application {
                 Text aloitusAikaText = new Text("ja kellonaika");
                 Text lopetusPvmText = new Text("Lopetuspäivämäärä");
                 Text lopetusAikaText = new Text("ja kellonaika");
+                Text lisapalvelu1Text = new Text("Lisäpalvelu 1 (palveluID)");
+                Text lisapalvelu1lkmText = new Text("Lukumäärä");
+                Text lisapalvelu2Text = new Text("Lisäpalvelu 2 (palveluID)");
+                Text lisapalvelu2lkmText = new Text("Lukumäärä");
+                Text lisapalvelu3Text = new Text("Lisäpalvelu 3 (palveluID)");
+                Text lisapalvelu3lkmText = new Text("Lukumäärä");
 
                 varausMuokkausGridPaneeli.add(asiakasIDText, 0, 1);
                 varausMuokkausGridPaneeli.add(asiakasID, 1, 1);
@@ -1656,13 +1684,45 @@ public class Main extends Application {
                 varausMuokkausGridPaneeli.add(lopetusAikaText, 0, 6);
                 varausMuokkausGridPaneeli.add(lopetusAika, 1, 6);
 
+                varausMuokkausGridPaneeli.add(lisapalvelu1Text, 0, 7);
+                varausMuokkausGridPaneeli.add(lisapalvelu1, 1, 7);
+                varausMuokkausGridPaneeli.add(lisapalvelu1lkmText, 0, 8);
+                varausMuokkausGridPaneeli.add(lisapalvelu1lkm, 1, 8);
 
+                varausMuokkausGridPaneeli.add(lisapalvelu2Text, 0, 9);
+                varausMuokkausGridPaneeli.add(lisapalvelu2, 1, 9);
+                varausMuokkausGridPaneeli.add(lisapalvelu2lkmText, 0, 10);
+                varausMuokkausGridPaneeli.add(lisapalvelu2lkm, 1, 10);
+
+                varausMuokkausGridPaneeli.add(lisapalvelu3Text, 0, 11);
+                varausMuokkausGridPaneeli.add(lisapalvelu3, 1, 11);
+                varausMuokkausGridPaneeli.add(lisapalvelu3lkmText, 0, 12);
+                varausMuokkausGridPaneeli.add(lisapalvelu3lkm, 1, 12);
+
+                
                 Nappula tallennaVarausMuutokset = new Nappula("Tallenna muutokset");
                 tallennaVarausMuutokset.setOnAction( event -> {
                     String varausAlkuAika = aloitusPvm.getValue() + " " + aloitusAika.getText();
                     String varausLoppuAika = lopetusPvm.getValue() + " " + lopetusAika.getText();
-                    HashMap<Palvelu, Integer> varauksenPalvelut = new HashMap<>(); // TEMP varaukseen liittyviä palveluita varten
-                    varauksenPalvelut.put(palveluLista.get(0), 1); // TEMP
+
+                    HashMap<Palvelu, Integer> varauksenPalvelut = new HashMap<>();
+
+                    if (!lisapalvelu1lkm.getText().equals("") && !lisapalvelu1.getText().equals("")) {
+                        varauksenPalvelut.put(
+                                etsiPalveluID(palveluLista, Integer.parseInt(lisapalvelu1.getText())),
+                                Integer.parseInt(lisapalvelu1lkm.getText())
+                        );
+                    } if (!lisapalvelu2lkm.getText().equals("") && !lisapalvelu2.getText().equals("")) {
+                        varauksenPalvelut.put(
+                                etsiPalveluID(palveluLista, Integer.parseInt(lisapalvelu2.getText())),
+                                Integer.parseInt(lisapalvelu2lkm.getText())
+                        );
+                    } if (!lisapalvelu3lkm.getText().equals("") && !lisapalvelu3.getText().equals("")) {
+                        varauksenPalvelut.put(
+                                etsiPalveluID(palveluLista, Integer.parseInt(lisapalvelu3.getText())),
+                                Integer.parseInt(lisapalvelu3lkm.getText())
+                        );
+                    }
                     try {
                         tietokanta.muokkaaVaraus(
                                 obj.getID(),
@@ -1678,14 +1738,15 @@ public class Main extends Application {
                         paivitaVarausTaulukko(varausLista);
                     } catch (SQLException ex) {
                         ilmoitusPaneeli.lisaaIlmoitus(IlmoitusTyyppi.VAROITUS, String.valueOf(ex));
-                        // TODO teksti siitä että syötteet vääriä
+                        varausMuokkausTeksti.setText("Muutosten tallentaminen ei onnistunut. " +
+                                "\nTarkista syötteet ja yritä uudelleen.");
                     }
                 });
 
                 varausMuokkausPaneeli.getChildren().addAll
                         (varausMuokkausGridPaneeli, tallennaVarausMuutokset);
 
-                Scene varausMuokkausKehys = new Scene(varausMuokkausPaneeli, 400, 350);
+                Scene varausMuokkausKehys = new Scene(varausMuokkausPaneeli, 400, 550);
                 varausMuokkausIkkuna.setScene(varausMuokkausKehys);
                 varausMuokkausIkkuna.setTitle("Muokkaa varausta");
                 varausMuokkausIkkuna.show();
