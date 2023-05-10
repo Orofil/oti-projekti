@@ -1224,8 +1224,13 @@ public class Main extends Application {
         Text alueSuodatusTeksti = new Text("Varauksen alue");
         alueSuodatusTeksti.setFont(fonttiPaksu);
         ComboBox<Alue> alueSuodatus = new ComboBox<>(FXCollections.observableArrayList(alueLista));
+        Nappula alueSuodatusPoista = new Nappula("Poista aluevalinta", 180, 40);
         varausHaku.add(alueSuodatusTeksti, 5, 0);
         varausHaku.add(alueSuodatus, 5, 1);
+        varausHaku.add(alueSuodatusPoista, 5, 2);
+
+        alueSuodatusPoista.setOnAction(e -> alueSuodatus.valueProperty().set(null));
+        // TODO lisätäänkö tällainen samanlainen DatePickereille, nyt pitää painaa enteriä tyhjentämisen jälkeen että se huomaa sen
 
         // Virheiden käsittely. Jos virheitä on, hakunappula on poistettu käytöstä.
         varausPvmAlku.setOnAction(e -> tarkistaVarausHakuSyotteet(
@@ -1238,28 +1243,28 @@ public class Main extends Application {
                 varausPvmAlku, varausPvmLoppu, varausAikaAlku, varausAikaLoppu, varausHakuNappula));
 
         varausHakuNappula.setOnAction( e -> {
-            varausTulokset = varausLista;
+            varausTulokset = new ArrayList<>();
 
-            if (varausAikaAlku.getText().equals("") || varausAikaLoppu.getText().equals("")) {
-                if (!varausHakuKentta.getText().equals("")) {
-                    varausTulokset = haeVarausHakusanalla(varausTulokset, varausHakuKentta.getText());
-                }
-            } else {
+            // Suodatus
+            HashMap<String, LocalDateTime> valitutAjat = parseVarausAika(
+                    varausPvmAlku.getValue(), varausAikaAlku.getText(), varausPvmLoppu.getValue(), varausAikaLoppu.getText());
 
-                HashMap<String, LocalDateTime> valitutAjat = parseVarausAika(
-                        varausPvmAlku.getValue(), varausAikaAlku.getText(), varausPvmLoppu.getValue(), varausAikaLoppu.getText());
-
-                for (Varaus v : varausLista) {
-                    LocalDateTime vAlkuAika = v.getVarausAlkuPvm();
-                    if ((vAlkuAika.isAfter(valitutAjat.get("alku")) || vAlkuAika.isEqual(valitutAjat.get("alku"))) &&
-                            (vAlkuAika.isBefore(valitutAjat.get("loppu")) || vAlkuAika.isEqual(valitutAjat.get("loppu"))) &&
+            for (Varaus v : varausLista) {
+                LocalDateTime vAlkuAika = v.getVarausAlkuPvm();
+                if ((varausAikaAlku.getText().equals("") && varausAikaLoppu.getText().equals("") &&
+                        varausPvmAlku.getValue() == null && varausPvmLoppu.getValue() == null) ||
+                        ((vAlkuAika.isAfter(valitutAjat.get("alku")) || vAlkuAika.isEqual(valitutAjat.get("alku"))) &&
+                        (vAlkuAika.isBefore(valitutAjat.get("loppu")) || vAlkuAika.isEqual(valitutAjat.get("loppu"))))) {
+                    if (alueSuodatus.getValue() == null ||
                             v.getMokki().getAlue().equals(alueSuodatus.getValue())) {
                         varausTulokset.add(v);
                     }
                 }
             }
 
-            // TODO ei ole pakko täyttää kaikkia kenttiä hakua varten
+            if (!varausHakuKentta.getText().equals("")) {
+                varausTulokset = haeVarausHakusanalla(varausTulokset, varausHakuKentta.getText());
+            }
 
             // Lajittelu
             switch (varausLajittelu.getValue()) {
@@ -1781,7 +1786,6 @@ public class Main extends Application {
                 varausTaulukko.setWidths(new int[]{2,4,4,5,5,4,4,3});
 
                 // Lisää taulukon otsikkorivi
-
                 varausTaulukko.addCell(new PdfPCell(new Paragraph("ID", FontFactory.getFont("Arial", 9f))));
                 varausTaulukko.addCell(new PdfPCell(new Paragraph("Asiakas", FontFactory.getFont("Arial", 9f))));
                 varausTaulukko.addCell(new PdfPCell(new Paragraph("Mökki", FontFactory.getFont("Arial", 9f))));
@@ -1793,7 +1797,7 @@ public class Main extends Application {
 
 
                 // Lisää ArrayListin tiedot taulukkoon
-                for (Varaus v : varausLista) { //Tämä ei toimi vielä
+                for (Varaus v : varausLista) { // TODO Tämä ei toimi vielä (vai toimiiko? tämä vaan luki tässä)
                     varausTaulukko.addCell(new PdfPCell(new Paragraph(
                             String.valueOf(v.getID()), FontFactory.getFont("Arial", 9f))));
                     varausTaulukko.addCell(new PdfPCell(new Paragraph(
@@ -1807,26 +1811,19 @@ public class Main extends Application {
                     varausTaulukko.addCell(new PdfPCell(new Paragraph(
                             String.valueOf(v.getMokki().getAlue()), FontFactory.getFont("Arial", 9f))));
 
-                    HashMap<Palvelu, Integer> map
-                            = v.getPalvelut();
-                    Set<Palvelu> keySet = map.keySet();
-                    ArrayList<Palvelu> listOfKeys
-                            = new ArrayList<Palvelu>(keySet);
-                    Collection<Integer> values = map.values();
-                    ArrayList<Integer> listOfValues
-                            = new ArrayList<>(values);
+                    HashMap<Palvelu, Integer> varauksenPalvelut = v.getPalvelut();
 
                     int laskuri = 0;
-                    for (Palvelu p : listOfKeys) {
-                        if (laskuri >=1) {
+                    for (Map.Entry<Palvelu, Integer> vp : varauksenPalvelut.entrySet()) { // TODO muutin tätä vähän järkevämmäksi, toimiiko vielä
+                        if (laskuri >= 1) {
                             for (int i = 1; i <= 6; i++) {
                                 varausTaulukko.addCell(new PdfPCell(new Paragraph("")));
                             }
                         }
                         varausTaulukko.addCell(new PdfPCell(new Paragraph(
-                                String.valueOf(listOfKeys.get(laskuri).getNimi()), FontFactory.getFont("Arial", 9f))));
+                                String.valueOf(vp.getKey().getNimi()), FontFactory.getFont("Arial", 9f))));
                         varausTaulukko.addCell(new PdfPCell(new Paragraph(
-                                String.valueOf(listOfValues.get(laskuri)), FontFactory.getFont("Arial", 9f))));
+                                String.valueOf(vp.getValue()), FontFactory.getFont("Arial", 9f))));
                         laskuri++;
                     }
 
