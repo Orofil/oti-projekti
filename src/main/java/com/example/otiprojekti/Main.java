@@ -1713,7 +1713,7 @@ public class Main extends Application {
                                 Integer.parseInt(mokkiID.getText()),
                                 varauksenPalvelut, // TODO varauksen palvelut, näiden poistamisessa ja lisäämisessä voi käyttää insert- ja muokkaaVarauksenPalvelut-metodeita
                                 LocalDateTime.now().format(dateTimeFormat),
-                                null,
+                                LocalDateTime.now().format(dateTimeFormat),
                                 varausAlkuAika,
                                 varausLoppuAika);
                         varausMuokkausIkkuna.close();
@@ -1813,19 +1813,19 @@ public class Main extends Application {
                 // Avataan dokumentti
                 dokumentti.open();
 
-                PdfPTable varausTaulukko = new PdfPTable(6);
-                varausTaulukko.setWidths(new int[]{4,4,4,4,4,4});
+                PdfPTable varausTaulukko = new PdfPTable(8);
+                varausTaulukko.setWidths(new int[]{2,4,4,5,5,4,4,3});
 
                 // Lisää taulukon otsikkorivi
 
-                varausTaulukko.addCell(new PdfPCell(new Paragraph("Tunnus")));
-                varausTaulukko.addCell(new PdfPCell(new Paragraph("Asiakkaan nimi")));
-                varausTaulukko.addCell(new PdfPCell(new Paragraph("Mökin nimi")));
-                varausTaulukko.addCell(new PdfPCell(new Paragraph("Varauksen alku")));
-                varausTaulukko.addCell(new PdfPCell(new Paragraph("Varauksen loppu")));
-                varausTaulukko.addCell(new PdfPCell(new Paragraph("Varauksen alue")));
-                //varausTaulukko.addCell(new PdfPCell(new Paragraph("Varauksen palvelun nimi")));
-                //varausTaulukko.addCell(new PdfPCell(new Paragraph("Varauksen palvelujen lukumäärä")));
+                varausTaulukko.addCell(new PdfPCell(new Paragraph("ID")));
+                varausTaulukko.addCell(new PdfPCell(new Paragraph("Asiakas")));
+                varausTaulukko.addCell(new PdfPCell(new Paragraph("Mökki")));
+                varausTaulukko.addCell(new PdfPCell(new Paragraph("Alkupvm.")));
+                varausTaulukko.addCell(new PdfPCell(new Paragraph("Loppupvm.")));
+                varausTaulukko.addCell(new PdfPCell(new Paragraph("Alue")));
+                varausTaulukko.addCell(new PdfPCell(new Paragraph("Palvelu")));
+                varausTaulukko.addCell(new PdfPCell(new Paragraph("Palvelu lkm")));
 
 
                 // Lisää ArrayListin tiedot taulukkoon
