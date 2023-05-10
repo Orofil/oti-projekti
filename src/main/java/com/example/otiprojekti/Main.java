@@ -1806,9 +1806,8 @@ public class Main extends Application {
 
                 // Varaukseen liittyvät palvelut
                 int riviVp = 11;
-
                 for (Map.Entry<Palvelu, Integer> vp : obj.getPalvelut().entrySet()) {
-                    tarkasteleVarausPaneeli.add(new Text(vp.getKey().getKuvaus()), 0, riviVp);
+                    tarkasteleVarausPaneeli.add(new Text(vp.getKey().getNimi()), 0, riviVp);
                     tarkasteleVarausPaneeli.add(new Text(String.valueOf(vp.getValue())), 1, riviVp);
                     riviVp++;
                 }
@@ -2479,10 +2478,11 @@ public class Main extends Application {
                 Text mokkiHintaText = new Text("Mökin hinta/vrk (€)");
                 Text palvelutHintaText = new Text("Lisäpalveluiden yhteishinta (€)");
                 Text alvText = new Text("Alv(%)");
-                Text statusText = new Text("Laskun tila \n" +
-                        "'0': Ei lähetetty \n" +
-                        "'1': Lähetetty \n" +
-                        "'2': Maksettu ");
+                Text statusText = new Text("""
+                        Laskun tila\s
+                        '0': Ei lähetetty\s
+                        '1': Lähetetty\s
+                        '2': Maksettu\s""");
 
                 TextField asiakkaanNimi = new TextField();
                 TextField mokki = new TextField();
@@ -2626,7 +2626,7 @@ public class Main extends Application {
                 laskunVarauksenPalvelut.add(palveluMaara, 1, 0);
                 int riviVp = 1;
                 for (Map.Entry<Palvelu, Integer> vp : obj.getVaraus().getPalvelut().entrySet()) {
-                    laskunVarauksenPalvelut.add(new Text(vp.getKey().getKuvaus()), 0, riviVp);
+                    laskunVarauksenPalvelut.add(new Text(vp.getKey().getNimi()), 0, riviVp);
                     laskunVarauksenPalvelut.add(new Text(String.valueOf(vp.getValue())), 1, riviVp);
                     riviVp++;
                 }
