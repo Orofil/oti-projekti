@@ -1224,13 +1224,25 @@ public class Main extends Application {
         Text alueSuodatusTeksti = new Text("Varauksen alue");
         alueSuodatusTeksti.setFont(fonttiPaksu);
         ComboBox<Alue> alueSuodatus = new ComboBox<>(FXCollections.observableArrayList(alueLista));
-        Nappula alueSuodatusPoista = new Nappula("Poista aluevalinta", 180, 40);
         varausHaku.add(alueSuodatusTeksti, 5, 0);
         varausHaku.add(alueSuodatus, 5, 1);
-        varausHaku.add(alueSuodatusPoista, 5, 2);
 
+        Nappula aikaSuodatusPoista = new Nappula("Poista aikavalinta", 120, 30);
+        Nappula alueSuodatusPoista = new Nappula("Poista aluevalinta", 120, 30);
+        aikaSuodatusPoista.setFont(Font.font(12));
+        alueSuodatusPoista.setFont(Font.font(12));
+        varausHaku.add(aikaSuodatusPoista, 6, 0);
+        varausHaku.add(alueSuodatusPoista, 6, 1);
+
+        aikaSuodatusPoista.setOnAction(e -> {
+            varausPvmAlku.valueProperty().set(null);
+            varausPvmLoppu.valueProperty().set(null);
+            varausAikaAlku.setText("");
+            varausAikaLoppu.setText("");
+            tarkistaVarausHakuSyotteet(
+                    varausPvmAlku, varausPvmLoppu, varausAikaAlku, varausAikaLoppu, varausHakuNappula);
+        });
         alueSuodatusPoista.setOnAction(e -> alueSuodatus.valueProperty().set(null));
-        // TODO lisätäänkö tällainen samanlainen DatePickereille, nyt pitää painaa enteriä tyhjentämisen jälkeen että se huomaa sen
 
         // Virheiden käsittely. Jos virheitä on, hakunappula on poistettu käytöstä.
         varausPvmAlku.setOnAction(e -> tarkistaVarausHakuSyotteet(
