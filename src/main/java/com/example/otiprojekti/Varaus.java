@@ -2,9 +2,7 @@ package com.example.otiprojekti;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Objects;
+import java.util.*;
 
 public class Varaus {
     private final int ID;
@@ -61,6 +59,24 @@ public class Varaus {
 
     public HashMap<Palvelu, Integer> getPalvelut() {
         return palvelut;
+    }
+
+    public ArrayList<Palvelu> getPalvelutArrayListina() {
+        HashMap<Palvelu, Integer> map
+                = getPalvelut();
+        Set<Palvelu> keySet = map.keySet();
+        ArrayList<Palvelu> listOfKeys
+                = new ArrayList<Palvelu>(keySet);
+        return listOfKeys;
+    }
+
+    public ArrayList<Integer> getPalvelunLkmArrayListina() {
+        HashMap<Palvelu, Integer> map
+                = getPalvelut();
+        Collection<Integer> values = map.values();
+        ArrayList<Integer> listOfValues
+                = new ArrayList<>(values);
+        return listOfValues;
     }
 
     public void setPalvelut(HashMap<Palvelu, Integer> palvelut) {
