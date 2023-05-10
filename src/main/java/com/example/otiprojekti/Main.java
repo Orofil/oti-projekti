@@ -1809,7 +1809,7 @@ public class Main extends Application {
 
 
                 // Lisää ArrayListin tiedot taulukkoon
-                for (Varaus v : varausLista) {
+                for (Varaus v : varausTulokset) {
                     varausTaulukko.addCell(new PdfPCell(new Paragraph(
                             String.valueOf(v.getID()), FontFactory.getFont("Arial", 9f))));
                     varausTaulukko.addCell(new PdfPCell(new Paragraph(
