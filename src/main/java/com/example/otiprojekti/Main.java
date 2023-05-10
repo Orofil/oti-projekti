@@ -4,6 +4,7 @@ import com.example.otiprojekti.ilmoitukset.IlmoitusPaneeli;
 import com.example.otiprojekti.ilmoitukset.IlmoitusTyyppi;
 import com.itextpdf.text.Document;
 import com.itextpdf.text.DocumentException;
+import com.itextpdf.text.FontFactory;
 import com.itextpdf.text.Paragraph;
 import com.itextpdf.text.pdf.PdfPCell;
 import com.itextpdf.text.pdf.PdfPTable;
@@ -1755,25 +1756,54 @@ public class Main extends Application {
 
                 // Lisää taulukon otsikkorivi
 
-                varausTaulukko.addCell(new PdfPCell(new Paragraph("ID")));
-                varausTaulukko.addCell(new PdfPCell(new Paragraph("Asiakas")));
-                varausTaulukko.addCell(new PdfPCell(new Paragraph("Mökki")));
-                varausTaulukko.addCell(new PdfPCell(new Paragraph("Alkupvm.")));
-                varausTaulukko.addCell(new PdfPCell(new Paragraph("Loppupvm.")));
-                varausTaulukko.addCell(new PdfPCell(new Paragraph("Alue")));
-                varausTaulukko.addCell(new PdfPCell(new Paragraph("Palvelu")));
-                varausTaulukko.addCell(new PdfPCell(new Paragraph("Palvelu lkm")));
+                varausTaulukko.addCell(new PdfPCell(new Paragraph("ID", FontFactory.getFont("Arial", 9f))));
+                varausTaulukko.addCell(new PdfPCell(new Paragraph("Asiakas", FontFactory.getFont("Arial", 9f))));
+                varausTaulukko.addCell(new PdfPCell(new Paragraph("Mökki", FontFactory.getFont("Arial", 9f))));
+                varausTaulukko.addCell(new PdfPCell(new Paragraph("Alkupvm.", FontFactory.getFont("Arial", 9f))));
+                varausTaulukko.addCell(new PdfPCell(new Paragraph("Loppupvm.", FontFactory.getFont("Arial", 9f))));
+                varausTaulukko.addCell(new PdfPCell(new Paragraph("Alue", FontFactory.getFont("Arial", 9f))));
+                varausTaulukko.addCell(new PdfPCell(new Paragraph("Palvelu", FontFactory.getFont("Arial", 9f))));
+                varausTaulukko.addCell(new PdfPCell(new Paragraph("Palvelu lkm", FontFactory.getFont("Arial", 9f))));
 
 
                 // Lisää ArrayListin tiedot taulukkoon
                 for (Varaus v : varausLista) { //Tämä ei toimi vielä
-                    varausTaulukko.addCell(new PdfPCell(new Paragraph(String.valueOf(v.getID()))));
-                    varausTaulukko.addCell(new PdfPCell(new Paragraph(String.valueOf(v.getAsiakas().getNimi(false)))));
-                    varausTaulukko.addCell(new PdfPCell(new Paragraph(String.valueOf(v.getMokki().getNimi()))));
-                    varausTaulukko.addCell(new PdfPCell(new Paragraph(v.getVarausAlkuPvm().format(dateTimeFormat))));
-                    varausTaulukko.addCell(new PdfPCell(new Paragraph(v.getVarausLoppuPvm().format(dateTimeFormat))));
-                    varausTaulukko.addCell(new PdfPCell(new Paragraph(String.valueOf(v.getMokki().getAlue()))));
+                    varausTaulukko.addCell(new PdfPCell(new Paragraph(
+                            String.valueOf(v.getID()), FontFactory.getFont("Arial", 9f))));
+                    varausTaulukko.addCell(new PdfPCell(new Paragraph(
+                            String.valueOf(v.getAsiakas().getNimi(false)), FontFactory.getFont("Arial", 9f))));
+                    varausTaulukko.addCell(new PdfPCell(new Paragraph(
+                            String.valueOf(v.getMokki().getNimi()), FontFactory.getFont("Arial", 9f))));
+                    varausTaulukko.addCell(new PdfPCell(new Paragraph(
+                            v.getVarausAlkuPvm().format(dateTimeFormat), FontFactory.getFont("Arial", 9f))));
+                    varausTaulukko.addCell(new PdfPCell(new Paragraph(
+                            v.getVarausLoppuPvm().format(dateTimeFormat), FontFactory.getFont("Arial", 9f))));
+                    varausTaulukko.addCell(new PdfPCell(new Paragraph(
+                            String.valueOf(v.getMokki().getAlue()), FontFactory.getFont("Arial", 9f))));
                     //varausTaulukko.addCell(new PdfPCell(new Paragraph(String.valueOf(v.getPalvelut().get())))); // TODO palvelut
+
+                    HashMap<Palvelu, Integer> map
+                            = v.getPalvelut();
+                    Set<Palvelu> keySet = map.keySet();
+                    ArrayList<Palvelu> listOfKeys
+                            = new ArrayList<Palvelu>(keySet);
+                    Collection<Integer> values = map.values();
+                    ArrayList<Integer> listOfValues
+                            = new ArrayList<>(values);
+
+                    int laskuri = 0;
+                    for (Palvelu p : listOfKeys) {
+                        if (laskuri >=1) {
+                            for (int i = 1; i <= 6; i++) {
+                                varausTaulukko.addCell(new PdfPCell(new Paragraph("")));
+                            }
+                        }
+                        varausTaulukko.addCell(new PdfPCell(new Paragraph(
+                                String.valueOf(listOfKeys.get(laskuri).getNimi()), FontFactory.getFont("Arial", 9f))));
+                        varausTaulukko.addCell(new PdfPCell(new Paragraph(
+                                String.valueOf(listOfValues.get(laskuri)), FontFactory.getFont("Arial", 9f))));
+                        laskuri++;
+                    }
 
                 }
 
