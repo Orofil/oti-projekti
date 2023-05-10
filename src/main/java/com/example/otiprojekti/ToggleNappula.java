@@ -14,7 +14,7 @@ public class ToggleNappula extends ToggleButton {
         setFont(Font.font(18));
         setTextFill(Color.WHITE);
         setStyle("-fx-background-radius: 0; -fx-background-color: black; -fx-border-color: black;");
-        setOnMouseEntered(e -> setStyle("-fx-background-radius: 0; -fx-background-color: black; -fx-border-color: white;"));
+        setOnMouseEntered(e -> setStyle("-fx-background-radius: 0; -fx-background-color: black; -fx-border-color: white; -fx-cursor: hand;"));
         setOnMouseExited(e -> setStyle("-fx-background-radius: 0; -fx-background-color: black; -fx-border-color: black;"));
     }
 
