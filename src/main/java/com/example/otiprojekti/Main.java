@@ -1432,6 +1432,7 @@ public class Main extends Application {
 
                     HashMap<String, LocalDateTime> varausAjat = parseVarausAika(
                             aloitusPvm.getValue(), aloitusAika.getText(), lopetusPvm.getValue(), lopetusAika.getText());
+
                     HashMap<Palvelu, Integer> varauksenPalvelut = new HashMap<>();
                     for (Map.Entry<TextField, TextField> entry : lisaPalvelut.entrySet()) {
                         try {
@@ -1476,50 +1477,6 @@ public class Main extends Application {
             varausLisaysStage.setTitle("Lisää varaus");
             varausLisaysStage.show();
         });
-    }
-
-    public void tarkistaVarausHakuSyotteet(DatePicker alkuPvm, DatePicker loppuPvm,
-                                           TextField alkuAika, TextField loppuAika,
-                                           Nappula hakuNappula) {
-        try {
-            parseVarausAika(alkuPvm.getValue(), alkuAika.getText(), loppuPvm.getValue(), loppuAika.getText());
-            hakuNappula.setDisable(false);
-        } catch (IllegalArgumentException ex) {
-            hakuNappula.setDisable(true);
-        }
-    }
-
-    public HashMap<String, LocalDateTime> parseVarausAika(LocalDate alkuPvm, String alkuAika,
-                                                          LocalDate loppuPvm, String loppuAika) throws IllegalArgumentException {
-        HashMap<String, LocalDateTime> tulokset = new HashMap<>();
-
-        if (alkuPvm == null && alkuAika.equals("") && loppuPvm == null && loppuAika.equals("")) {
-            tulokset.put("alku", null);
-            tulokset.put("loppu", null);
-        } else if (alkuPvm == null || alkuAika.equals("") || loppuPvm == null || loppuAika.equals("")) {
-            throw new IllegalArgumentException();
-        } else {
-            int kaksoispisteet;
-            if ((kaksoispisteet = laskeMerkki(alkuAika, ':')) < 2) {
-                alkuAika = alkuAika + ":00".repeat(2 - kaksoispisteet);
-            }
-            if ((kaksoispisteet = laskeMerkki(loppuAika, ':')) < 2) {
-                loppuAika = loppuAika + ":00".repeat(2 - kaksoispisteet);
-            }
-            try {
-                LocalDateTime alku = LocalDateTime.parse(alkuPvm + " " + alkuAika, dateTimeFormat);
-                tulokset.put("alku", alku);
-            } catch (DateTimeParseException e) {
-                throw new IllegalArgumentException();
-            }
-            try {
-                LocalDateTime loppu = LocalDateTime.parse(loppuPvm + " " + loppuAika, dateTimeFormat);
-                tulokset.put("loppu", loppu);
-            } catch (DateTimeParseException e) {
-                throw new IllegalArgumentException();
-            }
-        }
-        return tulokset;
     }
 
     public void paivitaVarausTaulukko(ArrayList<Varaus> varausTulokset) {
@@ -1621,26 +1578,31 @@ public class Main extends Application {
                 TextField lopetusAika = new TextField(String.valueOf(Objects.requireNonNullElse(
                         obj.getVarausLoppuPvm().toLocalTime(), "12:00")));
 
-                HashMap<Palvelu, Integer> map = obj.getPalvelut();
-                Set<Palvelu> keySet = map.keySet();
-                ArrayList<Palvelu> listOfKeys = new ArrayList<Palvelu>(keySet);
-                Collection<Integer> values = map.values();
-                ArrayList<Integer> listOfValues = new ArrayList<>(values);
+                // Lisäpalvelut kenttien luonti
+                HashMap<Palvelu, Integer> lisaPalvelutIn = obj.getPalvelut();
+                HashMap<TextField, TextField> lisaPalvelutOut = new HashMap<>();
+                GridPane lisaPalvelutGrid = new GridPane();
+                lisaPalvelutGrid.setVgap(5);
+                lisaPalvelutGrid.setHgap(15);
+                int riviVp = 1;
+                for (Map.Entry<Palvelu, Integer> vp : lisaPalvelutIn.entrySet()) {
+                    Text lisaPalveluText = new Text("Lisäpalvelu " + riviVp + " (palveluID)");
+                    Text lisaPalveluLkmText = new Text("lkm");
+                    TextField lisaPalvelu = new TextField();
+                    TextField lisaPalveluLkm = new TextField();
+                    lisaPalvelu.setPrefWidth(100);
+                    lisaPalveluLkm.setPrefWidth(100);
 
-                TextField lisapalvelu1 = new TextField(String.valueOf(listOfKeys.get(0).getID()));
-                TextField lisapalvelu1lkm = new TextField(String.valueOf(listOfValues.get(0)));
-                TextField lisapalvelu2 = new TextField();
-                TextField lisapalvelu2lkm = new TextField();
-                TextField lisapalvelu3 = new TextField();
-                TextField lisapalvelu3lkm = new TextField();
+                    lisaPalvelutGrid.add(lisaPalveluText, 0, riviVp);
+                    lisaPalvelutGrid.add(lisaPalvelu, 1, riviVp);
+                    lisaPalvelutGrid.add(lisaPalveluLkmText, 2, riviVp);
+                    lisaPalvelutGrid.add(lisaPalveluLkm, 3, riviVp);
 
-                if (listOfKeys.size() >= 2) {
-                    lisapalvelu1.setText(String.valueOf(listOfKeys.get(1).getID()));
-                    lisapalvelu1lkm.setText(String.valueOf(listOfValues.get(1)));
-                    if (listOfKeys.size() >= 3) {
-                        lisapalvelu3.setText(String.valueOf(listOfKeys.get(2).getID()));
-                        lisapalvelu3lkm.setText(String.valueOf(listOfValues.get(2)));
-                    }
+                    lisaPalvelu.setText(String.valueOf(vp.getKey().getID()));
+                    lisaPalveluLkm.setText(String.valueOf(vp.getValue()));
+                    lisaPalvelutOut.put(lisaPalvelu, lisaPalveluLkm);
+
+                    riviVp++;
                 }
 
                 Text asiakasIDText = new Text("AsiakasID");
@@ -1649,12 +1611,6 @@ public class Main extends Application {
                 Text aloitusAikaText = new Text("ja kellonaika");
                 Text lopetusPvmText = new Text("Lopetuspäivämäärä");
                 Text lopetusAikaText = new Text("ja kellonaika");
-                Text lisapalvelu1Text = new Text("Lisäpalvelu 1 (palveluID)");
-                Text lisapalvelu1lkmText = new Text("Lukumäärä");
-                Text lisapalvelu2Text = new Text("Lisäpalvelu 2 (palveluID)");
-                Text lisapalvelu2lkmText = new Text("Lukumäärä");
-                Text lisapalvelu3Text = new Text("Lisäpalvelu 3 (palveluID)");
-                Text lisapalvelu3lkmText = new Text("Lukumäärä");
 
                 varausMuokkausGridPaneeli.add(asiakasIDText, 0, 1);
                 varausMuokkausGridPaneeli.add(asiakasID, 1, 1);
@@ -1668,21 +1624,8 @@ public class Main extends Application {
                 varausMuokkausGridPaneeli.add(lopetusPvm, 1, 5);
                 varausMuokkausGridPaneeli.add(lopetusAikaText, 0, 6);
                 varausMuokkausGridPaneeli.add(lopetusAika, 1, 6);
-
-                varausMuokkausGridPaneeli.add(lisapalvelu1Text, 0, 7);
-                varausMuokkausGridPaneeli.add(lisapalvelu1, 1, 7);
-                varausMuokkausGridPaneeli.add(lisapalvelu1lkmText, 0, 8);
-                varausMuokkausGridPaneeli.add(lisapalvelu1lkm, 1, 8);
-
-                varausMuokkausGridPaneeli.add(lisapalvelu2Text, 0, 9);
-                varausMuokkausGridPaneeli.add(lisapalvelu2, 1, 9);
-                varausMuokkausGridPaneeli.add(lisapalvelu2lkmText, 0, 10);
-                varausMuokkausGridPaneeli.add(lisapalvelu2lkm, 1, 10);
-
-                varausMuokkausGridPaneeli.add(lisapalvelu3Text, 0, 11);
-                varausMuokkausGridPaneeli.add(lisapalvelu3, 1, 11);
-                varausMuokkausGridPaneeli.add(lisapalvelu3lkmText, 0, 12);
-                varausMuokkausGridPaneeli.add(lisapalvelu3lkm, 1, 12);
+                varausMuokkausGridPaneeli.add(lisaPalvelutGrid, 0, 7);
+                GridPane.setColumnSpan(lisaPalvelutGrid, 2);
 
                 
                 Nappula tallennaVarausMuutokset = new Nappula("Tallenna muutokset");
@@ -1691,29 +1634,23 @@ public class Main extends Application {
                     String varausLoppuAika = lopetusPvm.getValue() + " " + lopetusAika.getText();
 
                     HashMap<Palvelu, Integer> varauksenPalvelut = new HashMap<>();
-
-                    if (!lisapalvelu1lkm.getText().equals("") && !lisapalvelu1.getText().equals("")) {
-                        varauksenPalvelut.put(
-                                etsiPalveluID(palveluLista, Integer.parseInt(lisapalvelu1.getText())),
-                                Integer.parseInt(lisapalvelu1lkm.getText())
-                        );
-                    } if (!lisapalvelu2lkm.getText().equals("") && !lisapalvelu2.getText().equals("")) {
-                        varauksenPalvelut.put(
-                                etsiPalveluID(palveluLista, Integer.parseInt(lisapalvelu2.getText())),
-                                Integer.parseInt(lisapalvelu2lkm.getText())
-                        );
-                    } if (!lisapalvelu3lkm.getText().equals("") && !lisapalvelu3.getText().equals("")) {
-                        varauksenPalvelut.put(
-                                etsiPalveluID(palveluLista, Integer.parseInt(lisapalvelu3.getText())),
-                                Integer.parseInt(lisapalvelu3lkm.getText())
-                        );
+                    for (Map.Entry<TextField, TextField> entry : lisaPalvelutOut.entrySet()) {
+                        try {
+                            varauksenPalvelut.put(
+                                    etsiPalveluID(palveluLista, Integer.parseInt(entry.getKey().getText())),
+                                    Integer.parseInt(entry.getValue().getText())
+                            );
+                            // Virheellinen lukuarvo, esim tyhjä kenttä, jätetään huomiotta ja jatketaan TODO onko ok näin
+                        } catch (NumberFormatException ignored) {}
                     }
+
                     try {
                         tietokanta.muokkaaVaraus(
+                                obj,
                                 obj.getID(),
                                 Integer.parseInt(asiakasID.getText()),
                                 Integer.parseInt(mokkiID.getText()),
-                                varauksenPalvelut, // TODO varauksen palvelut, näiden poistamisessa ja lisäämisessä voi käyttää insert- ja muokkaaVarauksenPalvelut-metodeita
+                                varauksenPalvelut,
                                 LocalDateTime.now().format(dateTimeFormat),
                                 LocalDateTime.now().format(dateTimeFormat),
                                 varausAlkuAika,
@@ -1889,8 +1826,50 @@ public class Main extends Application {
                         IlmoitusTyyppi.VAROITUS, "Virhe tiedoston avaamisessa: " + i.getMessage());
             }
         });
+    }
 
+    public void tarkistaVarausHakuSyotteet(DatePicker alkuPvm, DatePicker loppuPvm,
+                                           TextField alkuAika, TextField loppuAika,
+                                           Nappula hakuNappula) {
+        try {
+            parseVarausAika(alkuPvm.getValue(), alkuAika.getText(), loppuPvm.getValue(), loppuAika.getText());
+            hakuNappula.setDisable(false);
+        } catch (IllegalArgumentException ex) {
+            hakuNappula.setDisable(true);
+        }
+    }
 
+    public HashMap<String, LocalDateTime> parseVarausAika(LocalDate alkuPvm, String alkuAika,
+                                                          LocalDate loppuPvm, String loppuAika) throws IllegalArgumentException {
+        HashMap<String, LocalDateTime> tulokset = new HashMap<>();
+
+        if (alkuPvm == null && alkuAika.equals("") && loppuPvm == null && loppuAika.equals("")) {
+            tulokset.put("alku", null);
+            tulokset.put("loppu", null);
+        } else if (alkuPvm == null || alkuAika.equals("") || loppuPvm == null || loppuAika.equals("")) {
+            throw new IllegalArgumentException();
+        } else {
+            int kaksoispisteet;
+            if ((kaksoispisteet = laskeMerkki(alkuAika, ':')) < 2) {
+                alkuAika = alkuAika + ":00".repeat(2 - kaksoispisteet);
+            }
+            if ((kaksoispisteet = laskeMerkki(loppuAika, ':')) < 2) {
+                loppuAika = loppuAika + ":00".repeat(2 - kaksoispisteet);
+            }
+            try {
+                LocalDateTime alku = LocalDateTime.parse(alkuPvm + " " + alkuAika, dateTimeFormat);
+                tulokset.put("alku", alku);
+            } catch (DateTimeParseException e) {
+                throw new IllegalArgumentException();
+            }
+            try {
+                LocalDateTime loppu = LocalDateTime.parse(loppuPvm + " " + loppuAika, dateTimeFormat);
+                tulokset.put("loppu", loppu);
+            } catch (DateTimeParseException e) {
+                throw new IllegalArgumentException();
+            }
+        }
+        return tulokset;
     }
 
     public void luoAsiakasnakyma() {
