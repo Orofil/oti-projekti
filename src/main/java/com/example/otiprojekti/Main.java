@@ -230,8 +230,6 @@ public class Main extends Application {
         alueHaku.add(alueLajitteluTeksti, 2, 0);
         ComboBox<String> alueLajittelu = new ComboBox<>(FXCollections.observableList(Arrays.asList(
                 "Tunnuksen mukaan",
-                "Uusin > Vanhin",
-                "Vanhin > Uusin",
                 "A > Ö"
         )));
         alueLajittelu.setValue("Uusin > Vanhin"); // Oletuksena valittu vaihtoehto
@@ -849,8 +847,6 @@ public class Main extends Application {
         palveluHaku.add(palveluLajitteluTeksti, 2, 0);
         ComboBox<String> palveluLajittelu = new ComboBox<>(FXCollections.observableList(Arrays.asList(
                 "Tunnuksen mukaan",
-                "Uusin > Vanhin",
-                "Vanhin > Uusin",
                 "A > Ö",
                 "Alueittain"
         )));
@@ -1933,8 +1929,6 @@ public class Main extends Application {
         asiakasHaku.add(asiakasLajitteluTeksti, 2, 0);
         ComboBox<String> asiakasLajittelu = new ComboBox<>(FXCollections.observableList(Arrays.asList(
                 "Tunnuksen mukaan",
-                "Uusin > Vanhin",
-                "Vanhin > Uusin",
                 "A > Ö"
         )));
         asiakasLajittelu.setValue("Tunnuksen mukaan"); // Oletuksena valittu vaihtoehto
@@ -2690,14 +2684,13 @@ public class Main extends Application {
             luoLaskuNappula.setGraphic(tiedostoksi);
             laskuTaulukko.add(luoLaskuNappula, 7, rivi);
             luoLaskuNappula.setOnMouseClicked(e -> {
-                if (obj.vieDokumentiksi()) {
-                    try {
-                        tietokanta.paivitaLaskunStatusLahetetyksi(obj.getID(), 1);
-                        haeKaikkiTiedot();
-                        paivitaLaskuTaulukko(laskuLista);
-                    } catch (SQLException ex) {
-                        throw new RuntimeException(ex);
-                    }
+                obj.vieDokumentiksi();
+                try {
+                    tietokanta.paivitaLaskunStatusLahetetyksi(obj.getID(), 1);
+                    haeKaikkiTiedot();
+                    paivitaLaskuTaulukko(laskuLista);
+                } catch (SQLException ex) {
+                    throw new RuntimeException(ex);
                 }
             });
 

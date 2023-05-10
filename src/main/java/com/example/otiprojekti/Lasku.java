@@ -129,7 +129,7 @@ public class Lasku {
     }
 
 
-    public boolean vieDokumentiksi() {
+    public void vieDokumentiksi() {
         Stage laskuIkkuna = new Stage();
         GridPane laskunTiedot = new GridPane();
         laskunTiedot.setPadding(new Insets(25));
@@ -145,8 +145,6 @@ public class Lasku {
         );
         TextField viiteNumero = new TextField("404");
 
-        CheckBox lahetetyksi = new CheckBox("Merkitse laskun status lähetetyksi");
-
         Label saaja = new Label("Saajan nimi");
         Label tilinro = new Label("Saajan IBAN");
         Label erapv = new Label("Laskun eräpäivä");
@@ -161,8 +159,7 @@ public class Lasku {
         laskunTiedot.add(tiliNumero,1,1);
         laskunTiedot.add(eraPaiva,1,2);
         laskunTiedot.add(viiteNumero,1,3);
-        laskunTiedot.add(lahetetyksi,0,4);
-        laskunTiedot.add(syotaTiedot,0,5);
+        laskunTiedot.add(syotaTiedot,0,4);
 
         Scene scene = new Scene(laskunTiedot,400,600);
         laskuIkkuna.setScene(scene);
@@ -195,12 +192,9 @@ public class Lasku {
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
-            if (lahetetyksi.isSelected()) {
-                palautus.set(true);
-            }
             laskuIkkuna.close();
         });
-        return palautus.get();
+
     }
 
     public void maksuMuistutus() {
