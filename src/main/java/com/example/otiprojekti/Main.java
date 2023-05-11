@@ -196,6 +196,7 @@ public class Main extends Application {
 
         Scene kehys = new Scene(paneeliYlin, W, H);
         ikkuna.setScene(kehys);
+        ikkuna.getIcons().add(imageKuvasta("vnlogo.png"));
         ikkuna.setTitle("Varaustenhallintajärjestelmä");
         ikkuna.setMaxWidth(MAX_LEVEYS);
         ikkuna.setMaxHeight(MAX_KORKEUS);
