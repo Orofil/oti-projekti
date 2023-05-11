@@ -16,6 +16,12 @@ Savonia AMK:n Ohjelmistotuotanto I -kurssin ohjelmistoprojekti.
 - __Palvelu__
 - __Tietokanta__
 - __Varaus__
+- __LaskuStatus__
+- __PoistoIkkuna__
+- __Posti__
+- __Nappula__
+- __ToggleNappula__
+- __Utils__
 
 ### Resurssit
 
