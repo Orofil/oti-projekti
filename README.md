@@ -1,4 +1,4 @@
-![vnlogo.png](src%2Fmain%2Fresources%2Fvnlogo.png)
+![vnlogo.png](src/main/resources/vnlogo.png)
 # Village Newbies varausjärjestelmä
 __oti-projekti__
 
@@ -90,8 +90,8 @@ __Muut toiminnot:__
   - Tietokannan luontiskripti ('vn.sql')
   - Insert-skripti testausta varten ('insertit testi.sql')
 - __kuvakkeet__
-  - tietojen lisäykseen, muokkaamiseen, poistamiseen, tarkasteluun ja tiedostoksi viemiseen liittyvät kuvakkeet
-  - logo
+  - Tietojen lisäykseen, muokkaamiseen, poistamiseen, tarkasteluun ja tiedostoksi viemiseen liittyvät kuvakkeet
+  - Logo
 
   
 
