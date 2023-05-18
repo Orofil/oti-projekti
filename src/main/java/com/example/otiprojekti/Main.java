@@ -43,6 +43,10 @@ import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.logging.FileHandler;
+import java.util.logging.Handler;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import static com.example.otiprojekti.Tietokanta.dateTimeFormat;
 import static com.example.otiprojekti.Utils.*;
@@ -56,7 +60,10 @@ public class Main extends Application {
     // Ikkunan suurin sallittu koko
     public final int MAX_LEVEYS = 1600;
     public final int MAX_KORKEUS = 800;
-    
+
+    // Logger
+    private static final Logger logger = Logger.getLogger("");
+
     public static final Font fonttiIsompi = Font.font(16);
     public static final Font fonttiPaksu = Font.font("", FontWeight.BOLD, 14);
     public static final Font fonttiKursiivi = Font.font("", FontPosture.ITALIC, 12);
@@ -122,6 +129,7 @@ public class Main extends Application {
 
     @Override
     public void start(Stage ikkuna) {
+        logger.log(Level.INFO, "Ohjelman käynnistys aloitettu");
 
         // Vasen valikko
         for (ToggleNappula n : nappulat) {
@@ -201,9 +209,13 @@ public class Main extends Application {
         ikkuna.setMaxWidth(MAX_LEVEYS);
         ikkuna.setMaxHeight(MAX_KORKEUS);
         ikkuna.show();
+
+        logger.log(Level.INFO, "Ohjelman käynnistys valmis");
     }
 
     public void luoAluenakyma() {
+        logger.log(Level.FINE, "Luodaan aluenäkymä");
+
         BorderPane aluepaneeli = new BorderPane();
         aluenappula.setOnAction(e -> {
             paneeli.setCenter(aluepaneeli);
@@ -311,6 +323,7 @@ public class Main extends Application {
     }
 
     public void paivitaAlueTaulukko(ArrayList<Alue> alueTulokset) {
+        logger.log(Level.FINE, "Päivitetään aluetaulukko");
 
         alueTaulukko.setGridLinesVisible(false);
         alueTaulukko.getColumnConstraints().clear();
@@ -420,6 +433,8 @@ public class Main extends Application {
     }
     
     public void luoMokkinakyma() {
+        logger.log(Level.FINE, "Luodaan mökkinäkymä");
+
         BorderPane mokkipaneeli = new BorderPane();
         mokkinappula.setOnAction(e -> {
             paneeli.setCenter(mokkipaneeli);
@@ -595,6 +610,7 @@ public class Main extends Application {
     }
 
     public void paivitaMokkiTaulukko(LocalDate paivaAlku, LocalDate paivaLoppu, ArrayList<Mokki> mokkiTulokset) {
+        logger.log(Level.FINE, "Päivitetään mökkitaulukko");
 
         mokkiTaulukko.setGridLinesVisible(false);
         mokkiTaulukko.getColumnConstraints().clear();
@@ -822,6 +838,8 @@ public class Main extends Application {
     }
     
     public void luoPalvelunakyma() {
+        logger.log(Level.FINE, "Luodaan palvelunäkymä");
+
         BorderPane palvelupaneeli = new BorderPane();
         palvelunappula.setOnAction(e -> {
             paneeli.setCenter(palvelupaneeli);
@@ -959,6 +977,7 @@ public class Main extends Application {
     }
 
     public void paivitaPalveluTaulukko(ArrayList<Palvelu> palveluTulokset) {
+        logger.log(Level.FINE, "Päivitetään palvelutaulukko");
 
         palveluTaulukko.setGridLinesVisible(false);
         palveluTaulukko.getColumnConstraints().clear();
@@ -1154,6 +1173,8 @@ public class Main extends Application {
     }
 
     public void luoVarausnakyma() {
+        logger.log(Level.FINE, "Luodaan varausnäkymä");
+
         BorderPane varauspaneeli = new BorderPane();
         varausnappula.setOnAction(e -> {
             paneeli.setCenter(varauspaneeli);
@@ -1497,6 +1518,8 @@ public class Main extends Application {
     }
 
     public void paivitaVarausTaulukko(ArrayList<Varaus> varausTulokset) {
+        logger.log(Level.FINE, "Päivitetään varaustaulukko");
+
         varausTaulukko.setGridLinesVisible(false);
         varausTaulukko.getColumnConstraints().clear();
         varausTaulukko.getChildren().clear();
@@ -1904,6 +1927,8 @@ public class Main extends Application {
     }
 
     public void luoAsiakasnakyma() {
+        logger.log(Level.FINE, "Luodaan asiakasnäkymä");
+
         BorderPane asiakaspaneeli = new BorderPane();
         asiakasnappula.setOnAction(e -> {
             paneeli.setCenter(asiakaspaneeli);
@@ -2037,6 +2062,8 @@ public class Main extends Application {
     }
 
     public void paivitaAsiakasTaulukko(ArrayList<Asiakas> asiakasTulokset) {
+        logger.log(Level.FINE, "Päivitetään asiakastaulukko");
+
         asiakasTaulukko.setGridLinesVisible(false);
         asiakasTaulukko.getColumnConstraints().clear();
         asiakasTaulukko.getChildren().clear();
@@ -2233,6 +2260,8 @@ public class Main extends Application {
     }
 
     public void luoLaskunakyma() {
+        logger.log(Level.FINE, "Luodaan laskunäkymä");
+
         BorderPane laskupaneeli = new BorderPane();
         laskunappula.setOnAction(e -> {
             paneeli.setCenter(laskupaneeli);
@@ -2414,6 +2443,8 @@ public class Main extends Application {
     }
     
     public void paivitaLaskuTaulukko(ArrayList<Lasku> laskuTulokset) {
+        logger.log(Level.FINE, "Päivitetään laskutaulukko");
+
         laskuTaulukko.setGridLinesVisible(false);
         laskuTaulukko.getColumnConstraints().clear();
         laskuTaulukko.getChildren().clear();
@@ -2729,6 +2760,14 @@ public class Main extends Application {
     }
 
     public static void main(String[] args) {
+        // Logger
+        try {
+            Handler fh = new FileHandler("toimintaloki.log");
+            logger.addHandler(fh);
+        } catch (IOException e) {
+            throw new RuntimeException("Lokitiedoston luonti epäonnistui");
+        }
+
         launch();
     }
 }
