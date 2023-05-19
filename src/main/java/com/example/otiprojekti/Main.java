@@ -129,7 +129,7 @@ public class Main extends Application {
 
     @Override
     public void start(Stage ikkuna) {
-        logger.log(Level.INFO, "Ohjelman käynnistys aloitettu");
+        logger.log(Level.INFO, "Käyttöliittymän käynnistys aloitettu");
 
         // Vasen valikko
         for (ToggleNappula n : nappulat) {
@@ -210,7 +210,7 @@ public class Main extends Application {
         ikkuna.setMaxHeight(MAX_KORKEUS);
         ikkuna.show();
 
-        logger.log(Level.INFO, "Ohjelman käynnistys valmis");
+        logger.log(Level.INFO, "Käyttöliittymän käynnistys valmis");
     }
 
     public void luoAluenakyma() {
@@ -312,6 +312,8 @@ public class Main extends Application {
                 } catch (SQLException ex) {
                     alueLisaysTeksti.setText("Alueen lisääminen ei onnistunut. \n Yritä uudelleen.");
                     alueLisaysTeksti.setFill(Color.RED);
+                    logger.log(Level.WARNING, "Alueen lisääminen tietokantaan ei onnistunut");
+                    logger.log(Level.WARNING, ex.getMessage(), ex);
                 }
             });
 
@@ -374,6 +376,8 @@ public class Main extends Application {
                         paivitaAlueTaulukko(alueLista);
                     } catch (SQLException ex) {
                         ilmoitusPaneeli.lisaaIlmoitus(IlmoitusTyyppi.VAROITUS, "Virhe alueen poistamisessa.");
+                        logger.log(Level.WARNING, "Alueen poistaminen tietokannasta ei onnistunut");
+                        logger.log(Level.WARNING, ex.getMessage(), ex);
                     }
                 });
             });
@@ -419,6 +423,8 @@ public class Main extends Application {
                     } catch (SQLException ex) {
                         alueMuokkausTeksti.setText("Alueen tietojen muokkaaminen ei onnistunut. \n Yritä uudelleen.");
                         alueMuokkausTeksti.setFill(Color.RED);
+                        logger.log(Level.WARNING, "Alueen tietojen muokkaaminen tietokannassa ei onnistunut");
+                        logger.log(Level.WARNING, ex.getMessage(), ex);
                     }
                 });
 
@@ -599,6 +605,8 @@ public class Main extends Application {
                     mokkiLisaysTeksti.setText("Mökin lisääminen ei onnistunut. \n " +
                             "Tarkista syötteet ja yritä uudelleen.");
                     mokkiLisaysTeksti.setFill(Color.RED);
+                    logger.log(Level.WARNING, "Mökin lisääminen tietokantaan ei onnistunut");
+                    logger.log(Level.WARNING, ex.getMessage(), ex);
                 }
             });
 
@@ -689,6 +697,8 @@ public class Main extends Application {
                         paivitaMokkiTaulukko(paivaAlku, paivaLoppu, mokkiLista);
                     } catch (SQLException ex) {
                         ilmoitusPaneeli.lisaaIlmoitus(IlmoitusTyyppi.VAROITUS, "Virhe mökin poistamisessa.");
+                        logger.log(Level.WARNING, "Mökin poistaminen tietokannasta ei onnistunut");
+                        logger.log(Level.WARNING, ex.getMessage(), ex);
                     }
                 });
             });
@@ -781,6 +791,8 @@ public class Main extends Application {
                         mokkiMuokkausTeksti.setText("Mökin muokkaaminen ei onnistunut. \n " +
                                 "Tarkista syötteet ja yritä uudelleen.");
                         mokkiMuokkausTeksti.setFill(Color.RED);
+                        logger.log(Level.WARNING, "Mökin muokkaaminen tietokannassa ei onnistunut");
+                        logger.log(Level.WARNING, ex.getMessage(), ex);
 
                     }
                 });
@@ -965,6 +977,8 @@ public class Main extends Application {
                     palveluLisaysTeksti.setText("Palvelun lisääminen ei onnistunut. \n " +
                             "Tarkista syötteet ja yritä uudelleen.");
                     palveluLisaysTeksti.setFill(Color.RED);
+                    logger.log(Level.WARNING, "Palvelun lisääminen tietokantaan ei onnistunut");
+                    logger.log(Level.WARNING, ex.getMessage(), ex);
                 }
             });
 
@@ -1044,6 +1058,8 @@ public class Main extends Application {
                         paivitaPalveluTaulukko(palveluLista);
                     } catch (SQLException ex) {
                         ilmoitusPaneeli.lisaaIlmoitus(IlmoitusTyyppi.VAROITUS, "Virhe palvelun poistamisessa");
+                        logger.log(Level.WARNING, "Palvelun poistaminen tietokannasta ei onnistunut");
+                        logger.log(Level.WARNING, ex.getMessage(), ex);
                     }
 
                 });            
@@ -1120,6 +1136,8 @@ public class Main extends Application {
                         palveluMuokkausTeksti.setText("Muutosten tallentaminen ei onnistunut. \n " +
                                 "Tarkista syötteet ja yritä uudelleen.");
                         palveluMuokkausTeksti.setFill(Color.RED);
+                        logger.log(Level.WARNING, "Palvelun muokkaaminen tietokannassa ei onnistunut");
+                        logger.log(Level.WARNING, ex.getMessage(), ex);
                     }
                 });
 
@@ -1501,6 +1519,8 @@ public class Main extends Application {
                     ilmoitusPaneeli.lisaaIlmoitus(IlmoitusTyyppi.VAROITUS, String.valueOf(ex));
                     vanhaAsiakasTeksti.setText("Varauksen asettaminen ei onnistunut. \n" +
                             "Tarkista syötteet ja yritä uudelleen.");
+                    logger.log(Level.WARNING, "Varauksen lisääminen tietokantaan ei onnistunut");
+                    logger.log(Level.WARNING, ex.getMessage(), ex);
                 }
             });
 
@@ -1584,6 +1604,8 @@ public class Main extends Application {
                         paivitaVarausTaulukko(varausLista);
                     } catch (SQLException ex) {
                         ilmoitusPaneeli.lisaaIlmoitus(IlmoitusTyyppi.VAROITUS, "Virhe varauksen poistamisessa.");
+                        logger.log(Level.WARNING, "Varauksen poistaminen tietokannasta ei onnistunut");
+                        logger.log(Level.WARNING, ex.getMessage(), ex);
                     }
                 });
             });
@@ -1724,6 +1746,8 @@ public class Main extends Application {
                         varausMuokkausTeksti.setText("Muutosten tallentaminen ei onnistunut. " +
                                 "\nTarkista syötteet ja yritä uudelleen.");
                         varausMuokkausTeksti.setFill(Color.RED);
+                        logger.log(Level.WARNING, "Varauksen muokkaaminen tietokannassa ei onnistunut");
+                        logger.log(Level.WARNING, ex.getMessage(), ex);
                     }
                 });
 
@@ -1868,16 +1892,20 @@ public class Main extends Application {
 
                 System.out.println("Raportti luotu onnistuneesti!");
 
-            } catch (DocumentException | FileNotFoundException i) {
+            } catch (DocumentException | FileNotFoundException ex) {
                 ilmoitusPaneeli.lisaaIlmoitus(
-                        IlmoitusTyyppi.VAROITUS, "Virhe raportin generoimisessa: " + i.getMessage());
+                        IlmoitusTyyppi.VAROITUS, "Virhe raportin generoimisessa: " + ex.getMessage());
+                logger.log(Level.WARNING, "Varausraportin luominen ei onnistunut");
+                logger.log(Level.WARNING, ex.getMessage(), ex);
             }
             try {
                 // Avataan dokumentti oletusohjelmalla
                 Desktop.getDesktop().open(new File(tiedostonNimi));
-            } catch (IOException i) {
+            } catch (IOException ex) {
                 ilmoitusPaneeli.lisaaIlmoitus(
-                        IlmoitusTyyppi.VAROITUS, "Virhe tiedoston avaamisessa: " + i.getMessage());
+                        IlmoitusTyyppi.VAROITUS, "Virhe tiedoston avaamisessa: " + ex.getMessage());
+                logger.log(Level.WARNING, "Varausraportin avaaminen ei onnistunut");
+                logger.log(Level.WARNING, ex.getMessage(), ex);
             }
         });
     }
@@ -2048,6 +2076,8 @@ public class Main extends Application {
                     asiakasLisaysTeksti.setText("Tarkista, että syöttämäsi arvot ovat \n " +
                             "oikeaa muotoa ja yritä uudelleen.");
                     asiakasLisaysTeksti.setFill(Color.RED);
+                    logger.log(Level.WARNING, "Asiakkaan lisääminen tietokantaan ei onnistunut");
+                    logger.log(Level.WARNING, ex.getMessage(), ex);
                 }
             });
 
@@ -2127,6 +2157,8 @@ public class Main extends Application {
                         paivitaAsiakasTaulukko(asiakasLista);
                     } catch (SQLException ex) {
                         ilmoitusPaneeli.lisaaIlmoitus(IlmoitusTyyppi.VAROITUS, "Virhe asiakkaan poistamisessa.");
+                        logger.log(Level.WARNING, "Asiakkaan poistaminen tietokannasta ei onnistunut");
+                        logger.log(Level.WARNING, ex.getMessage(), ex);
                     }
                 });
             });
@@ -2206,6 +2238,8 @@ public class Main extends Application {
                         asiakasMuokkausTeksti.setText("Varmista, että tiedot ovat oikeaa\n " +
                                 "tietotyyppiä ja yritä uudelleen.");
                         asiakasMuokkausTeksti.setFill(Color.RED);
+                        logger.log(Level.WARNING, "Asiakkaan muokkaaminen tietokannassa ei onnistunut");
+                        logger.log(Level.WARNING, ex.getMessage(), ex);
                     }
                 });
 
@@ -2425,6 +2459,8 @@ public class Main extends Application {
                     laskuLisaysTeksti.setFill(Color.RED);
                     laskuLisaysTeksti.setText("Laskun lisääminen ei onnistunut. \n" +
                             "Tarkista syötteet ja yritä uudelleen.");
+                    logger.log(Level.WARNING, "Laskun lisääminen tietokantaan ei onnistunut");
+                    logger.log(Level.WARNING, ex.getMessage(), ex);
                 }
             });
 
@@ -2507,6 +2543,8 @@ public class Main extends Application {
                         paivitaLaskuTaulukko(laskuLista);
                     } catch (SQLException ex) {
                         ilmoitusPaneeli.lisaaIlmoitus(IlmoitusTyyppi.VAROITUS, "Virhe laskun poistamisessa.");
+                        logger.log(Level.WARNING, "Laskun poistaminen tietokannasta ei onnistunut");
+                        logger.log(Level.WARNING, ex.getMessage(), ex);
                     }
                 });
             });
@@ -2627,6 +2665,8 @@ public class Main extends Application {
                         laskuMuokkausTeksti.setFill(Color.RED);
                         laskuMuokkausTeksti.setText("Muutosten tallentaminen ei onnistunut. \n" +
                                 "Tarkista syötteet ja yritä uudelleen.");
+                        logger.log(Level.WARNING, "Laskun muokkaaminen tietokannassa ei onnistunut");
+                        logger.log(Level.WARNING, ex.getMessage(), ex);
                     }
                 });
 
@@ -2722,7 +2762,9 @@ public class Main extends Application {
                     haeKaikkiTiedot();
                     paivitaLaskuTaulukko(laskuLista);
                 } catch (SQLException ex) {
-                    throw new RuntimeException(ex);
+                    ilmoitusPaneeli.lisaaIlmoitus(IlmoitusTyyppi.VAROITUS, "Laskun tilan päivitys ei onnistunut.");
+                    logger.log(Level.WARNING, "Laskun statuksen muuttaminen tietokannassa ei onnistunut");
+                    logger.log(Level.WARNING, ex.getMessage(), ex);
                 }
             });
 
@@ -2756,6 +2798,8 @@ public class Main extends Application {
         } catch (SQLException | NullPointerException e) {
             ilmoitusPaneeli.lisaaIlmoitus(IlmoitusTyyppi.VAROITUS,
                     "Virhe tietojen hakemisessa. Tietokantaa ei ole ehkä käynnistetty.");
+            logger.log(Level.SEVERE, "Tietojen hakeminen tietokannasta ei onnistunut");
+            logger.log(Level.SEVERE, e.getMessage(), e);
         }
     }
 

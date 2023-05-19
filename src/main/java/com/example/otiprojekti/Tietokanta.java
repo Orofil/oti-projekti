@@ -7,6 +7,8 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import static com.example.otiprojekti.Utils.*;
 
@@ -26,17 +28,23 @@ public class Tietokanta {
     private Connection con;
     private PreparedStatement stm;
 
+    private final Logger logger = Logger.getLogger("");
+
     /**
      * SQL:n käyttämä muotoilu DateTime-tietotyypeissä
      */
     public static final DateTimeFormatter dateTimeFormat = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 
     public Tietokanta() {
+        logger.log(Level.INFO, "Avataan tietokantayhteys");
+
         // Tarkistetaan löytyykö tarvittavaa luokkaa yhdistämiseen
         try {
             Class.forName("com.mysql.cj.jdbc.Driver");
         } catch (ClassNotFoundException e) {
             System.out.println("Tietokantaan yhdistämiseen tarvittavaa pakkausta ei löytynyt.\nVirhe: " + e);
+            logger.log(Level.SEVERE, "Tietokantaan yhdistämiseen tarvittavaa pakkausta ei löytynyt");
+            logger.log(Level.SEVERE, e.getMessage(), e);
         }
 
         // Yhdistetään tietokantaan
@@ -44,7 +52,11 @@ public class Tietokanta {
             con = DriverManager.getConnection(DB_URL, USER, PASS);
         } catch (SQLException e) {
             System.out.println("Tietokantaan yhdistäminen ei onnistunut.\nVirhe: " + e);
+            logger.log(Level.SEVERE, "Tietokantaan yhdistäminen ei onnistunut");
+            logger.log(Level.SEVERE, e.getMessage(), e);
         }
+
+        logger.log(Level.INFO, "Tietokantayhteyden avaus valmis");
     }
 
 
